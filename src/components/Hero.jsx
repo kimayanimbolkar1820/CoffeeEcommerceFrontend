@@ -25,14 +25,29 @@ export default function Hero() {
       <div className="relative z-10 grid h-full grid-cols-1 md:grid-cols-[30%_70%]">
 
         {/* LEFT – TEXT CONTENT */}
-        <div className="flex flex-col justify-center px-6 md:px-16 text-white pt-24 md:pt-28 font-serif z-20">
-          <p className="uppercase tracking-widest text-sm text-gray-400">
-            Freshly Roasted
-          </p>
+        <div className="flex flex-col justify-center px-4 md:px-16 text-white pt-24 md:pt-28 font-serif z-20">
+        <p className="
+  inline-flex items-center
+  uppercase tracking-widest text text-white/90
+  px-5 py-2.5 rounded-full w-55 h-10
 
-          <h1 className="text-5xl md:text-7xl font-bold mt-4 leading-tight">
-            Modern Coffee.
-          </h1>
+  bg-white/10 backdrop-blur-xl
+  border border-white/20
+  shadow-lg 
+">
+  Freshly Roasted
+</p>
+
+
+
+
+
+
+         <h1 className="text-5xl md:text-7xl font-bold mt-4 leading-tight  whitespace-nowrap">
+  Modern{" "}
+  <span >Coffee.</span>
+</h1>
+
 
           <p className="mt-6 max-w-md text-gray-300">
             Experience the aroma of premium coffee beans roasted to perfection.
