@@ -9,14 +9,14 @@ export default function PricingCards() {
   const plans = [
     {
       title: "1829 Espresso",
-      price: "$12.00",
+      price: "₹12.00",
       description:
         "This customer favourite is a cup of a customer routine. Pairs great with milk and provides hints of grape and caramel.",
       gradient: "from-[#f3e2c7] to-[#e8c39e]",
     },
     {
       title: "Roaster's Spotlight",
-      price: "$15.00",
+      price: "₹15.00",
       description:
         "Explore the best of our single origin roasts, with a new & different taste delivered every month.",
       gradient: "from-[#b56a73] to-[#7b3b44]",
@@ -45,7 +45,7 @@ export default function PricingCards() {
           {/* LEFT SIDE — TEXT */}
           <div className="flex items-center ">
             <div className="max-w-sm text-[#e5dfdd] font-bold">
-              <h1 className="text-5xl font-serif leading-tight mb-5">
+              <h1 className="md:text-5xl font-serif leading-tight mb-5">
                 Subscribe <br /> today.
               </h1>
 
