@@ -1,11 +1,11 @@
 import Navbar from "@/components/Navbar";
 import "./globals.css";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Cinzel_Decorative, Playfair , Inter } from "next/font/google";
 
-const playfair = Playfair_Display({
+const  cinzel = Cinzel_Decorative({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-playfair",
+  weight: ["400","700"],
+  variable: "--font-cinzel",
   display: "swap",
 });
 
@@ -15,12 +15,18 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
+const playfair = Playfair({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair",
+  display: "swap",
+});
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable}`}
+      className={`${cinzel.variable} ${inter.variable} ${playfair.variable}`}
     >
       <body className="bg-black text-white font-inter">
         <Navbar />

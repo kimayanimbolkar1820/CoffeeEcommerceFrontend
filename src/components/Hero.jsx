@@ -30,7 +30,7 @@ export default function Hero() {
             Freshly Roasted
           </p>
 
-          <h1 className="text-5xl md:text-7xl font-bold mt-4 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-cinzel w-[700px]  font-bold mt-4 ">
             Modern Coffee.
           </h1>
 
