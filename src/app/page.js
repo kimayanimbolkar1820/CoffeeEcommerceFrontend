@@ -1,11 +1,15 @@
-import Hero from "@/components/Hero";
-import PricingCards from "@/components/PricingCards";
+import Hero from '@/components/Hero'
+import PricingCards from '@/components/PricingCards'
+// import Navbar from '@/components/Navbar'
 
-export default function Page() {
+const Page = () => {
   return (
-    <>
+    <div>
+      {/* <Navbar /> */}
       <Hero />
-      <PricingCards />
-    </>
-  );
+      <PricingCards/>
+    </div>
+  )
 }
+
+export default Page;
