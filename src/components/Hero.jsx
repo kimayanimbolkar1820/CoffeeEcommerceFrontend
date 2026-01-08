@@ -70,7 +70,7 @@ export default function Hero() {
               {item.type === "image" ? (
                 <Image
                   src={item.src}
-                  width={item.width}   // original image resolution
+                  width={item.width}   
                   height={item.height}
                   alt="Coffee visual"
                   className="w-full h-full object-cover scale-105 transition-transform duration-700"
