@@ -1,15 +1,12 @@
-
 import React from 'react'
-
 import Hero from '@/components/Hero'
-import FeaturedDrinks from '@/components/FeaturedDrinks'
+import Categories from '@/components/Categories'
 
 const page = () => {
   return (
     <div>
-     
      <Hero/>
-     <FeaturedDrinks/>
+     <Categories/>
       </div>
   )
 }
