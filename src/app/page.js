@@ -1,14 +1,23 @@
-import React from 'react'
 import Hero from '@/components/Hero'
-import Categories from '@/components/Categories'
+import PricingCards from '@/components/PricingCards'
 
-const page = () => {
+import React from 'react'
+
+import Categories from '@/components/Categories'
+import FeaturedDrinks from '@/components/FeaturedDrinks'
+
+const Page = () => {
   return (
     <div>
-     <Hero/>
+     
+      <Hero />
+    
+   
      <Categories/>
+     <FeaturedDrinks/>
+     <PricingCards/>
       </div>
   )
 }
 
-export default page
+export default Page;
