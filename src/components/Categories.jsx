@@ -32,8 +32,14 @@ const Categories = () => {
             }
           </ul>
       </div>
+
+const Categories = () => {
+  return (
+    <div>
+      
     </div>
   )
 }
 
+export default Categories
 export default Categories
