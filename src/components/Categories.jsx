@@ -31,15 +31,11 @@ const Categories = () => {
                 ))
             }
           </ul>
+          </div>
       </div>
-
-const Categories = () => {
-  return (
-    <div>
-      
-    </div>
   )
 }
 
+
 export default Categories
-export default Categories
+
