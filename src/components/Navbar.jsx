@@ -189,7 +189,7 @@ function NavLink({ href, children }) {
       className="
         relative inline-block
         after:absolute after:left-0 after:-bottom-1
-        after:h-[2px] after:w-0
+        after:h-0.5 after:w-0
         after:bg-[#fffefd]
         after:transition-all after:duration-300
         group-hover:after:w-full
