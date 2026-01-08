@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlinePhone } from "react-icons/md";
+import navbarData from "./data/navbar.json"; 
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -20,111 +21,40 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 z-50 w-full">
       <div
-        className={`flex items-center justify-between px-8 py-5 transition-all duration-500
-        ${
+        className={`flex items-center justify-between px-8 py-5 transition-all duration-500 ${
           scrolled
             ? "bg-black/50 backdrop-blur-2xl border-b border-white/30 shadow-lg"
             : "bg-transparent"
         }`}
       >
         {/* LOGO */}
-        <div className="text-xl font-semibold text-white">
-          Coffee & Joy
-        </div>
+        <div className="text-xl font-semibold text-white">Coffee & Joy</div>
 
         {/* NAV LINKS */}
         <ul className="hidden md:flex gap-10 text-sm text-white font-medium">
+          {navbarData.links.map((link, index) => (
+            <li key={index} className="relative group">
+              <NavLink href={link.href}>{link.label}</NavLink>
 
-          {/* COFFEE */}
-          <li className="relative group">
-            <NavLink href="/coffee">COFFEE</NavLink>
-
-            <DropdownContainer width="w-[450px]"scrolled={scrolled}>
-              <div className="grid grid-cols-3 gap-6 p-6 text-sm">
-
-                <DropdownColumn title="Beans & Grounds">
-                  <DropdownItem label="Whole Bean" />
-                  <DropdownItem label="Ground Coffee" />
-                  <DropdownItem label="Single Origin" />
-                  <DropdownItem label="Blends" />
-                  <DropdownItem label="Flavoured" />
-                  <DropdownItem label="Decaf" />
-                </DropdownColumn>
-
-                <DropdownColumn title="Pods & Capsules">
-                  <DropdownItem label="Coffee Pods" />
-                  <DropdownItem label="Coffee Capsules" />
-                  <DropdownItem label="Espresso Pods" />
-                  <DropdownItem label="Compatible Pods" />
-                </DropdownColumn>
-
-                <DropdownColumn title="Instant">
-                  <DropdownItem label="Classic Instant" />
-                  <DropdownItem label="Speciality Instant" />
-                  <DropdownItem label="Flavoured Instant" />
-                </DropdownColumn>
-
-              </div>
-            </DropdownContainer>
-          </li>
-
-          {/* MACHINES */}
-          <li className="relative group">
-            <NavLink href="/machines">MACHINES</NavLink>
-
-            <DropdownContainer width="w-[520px]"scrolled={scrolled}>
-              <div className="grid grid-cols-4 gap-6 p-6 text-sm">
-
-                <DropdownColumn title="Espresso">
-                  <DropdownItem label="Semi Automatic" />
-                  <DropdownItem label="Fully Automatic" />
-                  <DropdownItem label="Commercial" />
-                  <DropdownItem label="Manual" />
-                </DropdownColumn>
-
-                <DropdownColumn title="Capsule">
-                  <DropdownItem label="Nespresso" />
-                  <DropdownItem label="Dolce Gusto" />
-                  <DropdownItem label="Multi Pod" />
-                </DropdownColumn>
-
-                <DropdownColumn title="Drip">
-                  <DropdownItem label="Basic Drip" />
-                  <DropdownItem label="Pour Over" />
-                  <DropdownItem label="With Grinder" />
-                </DropdownColumn>
-
-                <DropdownColumn title="Manual">
-                  <DropdownItem label="French Press" />
-                  <DropdownItem label="AeroPress" />
-                  <DropdownItem label="Moka Pot" />
-                </DropdownColumn>
-
-              </div>
-            </DropdownContainer>
-          </li>
-
-          {/* ACCESSORIES */}
-          <li className="relative group">
-            <NavLink href="/accessories">ACCESSORIES</NavLink>
-
-            <DropdownContainer width="w-56"scrolled={scrolled}>
-              <ul className="p-4 space-y-3 text-white/90 text-sm">
-                <li><Link href="#">Mugs</Link></li>
-                <li><Link href="#">Filters</Link></li>
-                <li><Link href="#">Brewers</Link></li>
-              </ul>
-            </DropdownContainer>
-          </li>
-
-          <li className="relative group">
-            <NavLink href="/about">ABOUT US</NavLink>
-          </li>
-
-          <li className="relative group">
-            <NavLink href="/subscription">SUBSCRIPTION</NavLink>
-          </li>
-
+              {link.dropdown && (
+                <DropdownContainer scrolled={scrolled}>
+                  <div
+                    className={`grid gap-10 p-10 text-base ${
+                      link.dropdown.length > 3 ? "grid-cols-4" : "grid-cols-3"
+                    }`}
+                  >
+                    {link.dropdown.map((col, i) => (
+                      <DropdownColumn key={i} title={col.title}>
+                        {col.items.map((item, j) => (
+                          <DropdownItem key={j} label={item} />
+                        ))}
+                      </DropdownColumn>
+                    ))}
+                  </div>
+                </DropdownContainer>
+              )}
+            </li>
+          ))}
         </ul>
 
         {/* ICONS */}
@@ -138,62 +68,56 @@ export default function Navbar() {
   );
 }
 
-/* ===== Reusable centered dropdown container ===== */
-function DropdownContainer({ children, width, scrolled }) {
+
+/* ===== Reusable dropdown container ===== */
+function DropdownContainer({ children, scrolled }) {
   return (
     <div
-      className={`
-        absolute top-full mt-6
-        left-1/2 -translate-x-1/2
-        ${width} max-w-[90vw]
-        rounded-xl
-        ${scrolled
-           
-            ? "bg-black/50 backdrop-blur-2xl border-b border-white/30 shadow-xl"
-         
-          : "bg-white/15 backdrop-blur-2xl border border-white/20 shadow-lg"}
-        opacity-0 invisible
-        group-hover:opacity-100 group-hover:visible
-        transition-all duration-300
-      `}
+      className={`fixed top-[70px] left-10 right-10 z-40 rounded-2xl flex justify-center items-start p-8 transition-all duration-300 ease-out opacity-0 invisible group-hover:opacity-100 group-hover:visible ${
+        scrolled
+          ? "bg-black/60 backdrop-blur-2xl border border-white/20 shadow-2xl"
+          : "bg-white/10 backdrop-blur-2xl border border-white/30 shadow-2xl"
+      }`}
     >
-      {children}
+      <div className="w-full h-[600px] max-h-[calc(100vh-200px)] overflow-auto">
+        {children}
+      </div>
     </div>
   );
 }
 
-/* ===== Helpers ===== */
+/* ===== Dropdown column ===== */
 function DropdownColumn({ title, children }) {
   return (
     <div>
-      <h4 className="font-semibold mb-3">{title}</h4>
-      <ul className="space-y-2 text-white/80">{children}</ul>
+      <h4 className="text-2xl font-semibold mb-6 tracking-wide text-white">
+        {title}
+      </h4>
+      <ul className="space-y-4 text-white/80 text-lg">{children}</ul>
     </div>
   );
 }
 
+/* ===== Dropdown item ===== */
 function DropdownItem({ label }) {
   return (
     <li>
-      <Link href="#" className="hover:text-white">
+      <Link
+        href="#"
+        className="block text-lg transition-all duration-200 hover:text-white hover:translate-x-2"
+      >
         {label}
       </Link>
     </li>
   );
 }
 
+/* ===== NavLink ===== */
 function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="
-        relative inline-block
-        after:absolute after:left-0 after:-bottom-1
-        after:h-0.5 after:w-0
-        after:bg-[#fffefd]
-        after:transition-all after:duration-300
-        group-hover:after:w-full
-      "
+      className="relative inline-block after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-[#fffefd] after:transition-all after:duration-300 group-hover:after:w-full"
     >
       {children}
     </Link>

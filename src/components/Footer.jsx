@@ -87,11 +87,14 @@ export default function Footer() {
 
       <div className="relative z-10 w-full">
        <Image
-        src="/images/footer1.png"
-        alt="Coffee beans"
-        className="object-cover h-40 w-100px"
-      />
-      {/* </div> */}
+  src="/images/footer1.png"
+  alt="Coffee beans"
+  width={100}
+  height={100}
+  className="object-cover"
+/>
+
+     
       {/* Bottom */}
       {/* <div className="relative z-10 bg-[#3b2418] text-white text-center py-4 text-sm"> */}
         © 2025 Coffee & Co. All rights reserved.
