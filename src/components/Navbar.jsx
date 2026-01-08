@@ -23,7 +23,7 @@ export default function Navbar() {
         className={`flex items-center justify-between px-8 py-5 transition-all duration-500
         ${
           scrolled
-            ? "bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg"
+            ? "bg-black/50 backdrop-blur-2xl border-b border-white/30 shadow-lg"
             : "bg-transparent"
         }`}
       >
@@ -39,7 +39,7 @@ export default function Navbar() {
           <li className="relative group">
             <NavLink href="/coffee">COFFEE</NavLink>
 
-            <DropdownContainer width="w-[450px]">
+            <DropdownContainer width="w-[450px]"scrolled={scrolled}>
               <div className="grid grid-cols-3 gap-6 p-6 text-sm">
 
                 <DropdownColumn title="Beans & Grounds">
@@ -72,7 +72,7 @@ export default function Navbar() {
           <li className="relative group">
             <NavLink href="/machines">MACHINES</NavLink>
 
-            <DropdownContainer width="w-[520px]">
+            <DropdownContainer width="w-[520px]"scrolled={scrolled}>
               <div className="grid grid-cols-4 gap-6 p-6 text-sm">
 
                 <DropdownColumn title="Espresso">
@@ -108,7 +108,7 @@ export default function Navbar() {
           <li className="relative group">
             <NavLink href="/accessories">ACCESSORIES</NavLink>
 
-            <DropdownContainer width="w-56">
+            <DropdownContainer width="w-56"scrolled={scrolled}>
               <ul className="p-4 space-y-3 text-white/90 text-sm">
                 <li><Link href="#">Mugs</Link></li>
                 <li><Link href="#">Filters</Link></li>
@@ -117,13 +117,13 @@ export default function Navbar() {
             </DropdownContainer>
           </li>
 
-        <li className="relative group">
-  <NavLink href="/about">ABOUT US</NavLink>
-</li>
+          <li className="relative group">
+            <NavLink href="/about">ABOUT US</NavLink>
+          </li>
 
-<li className="relative group">
-  <NavLink href="/subscription">SUBSCRIPTION</NavLink>
-</li>
+          <li className="relative group">
+            <NavLink href="/subscription">SUBSCRIPTION</NavLink>
+          </li>
 
         </ul>
 
@@ -139,16 +139,23 @@ export default function Navbar() {
 }
 
 /* ===== Reusable centered dropdown container ===== */
-function DropdownContainer({ children, width }) {
+function DropdownContainer({ children, width, scrolled }) {
   return (
     <div
-      className={`absolute top-full mt-6
-      left-1/2 -translate-x-1/2
-      ${width} max-w-[90vw]
-      rounded-xl bg-white/10 backdrop-blur-xl
-      border border-white/20 shadow-lg
-      opacity-0 invisible group-hover:opacity-100
-      group-hover:visible transition-all duration-300`}
+      className={`
+        absolute top-full mt-6
+        left-1/2 -translate-x-1/2
+        ${width} max-w-[90vw]
+        rounded-xl
+        ${scrolled
+           
+            ? "bg-black/50 backdrop-blur-2xl border-b border-white/30 shadow-xl"
+         
+          : "bg-white/15 backdrop-blur-2xl border border-white/20 shadow-lg"}
+        opacity-0 invisible
+        group-hover:opacity-100 group-hover:visible
+        transition-all duration-300
+      `}
     >
       {children}
     </div>

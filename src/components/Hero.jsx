@@ -50,7 +50,9 @@ export default function Hero() {
 
 
           <p className="mt-6 max-w-md text-gray-300">
-            Experience the aroma of premium coffee beans roasted to perfection.
+            We Believe a cup of coffee is one of the most important,
+           
+            pleasures in life.
           </p>
 
           <div className="mt-8 flex gap-4">
