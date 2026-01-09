@@ -20,16 +20,42 @@ export default function Hero() {
 
   return (
     <section className="relative w-full h-screen bg-black overflow-hidden">
+
+      {/* MOBILE BACKGROUND VIDEO */}
+<div className="absolute inset-0 z-0 md:hidden">
+  <video
+    src="/images/coffeevideo.mp4.mp4"
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="w-full h-full object-cover"
+  />
+  {/* Dark overlay for readability */}
+  <div className="absolute inset-0 bg-black/50" />
+</div>
+
       
       {/* GRID: 30% LEFT / 70% RIGHT */}
-      <div className="relative z-10 grid h-full grid-cols-1 md:grid-cols-[30%_70%]">
+   <div className="relative z-10 grid min-h-screen md:grid-cols-[30%_70%]">
+
 
         {/* LEFT – TEXT CONTENT */}
-        <div className="flex flex-col justify-center px-4 md:px-16 text-white pt-24 md:pt-28 font-serif z-20">
+
+       
+
+       <div className="
+  flex flex-col justify-center
+  px-4 py-40 sm:px-8 md:px-16 md:py-20
+  pt-32 md:pt-28
+  text-white font-serif z-20
+  text-center md:text-left
+">
+
         <p className="
   inline-flex items-center
-  uppercase tracking-widest text text-white/90
-  px-5 py-2.5 rounded-full w-55 h-10
+  uppercase tracking-widest text text-white/90 px-5
+  md:px-5 py-2.5 rounded-full md:w-55 md:h-10 w-55 h-10 ml-4
 
   bg-white/10 backdrop-blur-xl
   border border-white/20
@@ -38,28 +64,35 @@ export default function Hero() {
   Freshly Roasted
 </p>
 
-          <h1 className="text-5xl md:text-7xl font-cinzel font-bold mt-4 leading-tight">
-            Modern Coffee.
-          </h1>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-cinzel font-bold mt-4 leading-tight">
+  Modern Coffee.
+</h1>
 
-          <p className="mt-6 max-w-md text-gray-300">
-            We Believe a cup of coffee is one of the most important,
-           
-            pleasures in life.
-          </p>
+<p className="mt-6 max-w-md mx-auto md:mx-0 text-gray-300 text-sm sm:text-base">
+  We believe a cup of coffee is one of the most important pleasures in life.
+</p>
+   
+     {/* BUTTONS */}
 
-          <div className="mt-8 flex gap-4">
-            <button className="px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start w-full sm:w-auto">
+
+
+            <button className="w-full cursor-pointer sm:w-auto max-w-[220px] sm:max-w-none px-5 py-2.5 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition mx-auto sm:mx-0">
+
               Order Now
             </button>
-            <button className="px-6 py-3 border border-white/30 rounded-full hover:bg-white/10 transition">
+            <button className="w-full cursor-pointer sm:w-auto max-w-[220px] sm:max-w-none px-5 py-2.5 border border-white/30 rounded-full hover:bg-white/10 transition mx-auto sm:mx-0">
+
               Read More
             </button>
           </div>
         </div>
+       
 
         {/* RIGHT – MEDIA */}
-        <div className="relative w-full h-full overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden hidden md:block">
+
+
           {media.map((item, index) => (
             <div
               key={index}
@@ -70,7 +103,7 @@ export default function Hero() {
               {item.type === "image" ? (
                 <Image
                   src={item.src}
-                  width={item.width}   // original image resolution
+                  width={item.width}   
                   height={item.height}
                   alt="Coffee visual"
                   className="w-full h-full object-cover scale-105 transition-transform duration-700"
@@ -95,8 +128,7 @@ export default function Hero() {
 
       </div>
 
-      {/* Subtle blur behind everything */}
-      <div className="absolute inset-0 z-0 backdrop-blur-[2px] pointer-events-none" />
+      
     </section>
   );
 }
