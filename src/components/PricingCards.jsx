@@ -10,15 +10,15 @@ export default function PricingCards() {
   /* ---------------- DATA ---------------- */
   const coffeePlans = [
     {
-      title: "Autopay Subscription",
+      title: "1829 Espresso",
       price: "$12.00",
       description:
         "A flexible monthly coffee subscription charged automatically. Enjoy freshly roasted beans delivered on schedule, with full control to pause, skip, or cancel anytime.",
       gradient: "from-[#f3e2c7] to-[#e8c39e]",
     },
     {
-      title: "Prepaid Subscription",
-      price: "$65.00",
+      title: "Roaster's Spotlight",
+      price: "$15.00",
       description:
         "Pay upfront and enjoy a curated coffee journey. Ideal for gifting or long-term savings, with premium roasts delivered consistently for months ahead.",
       gradient: "from-[#b56a73] to-[#7b3b44]",
@@ -46,7 +46,6 @@ export default function PricingCards() {
 
   const plans = isPods ? podsPlans : coffeePlans;
 
-  /* ---------------- ANIMATIONS ---------------- */
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -73,7 +72,11 @@ export default function PricingCards() {
   };
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
+    <div className="w-full overflow-x-hidden">
+    {/* // <section className="relative min-h-screen w-full overflow-hidden"> */}
+    {/* <section className="relative w-full overflow-y-auto  md:overflow-x-hidden overflow-y-hidden 
+    min-h-[100svh] md:min-h-screen px-0 md:px-16 py-10 md:py-20 scroll-smooth-auto flex-col-reverse"> */}
+    <section className="relative  px-0 md:px-16 py-10 md:py-20">
       {/* Background */}
       <div className="absolute inset-0 bg-[#2a1f1b]/40 z-0" />
       <div className="absolute inset-0 bg-[#faf6ef]/75 z-0" />
@@ -93,7 +96,7 @@ export default function PricingCards() {
           {/* LEFT */}
           <div className="flex items-center">
             <div className="max-w-sm text-[#e5dfdd] font-bold">
-              <h1 className="text-5xl font-serif mb-5">
+              <h1 className="text-5xl font-serif leading-tight mb-5">
                 Subscribe <br /> today.
               </h1>
 
@@ -139,10 +142,7 @@ export default function PricingCards() {
               initial="hidden"
               animate="visible"
               exit="exit"
-            className="flex gap-10 -ml-24 min-w-3xl "
-
-
-
+            className="md:flex  md:gap-10  scroll-auto mx-5 "
             >
               {plans.map((plan, i) => (
                 <motion.div
@@ -151,30 +151,28 @@ export default function PricingCards() {
                   whileHover={{ y: -6, scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className={`
-                    rounded-3xl p-8 text-[#2a1f1b]
+                    rounded-3xl md:px-10 md:py-6 px-8 py-4 text-[#2a1f1b]
                     bg-linear-to-b ${plan.gradient}
-                    shadow-xl backdrop-blur-sm
-                    flex flex-col justify-between
-                    min-h-[520px]   
+                    shadow-black shadow-sm  backdrop-blur-sm mt-5
                   `}
                 >
                   <div>
-                    <p className="uppercase tracking-wide text-xs mb-2">
+                    <p className="uppercase tracking-wide md:text-xs mb-2">
                       Coffee and Joy
                     </p>
 
-                    <h2 className="text-2xl font-semibold mb-4">
+                    <h2 className="text-2xl  font-semibold mb-4">
                       {plan.title}
                     </h2>
 
-                    <p className="text-sm opacity-80 mb-6">
+                    <p className="text-sm md:w-75 w-62.5 opacity-80 mb-6">
                       {plan.description}
                     </p>
 
-                    <p className="text-3xl font-semibold mb-1">
+                    <p className="md:text-3xl font-semibold mb-1">
                       {plan.price}
                     </p>
-                    <p className="text-xs mb-6">Subscribe today</p>
+                    <p className="md:text-xs mb-6">Subscribe today</p>
 
                     <ul className="text-sm space-y-2 mb-6">
                       <li>✓ Expertly selected & roasted</li>
@@ -184,18 +182,20 @@ export default function PricingCards() {
                   </div>
 
                   <div>
-                    <button
-                      className={`w-full py-3 rounded-full text-sm font-semibold
-                        ${
-                          plan.highlight
-                            ? "bg-white text-[#7b3b44]"
-                            : "bg-[#2a1f1b] text-white"
-                        }`}
-                    >
-                      SUBSCRIBE NOW
+                  <button
+                    onClick={() => alert(`Subscribed to ${plan.name}`)}
+                    className={`md:w-full w-62.5 py-3 rounded-full text-sm flex justify-center font-bold cursor-pointer
+                     transition-all duration-300 ease-out hover:scale-105 active:scale-95
+                    ${
+                       plan.highlight
+                       ? "bg-white text-[#7b3b44] hover:bg-[#f5eaea]"
+                      : "bg-[#2a1f1b] text-white hover:bg-[#3a2b26]"
+                    }`}
+                   >
+                    SUBSCRIBE NOW
                     </button>
 
-                    <p className="mt-3 text-xs font-semibold opacity-70 hover:underline text-center cursor-pointer">
+                    <p className="mt-3 text-xs font-bold opacity-70 hover:underline text-center cursor-pointer">
                       SAVE 10%
                     </p>
                   </div>
@@ -207,5 +207,6 @@ export default function PricingCards() {
         </div>
       </div>
     </section>
+  </div>
   );
 }

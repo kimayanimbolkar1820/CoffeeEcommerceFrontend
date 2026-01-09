@@ -5,8 +5,13 @@ import Link from "next/link";
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlinePhone } from "react-icons/md";
-import navbarData from "./data/navbar.json"; 
+
+ import navbarData from "./data/navbar.json"; 
+
+ 
 import { RxHamburgerMenu } from "react-icons/rx";
+
+
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -169,13 +174,13 @@ useEffect(() => {
 function DropdownContainer({ children, scrolled }) {
   return (
     <div
-      className={`fixed top-[70px] left-10 right-10 z-40 rounded-2xl flex justify-center items-start p-8 transition-all duration-300 ease-out opacity-0 invisible group-hover:opacity-100 group-hover:visible ${
+      className={`fixed top-17.5 left-10 right-10 z-40 rounded-2xl flex justify-center items-start p-8 transition-all duration-300 ease-out opacity-0 invisible group-hover:opacity-100 group-hover:visible ${
         scrolled
           ? "bg-black/60 backdrop-blur-2xl border border-white/20 shadow-2xl"
           : "bg-white/10 backdrop-blur-2xl border border-white/30 shadow-2xl"
       }`}
     >
-      <div className="w-full h-[600px] max-h-[calc(100vh-200px)] overflow-auto">
+      <div className="w-full h-150 max-h-[calc(100vh-200px)] overflow-auto">
         {children}
       </div>
     </div>
