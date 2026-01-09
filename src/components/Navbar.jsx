@@ -28,10 +28,10 @@ export default function Navbar() {
         }`}
       >
         {/* LOGO */}
-        <div className="text-xl font-semibold text-white">Coffee & Joy</div>
+        <div className="text-xl font-semibold text-white font-cinzel">Coffee & Joy</div>
 
         {/* NAV LINKS */}
-        <ul className="hidden md:flex gap-10 text-sm text-white font-medium">
+        <ul className="hidden md:flex gap-10 text-sm text-white font-medium font-cinzel">
           {navbarData.links.map((link, index) => (
             <li key={index} className="relative group">
               <NavLink href={link.href}>{link.label}</NavLink>

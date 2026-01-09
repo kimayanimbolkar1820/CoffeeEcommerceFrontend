@@ -1,41 +1,58 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Image from "next/image";
 
 const drinks = [
   {
     id: 1,
-    name: "Caramel Latte",
-    desc: "Rich espresso blended with caramel syrup and steamed milk.",
-    price: "₹280",
+    name: "Espresso",
+    desc: "A bold and intense coffee shot with a rich aroma and a smooth crema on top.",
+    recipe:"Finely ground coffee: 18–20 g  Hot water (92–96°C): 30–40 ml Extraction time: 25–30 seconds",
     image: "/images/fd4.png",
   },
   {
     id: 2,
     name: "Mocha Delight",
     desc: "Chocolate infused espresso with creamy milk foam.",
-    price: "₹310",
+    recipe:"Espresso: 1 shot (30 ml) Steamed milk: 60 ml Milk foam: 60 ml",
     image: "/images/fd3-removebg-preview.png",
   },
   {
     id: 3,
     name: "Classic Cappuccino",
     desc: "Bold espresso topped with velvety milk foam.",
-    price: "₹250",
+    recipe:"fewf",
     image: "/images/feature7-removebg-preview.png",
   },
   {
     id: 4,
     name: "Vanilla cold Brew",
     desc: "Bold espresso topped with velvety milk foam.",
-    price: "₹250",
+    recipe:"dwdd",
     image: "/images/feature9-removebg-preview.png",
   },
 
 ];
+const loopedDrinks = [...drinks, ...drinks];
+
 
 const FeaturedDrinks = () => {
-  const [active, setActive] = useState(0);
+ const [active, setActive] = useState(0);
+const [startIndex, setStartIndex] = useState(0);
+
+const visibleCount = 3;
+const itemWidth = 88; // width + gap
+
+
+
+
+const visibleDrinks = drinks.slice(
+  startIndex,
+  startIndex + visibleCount
+);
+
+
+
 
   return (
     <section className="w-full min-h-screen bg-[#F7E7CE] overflow-hidden">
@@ -57,7 +74,7 @@ const FeaturedDrinks = () => {
 
         {/* HEADING — LEFT ALIGNED */}
         <div className="absolute inset-0 flex items-center z-20 pl-16 md:pl-32">
-          <h2 className="text-4xl md:text-6xl font-serif italic text-[#F7E7CE]">
+          <h2 className="text-4xl md:text-6xl font-cinzel font-semibold italic text-[#F7E7CE]">
             Featured Drinks
           </h2>
         </div>
@@ -109,7 +126,7 @@ const FeaturedDrinks = () => {
 
         {/* GLASS CARD */}
        <div
-  className="relative z-20 ml-6 mb-25 md:ml-24 w-[90%] md:w-[420px] p-6
+  className="relative z-20 ml-6 mb-25 md:ml-24 w-[90%] md:w-[420px] p-6 h-60
              rounded-2xl bg-white/25 backdrop-blur-xl
              border border-white/30 shadow-xl
              transition-all duration-500"
@@ -119,42 +136,61 @@ const FeaturedDrinks = () => {
             {drinks[active].name}
           </h3>
 
-          <p className="text-[#4a3a3a] text-sm mb-4">
+          <p className="text-lg font-bold text-[#3b2f2f]">
             {drinks[active].desc}
           </p>
+          
 
-          <span className="text-lg font-bold text-[#3b2f2f]">
-            {drinks[active].price}
+          <span className="text-[#4a3a3a] text-sm mb-4">
+            {drinks[active].recipe}
           </span>
         </div>
 
-        {/* MINI MODELS — LINEAR SCROLL */}
+      {/* MINI MODELS — SMOOTH STEP SLIDER + LOOP */}
 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 w-[320px] overflow-hidden">
-
   <div
-    className="flex gap-6 transition-transform duration-500 ease-out"
+    className="flex gap-6 transition-transform duration-500 ease-in-out"
     style={{
-      transform: `translateX(-${active * 88}px)`
+      transform: `translateX(-${startIndex * itemWidth}px)`,
     }}
   >
-    {drinks.map((drink, index) => (
-      <button
-        key={drink.id}
-        onClick={() => setActive(index)}
-        className={`relative w-16 h-24 flex-shrink-0 transition-all duration-300
-          ${active === index ? "scale-110 opacity-100" : "opacity-60 hover:opacity-100"}`}
-      >
-        <Image
-          src={drink.image}
-          alt={drink.name}
-          fill
-          className="object-contain drop-shadow-lg"
-        />
-      </button>
-    ))}
-  </div>
+    {[...drinks, ...drinks].map((drink, index) => {
+      const realIndex = index % drinks.length;
 
+      return (
+        <div
+          key={index}
+          onMouseEnter={() => {
+            setActive(realIndex);
+
+            // Move slider forward on last visible
+            if (realIndex === drinks.length - 1) {
+              setTimeout(() => setStartIndex(0), 300);
+            } else if (index === startIndex + visibleCount - 1) {
+              setStartIndex((prev) => prev + 1);
+            }
+          }}
+          className={`relative w-16 h-24 flex-shrink-0 cursor-pointer transition-all duration-300
+            ${
+              active === realIndex
+                ? "scale-110 opacity-100"
+                : "opacity-60 hover:opacity-100"
+            }`}
+        >
+          <Image
+            src={drink.image}
+            alt={drink.name}
+            fill
+            className="object-contain drop-shadow-lg"
+          />
+        </div>
+      );
+    })}
+  </div>
 </div>
+
+
+
 
 
 </div>
