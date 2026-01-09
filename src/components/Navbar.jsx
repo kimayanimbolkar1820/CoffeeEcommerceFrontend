@@ -104,7 +104,7 @@ useEffect(() => {
       </div>
       {/* MOBILE SLIDE MENU */}
 <div
-  className={`fixed inset-y-0 right-0 z-[60] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 ease-in-out md:hidden ${
+  className={`fixed inset-y-0 right-0 z-60 w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 ease-in-out md:hidden ${
     menuOpen ? "translate-x-0" : "translate-x-full"
   }`}
 >
