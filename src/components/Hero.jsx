@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const media = [
   { type: "image", src: "/images/bg4.jpg", width: 1920, height: 1080 },
-  { type: "video", src: "/images/coffeevideo.mp4.mp4" },
+  { type: "video", src: "/images/hero2.mp4" },
 ];
 
 export default function Hero() {
@@ -46,7 +46,7 @@ export default function Hero() {
 
        <div className="
   flex flex-col justify-center
-  px-4 py-40 sm:px-8 md:px-16 md:py-20
+  px-20 py-50 sm:px-8 md:px-16 md:py-20
   pt-32 md:pt-28
   text-white font-serif z-20
   text-center md:text-left
