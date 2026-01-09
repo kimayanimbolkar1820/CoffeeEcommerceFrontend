@@ -10,7 +10,8 @@ const Categories = () => {
   ];
 
   return (
-    <section className="w-full bg-[#140d08]">
+    <section className="w-full bg-black
+    ">
       {/* Background image wrapper */}
       <div className="relative w-full">
         <Image
@@ -36,7 +37,7 @@ const Categories = () => {
           <div className="mt-6 grid grid-cols-3 gap-4 sm:gap-6 md:gap-10">
             {categories.map((item, index) => (
               <span key={index} className="flex flex-col items-center">
-                <div className="relative w-[90px] sm:w-[110px] md:w-[150px] aspect-square rounded-2xl overflow-hidden shadow-black shadow-lg  ">
+                <div className="relative w-[90px] sm:w-[110px] md:w-[150px] aspect-square rounded-2xl overflow-hidden shadow-gray-800 shadow-lg  ">
                   <Image
                     src={item.image}
                     alt={item.name}
