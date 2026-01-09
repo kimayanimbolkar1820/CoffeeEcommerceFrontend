@@ -38,16 +38,9 @@ export default function Hero() {
   Freshly Roasted
 </p>
 
-
-
-
-
-
-         <h1 className="text-5xl md:text-7xl font-bold mt-4 leading-tight  whitespace-nowrap">
-  Modern{" "}
-  <span >Coffee.</span>
-</h1>
-
+          <h1 className="text-5xl md:text-7xl font-cinzel font-bold mt-4 leading-tight">
+            Modern Coffee.
+          </h1>
 
           <p className="mt-6 max-w-md text-gray-300">
             We Believe a cup of coffee is one of the most important,
