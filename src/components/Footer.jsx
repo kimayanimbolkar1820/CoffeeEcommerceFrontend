@@ -7,7 +7,7 @@ import { GrInstagram } from "react-icons/gr";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#373030f9] text-[#e8d5b7] overflow-hidden">
+    <footer className="relative bg-[#373030f9] text-[#e8d5b7] overflow-hidden ">
       
       {/* Background image */}
       <div className="absolute inset-0 pointer-events-none">
