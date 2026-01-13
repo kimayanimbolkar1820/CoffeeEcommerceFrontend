@@ -17,7 +17,7 @@ export default function Footer() {
           fill
           className="object-cover opacity-[0.18] brightness-[0.65] contrast-[0.9]"
           sizes="100vw"
-          quality={80}
+          quality={75}
         />
       </div>
 
