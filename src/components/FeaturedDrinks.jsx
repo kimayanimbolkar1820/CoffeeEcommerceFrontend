@@ -51,9 +51,6 @@ const visibleDrinks = drinks.slice(
   startIndex + visibleCount
 );
 
-
-
-
   return (
     <section className="w-full min-h-screen bg-[#F7E7CE] overflow-hidden">
 
@@ -80,16 +77,16 @@ const visibleDrinks = drinks.slice(
         </div>
 
         {/* MAIN FLOATING MODEL */}
-<div className="absolute right-20 bottom-[-200px] z-40 transition-all duration-500">
+<div className="absolute right-20 -bottom-50 z-40 transition-all duration-500">
 
   {/* BLACK CIRCLE BACKDROP */}
   <div className="absolute inset-0 flex items-center justify-center">
-    <div className="w-[420px] h-[420px] md:w-[480px] md:h-[480px]
+    <div className="w-105 h-105 md:w-120 md:h-120
                     rounded-full bg-black/40 blur-2xl" />
   </div>
 
   {/* COFFEE IMAGE */}
-  <div className="relative w-44 md:w-140 h-72 md:h-[500px]">
+  <div className="relative w-44 md:w-140 h-72 md:h-125">
     <Image
       src={drinks[active].image}
       alt="Coffee Model"
@@ -103,7 +100,7 @@ const visibleDrinks = drinks.slice(
 
         {/* PAPER CUT */}
         <svg
-          className="absolute bottom-0 left-0 w-full h-[120px] z-30"
+          className="absolute bottom-0 left-0 w-full h-30 z-30"
           viewBox="0 0 1440 120"
           preserveAspectRatio="none"
         >
@@ -126,7 +123,7 @@ const visibleDrinks = drinks.slice(
 
         {/* GLASS CARD */}
        <div
-  className="relative z-20 ml-6 mb-25 md:ml-24 w-[90%] md:w-[420px] p-6 h-60
+  className="relative z-20 ml-6 mb-25 md:ml-24 w-[90%] md:w-105 p-6 h-60
              rounded-2xl bg-white/25 backdrop-blur-xl
              border border-white/30 shadow-xl
              transition-all duration-500"
@@ -170,7 +167,7 @@ const visibleDrinks = drinks.slice(
               setStartIndex((prev) => prev + 1);
             }
           }}
-          className={`relative w-16 h-24 flex-shrink-0 cursor-pointer transition-all duration-300
+          className={`relative w-16 h-24 shrink-0 cursor-pointer transition-all duration-300
             ${
               active === realIndex
                 ? "scale-110 opacity-100"

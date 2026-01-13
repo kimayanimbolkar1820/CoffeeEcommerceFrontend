@@ -6,7 +6,7 @@ import React from 'react'
 import Categories from '@/components/Categories'
 import FeaturedDrinks from '@/components/FeaturedDrinks'
 import Footer from '@/components/Footer'
-import ReviewCard from "@/components/ReviewCard";
+// import ReviewCard from "@/components/ReviewCard";
 
 
 const Page = () => {
@@ -16,7 +16,7 @@ const Page = () => {
      <Categories/>
      <FeaturedDrinks/>
      <PricingCards/>
-     <ReviewCard />
+     {/* <ReviewCard /> */}
      <Footer /> 
     </div>
   )
