@@ -1,23 +1,20 @@
 import Hero from '@/components/Hero'
 import PricingCards from '@/components/PricingCards'
-
 import React from 'react'
-
-import Categories from '@/components/Categories'
-import FeaturedDrinks from '@/components/FeaturedDrinks'
-import Footer from '@/components/Footer'
+import TopCategories from '@/components/TopCategories'
 import ReviewCard from "@/components/ReviewCard";
+import BestSellers from '@/components/BestSellers'
 
 
 const Page = () => {
   return (
     <div> 
      <Hero />
-     <Categories/>
-     <FeaturedDrinks/>
+     <TopCategories/>
+      {/* <BestSellers/> */}
+     
      <PricingCards/>
-     <ReviewCard />
-     <Footer /> 
+     <ReviewCard /> 
     </div>
   )
 }
