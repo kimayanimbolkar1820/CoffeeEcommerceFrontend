@@ -5,7 +5,10 @@ import React from 'react'
 import TopCategories from '@/components/TopCategories'
 import BestSellers from '@/components/BestSellers'
 import PricingCards from '@/components/PricingCards'
-import ReviewCard from '@/components/ReviewCards'
+import Blogs from '@/components/Blogs'
+import AboutUs from '@/components/AboutUs'
+import ReviewCard from '@/components/ReviewCard'
+
 
 
 
@@ -17,16 +20,12 @@ const Page = () => {
      <TopCategories/>
 
        <BestSellers/>
-       {/* <AboutUs/> */}
-     {/* <BlogPage/> */}
-
-     
+       <AboutUs/>
     
-
-     
-     <PricingCards/>
+   
+     <Blogs/>
      <ReviewCard /> 
-     {/* <Blogs/> */}
+      <PricingCards/>
 
     </div>
   )

@@ -33,7 +33,7 @@ import React from 'react'
       {/* Decorative beans – top left */}
       <div className="pointer-events-none absolute inset-0 z-[10]">
         <img
-          src="/images/beans3.png"
+          src="/images/beans3.webp"
           alt=""
           className="absolute -top-4 -left-24 w-[30%] max-w-none rotate-180"
         />
@@ -42,7 +42,7 @@ import React from 'react'
       {/* Decorative beans – bottom right */}
       <div className="pointer-events-none absolute inset-0 z-[10]">
         <img
-          src="/images/beans3.png"
+          src="/images/beans3.webp"
           alt=""
           className="absolute -bottom-6 -right-24 w-[30%] max-w-none"
         />
