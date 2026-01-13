@@ -7,7 +7,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlinePhone } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 
-import navbarData from "../data/navbar.json";
+import navbarData from "@/data/navbar.json";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -161,16 +161,19 @@ export default function Navbar() {
 }
 
 /* ================= DROPDOWN ================= */
-function DropdownContainer({ children, scrolled }) {
+function DropdownContainer({ children, scrollState }) {
+  const isScrolled = scrollState !== "top";
+
   return (
     <div
-      className={`fixed top-[88px] left-12 right-12 z-40 
-      rounded-2xl flex justify-center items-start 
-      p-8 transition-all duration-300 ease-out 
-      opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-      ${scrolled
-        ? "bg-black/70 backdrop-blur-xl border border-white/20 shadow-2xl"
-        : "bg-white/10 backdrop-blur-xl border border-white/30 shadow-2xl"
+      className={`fixed top-[88px] left-12 right-12 z-40
+      rounded-2xl flex justify-center items-start
+      p-8 transition-all duration-300 ease-out
+      opacity-0 invisible group-hover:opacity-100 group-hover:visible
+      ${
+        isScrolled
+          ? "bg-black/70 backdrop-blur-2xl border border-white/20 shadow-2xl"
+          : "bg-black/20 backdrop-blur-lg border border-white/20"
       }`}
     >
       <div className="w-full max-h-[calc(100vh-220px)] overflow-auto">

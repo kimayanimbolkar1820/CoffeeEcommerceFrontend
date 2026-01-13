@@ -27,7 +27,7 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-[#373030f9] text-[#e8d5b7] overflow-hidden">
-      {/* Background */}
+      {/* Background image */}
       <div className="absolute inset-0 pointer-events-none">
         <Image
           src="/images/footerbean.webp"
@@ -42,7 +42,6 @@ export default function Footer() {
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-16">
-        {/* TOP GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           {/* LEFT */}
           <div>
@@ -56,32 +55,15 @@ export default function Footer() {
               sustainability, and the art of coffee.
             </p>
 
-            {/* SOCIAL */}
-            {/* <div className="mt-6" */}
             <div className="mt-6 mb-3">
               <h4 className="text-sm tracking-widest text-amber-200 mb-3 pb-3">
                 FOLLOW US
               </h4>
               <div className="flex gap-4">
-                <SocialIcon
-                  icon={<FaFacebookF />}
-                  label="Facebook"
-                  className="border-2 border-brown-600 p-3 rounded-full text-brown-600 font-bold text-xl"/>
-                
-                <SocialIcon
-                  icon={<FaInstagram />}
-                  label="Instagram"
-                  className="border-2 border-brown-600 p-3 rounded-full text-brown-600 font-bold text-xl"/>
-  
-                <SocialIcon
-                  icon={<FaTwitter />}
-                  label="Twitter"
-                  className="border-2 border-brown-600 p-3 rounded-full text-brown-600 font-bold text-xl"/>
-
-                <SocialIcon
-                 icon={<FaYoutube />}
-                 label="YouTube"
-                 className="border-2 border-brown-600 p-3 rounded-full text-brown-600 font-bold text-xl"/>
+                <SocialIcon icon={<FaFacebookF />} label="Facebook" />
+                <SocialIcon icon={<FaInstagram />} label="Instagram" />
+                <SocialIcon icon={<FaTwitter />} label="Twitter" />
+                <SocialIcon icon={<FaYoutube />} label="YouTube" />
               </div>
             </div>
           </div>
@@ -118,7 +100,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* NEWSLETTER – CENTER BOTTOM */}
+        {/* NEWSLETTER */}
         <div className="mt-20 flex justify-center font-inter">
           <div className="w-full max-w-lg text-center">
             <h3 className="text-xl font-semibold text-amber-200 mb-4">
@@ -131,19 +113,18 @@ export default function Footer() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-5 py-3 rounded-full bg-transparent border border-[#e8d5b7]/50 text-sm focus:outline-none focus:border-amber-300"
-                />
+            />
 
             <button
               onClick={SubmitEvent}
-              className=" mt-5 w-full rounded-full underline-offset-2 bg-[#ffe6d8] py-3 font-bold text-[#4b2e1f] font-medium cursor-pointer
-               transition-all duration-300 ease-out hover:bg-[#f7d6c4] hover:scale-[1.03] hover:shadow-lg active:scale-95 active:shadow-md"
+              className="mt-5 w-full rounded-full bg-[#ffe6d8] py-3 font-bold text-[#4b2e1f]
+              transition-all duration-300 ease-out hover:bg-[#f7d6c4] hover:scale-[1.03] hover:shadow-lg active:scale-95"
             >
               {loading ? "Submitting..." : "Subscribe"}
             </button>
           </div>
         </div>
 
-        {/* COPYRIGHT */}
         <div className="mt-16 pt-6 border-t border-amber-900/30 text-sm text-[#d4b38a]/80 text-center">
           © {new Date().getFullYear()} Coffee & Joy • Handcrafted with passion in India
         </div>
