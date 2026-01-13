@@ -16,7 +16,7 @@ const Page = () => {
      
      <PricingCards/>
      <ReviewCard /> 
-     {/* <Blogs/> */}
+     <Blogs/>
     </div>
   )
 }
