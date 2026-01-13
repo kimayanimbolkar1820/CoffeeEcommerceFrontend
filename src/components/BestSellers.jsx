@@ -1,9 +1,9 @@
-import React from 'react'
-import Image from "next/image";
+// import React from 'react'
+// import Image from "next/image";
 
-/* ---------------- DATA ---------------- */
-// const data = {
-//   Coffee: [
+// /* ---------------- DATA ---------------- */
+//  const data = {
+//    Coffee: [
 //     { name: "Audentes", price: "₹500", img: "/images/coffee1.png" },
 //     { name: "Suavitatis", price: "₹550", img: "/images/coffee2.png" },
 //     { name: "Videntur", price: "₹600", img: "/images/coffee3.png" },
@@ -22,7 +22,7 @@ import Image from "next/image";
 //     { name: "Milk Pitcher", price: "₹1,200", img: "/images/accessory4.png" },
 //   ],
 // };
-// };
+
 // const BestSellers = () => {
 //   return (
 //    <section
@@ -76,14 +76,14 @@ import Image from "next/image";
 //         </div>
 
 //         {/* Rows */}
-//         <div className="space-y-16">
-//           <CategoryRow title="COFFEE" items={data.Coffee} />
-//           <CategoryRow title="MACHINES" items={data.Machines} />
-//           <CategoryRow title="ACCESSORIES" items={data.Accessories} />
+//          <div className="space-y-16">
+//            <CategoryRow title="COFFEE" items={data.Coffee} />
+//          <CategoryRow title="MACHINES" items={data.Machines} />
+//          <CategoryRow title="ACCESSORIES" items={data.Accessories} />
 //         </div>
 
-//       </div>
-//     </section>
+//        </div>
+//      </section>
 //   );
 // };
 
@@ -99,13 +99,12 @@ import Image from "next/image";
 
 //         <span className="text-m font-cinzel text-black cursor-pointer hover:underline">
 //           View all →
-//         </span>
-//       </div>
+//          </span>
+//        </div>
+//      <div className="w-16 h-[2px] bg-black mb-10" />
 
-//       <div className="w-16 h-[2px] bg-black mb-10" />
-
-//       {/* Cards */}
-//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+//      {/* Cards */}
+//      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 //         {items.map((item, i) => (
 //           <div
 //             key={i}
@@ -122,24 +121,24 @@ import Image from "next/image";
 //             </div>
 
 //             {/* Info */}
-//             <h4 className="text-lg font-playfair text-black group-hover:text-[#F3E0C8]">
+//            <h4 className="text-lg font-playfair text-black group-hover:text-[#F3E0C8]">
 //               {item.name}
-//             </h4>
+//              </h4>
 
-//             <p className="text-sm text-gray-600 group-hover:text-gray-300 mt-1">
-//               Best seller
-//             </p>
+//            <p className="text-sm text-gray-600 group-hover:text-gray-300 mt-1">
+//              Best seller
+//            </p>
 
 //             <div className="mt-6 flex items-center justify-between">
-//               <span className="font-medium text-black group-hover:text-[#F3E0C8]">
-//                 {item.price}
+//              <span className="font-medium text-black group-hover:text-[#F3E0C8]">
+//                  {item.price}
 //               </span>
 
 //               <button className="px-4 py-2 rounded-full bg-black text-[#F3E0C8] group-hover:bg-[#F3E0C8] group-hover:text-black transition">
 //                 Add
 //               </button>
 //             </div>
-//           </div>
+//          </div>
 //         ))}
 //       </div>
 //     </div>

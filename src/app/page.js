@@ -5,8 +5,6 @@ import React from 'react'
 import TopCategories from '@/components/TopCategories'
 
 import Footer from '@/components/Footer'
-import ReviewCard from "@/components/ReviewCard";
-import BestSellers from '@/components/BestSellers'
 
 
 const Page = () => {
@@ -14,10 +12,13 @@ const Page = () => {
     <div> 
      <Hero />
      <TopCategories/>
-     {/* <BestSellers/> */}
+       {/* <BestSellers/> */}
+       {/* <AboutUs/> */}
+     {/* <BlogPage/> */}
+
      
      <PricingCards/>
-     <ReviewCard />
+  
      <Footer /> 
     </div>
   )

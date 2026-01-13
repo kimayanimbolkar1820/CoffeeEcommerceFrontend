@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import clsx from "clsx";
 
 const media = [
-  { type: "image", src: "/images/bg4.jpg", width: 1920, height: 1080 },
+  { type: "image", src: "/images/bg4.webp", width: 1920, height: 1080 },
   { type: "video", src: "/images/hero2.mp4" },
 ];
 
@@ -44,13 +45,12 @@ export default function Hero() {
 
        
 
-       <div className="
+       <div className='\r\n 
   flex flex-col justify-center
   px-20 py-50 sm:px-8 md:px-16 md:py-20
   pt-32 md:pt-28
   text-white font-serif z-20
-  text-center md:text-left
-">
+  text-center md:text-left'>
 
         <p className="
   inline-flex items-center
@@ -96,9 +96,10 @@ export default function Hero() {
           {media.map((item, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === active ? "opacity-100 z-10" : "opacity-0 z-0"
-              }`}
+              className={clsx(
+    "absolute inset-0 transition-opacity duration-1000 ease-in-out",
+    index === active ? "opacity-100 z-10" : "opacity-0 z-0"
+  )}
             >
               {item.type === "image" ? (
                 <Image

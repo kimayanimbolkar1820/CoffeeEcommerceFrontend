@@ -1,0 +1,46 @@
+{
+  "background": {
+    "gradient": "linear-gradient(135deg,#050505_0%,#0b0b0b_42%,#24140d_68%,#2e1a12_100%)",
+    "glow": "#f5e6cf/5"
+  },
+  "heading": {
+    "title": "Top Categories",
+    "subtitle": "Discover our curated collection"
+  },
+  "mainCards": [
+    {
+      "title": "Premium Coffee",
+      "subtitle": "Single origin & artisan blends",
+      "image": "/images/review2.webp",
+      "button": "Shop Now",
+      "overlay": "bg-black/32",
+      "big": true
+    },
+    {
+      "title": "Machines",
+      "subtitle": "Professional equipment",
+      "image": "/images/machine.webp",
+      "button": "Explore →",
+      "overlay": "bg-black/35",
+      "big": false
+    },
+    {
+      "title": "Accessories",
+      "subtitle": "Elevate your ritual",
+      "image": "/images/Accessories.webp",
+      "button": "Explore →",
+      "overlay": "bg-black/35",
+      "big": false
+    }
+  ],
+  "bottomGrid": [
+    { "title": "Brewing Tools", "image": "/images/review3.webp" },
+    { "title": "Grinders", "image": "/images/review5.webp" },
+    { "title": "Pods", "image": "/images/review6.webp" },
+    { "title": "Subscriptions", "image": "/images/cartoon-BG.webp" }
+  ],
+  "beans": {
+    "topLeft": "/images/beans3.webp",
+    "bottomRight": "/images/beans3.webp"
+  }
+}

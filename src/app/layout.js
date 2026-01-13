@@ -1,6 +1,8 @@
-import Navbar from "@/components/Navbar";
+
 import "./globals.css";
 import { Cinzel_Decorative, Playfair_Display, Inter } from "next/font/google";
+import NavbarWrapper from "@/components/NavbarWrapper";
+
 
 const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
@@ -30,7 +32,7 @@ export default function RootLayout({ children }) {
       className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body className="bg-black text-white font-sans">
-       <Navbar/>
+       <NavbarWrapper/>
         {children}
       </body>
     </html>
