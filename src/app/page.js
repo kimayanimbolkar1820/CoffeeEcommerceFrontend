@@ -1,10 +1,13 @@
 import Hero from '@/components/Hero'
-import PricingCards from '@/components/PricingCards'
+
 
 import React from 'react'
 import TopCategories from '@/components/TopCategories'
+import BestSellers from '@/components/BestSellers'
+import PricingCards from '@/components/PricingCards'
+import ReviewCard from '@/components/ReviewCards'
 
-import Footer from '@/components/Footer'
+
 
 
 const Page = () => {
@@ -12,14 +15,19 @@ const Page = () => {
     <div> 
      <Hero />
      <TopCategories/>
-       {/* <BestSellers/> */}
+
+       <BestSellers/>
        {/* <AboutUs/> */}
      {/* <BlogPage/> */}
 
      
+    
+
+     
      <PricingCards/>
-  
-     <Footer /> 
+     <ReviewCard /> 
+     {/* <Blogs/> */}
+
     </div>
   )
 }

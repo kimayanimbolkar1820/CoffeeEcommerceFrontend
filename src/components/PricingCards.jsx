@@ -48,11 +48,11 @@ export default function PricingCards() {
   const plans = isPods ? podsPlans : coffeePlans;
 
   return (
+      
     <section className="relative w-full px-0 md:px-16 py-10 md:py-20 min-h-full ">
-  
 
-      Background
-       <div className="absolute inset-0 bg-[#2a1f1b]/40 z-0" />
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#2a1f1b]/40 z-0" />
       <div className="absolute inset-0 bg-[#faf6ef]/40 z-0" />
 
       <Image
@@ -60,8 +60,9 @@ export default function PricingCards() {
         alt="Coffee Background"
         fill
         priority
-        className="absolute inset-0 object-cover blur-xl  z-0"
-      /> 
+        className="absolute inset-0 object-cover blur-xl z-0"
+      />
+
        {/* BEANS — TOP LEFT */}
 
         <div className="pointer-events-none absolute inset-0 z-[5]">
