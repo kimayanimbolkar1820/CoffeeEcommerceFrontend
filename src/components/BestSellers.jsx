@@ -1,5 +1,6 @@
 import React from 'react'
- import Image from "next/image";
+import Image from "next/image";
+import CategoryRow from './CategoryRow';
 
 
 
@@ -71,64 +72,7 @@ import React from 'react'
     </section>
   );
 };
+<CategoryRow/>
 
-/* ================= CATEGORY ROW ================= */
-function CategoryRow({ title, items }) {
-  return (
-    <div>
-      {/* Row header */}
-      <div className="flex items-end justify-between mb-3">
-        <h3 className="text-2xl font-playfair text-black font-semibold">
-          {title}
-        </h3>
-
-        <span className="text-m font-cinzel text-black cursor-pointer hover:underline">
-          View all →
-        </span>
-      </div>
-
-      <div className="w-16 h-[2px] bg-black mb-10" />
-
-      {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {items.map((item, i) => (
-          <div
-            key={i}
-            className="group bg-white rounded-2xl p-6 transition-all duration-500 hover:bg-black"
-          >
-            {/* Image */}
-            <div className="relative w-full h-44 mb-6">
-              <Image
-                src={item.img}
-                alt={item.name}
-                fill
-                className="object-contain transition-transform duration-500 group-hover:-translate-y-2"
-              />
-            </div>
-
-            {/* Info */}
-            <h4 className="text-lg font-playfair text-black group-hover:text-[#F3E0C8]">
-              {item.name}
-            </h4>
-
-            <p className="text-sm text-gray-600 group-hover:text-gray-300 mt-1">
-              Best seller
-            </p>
-
-            <div className="mt-6 flex items-center justify-between">
-              <span className="font-medium text-black group-hover:text-[#F3E0C8]">
-                {item.price}
-              </span>
-
-              <button className="px-4 py-2 rounded-full bg-black text-[#F3E0C8] group-hover:bg-[#F3E0C8] group-hover:text-black transition">
-                Add
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default BestSellers;
