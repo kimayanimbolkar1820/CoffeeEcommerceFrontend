@@ -3,6 +3,7 @@ import "./globals.css";
 import { Cinzel_Decorative, Playfair_Display, Inter } from "next/font/google";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
+import ReduxProvider from "@/redux/ReduxProvider";
 
 
 const cinzel = Cinzel_Decorative({
@@ -33,9 +34,11 @@ export default function RootLayout({ children }) {
       className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body className="bg-black text-white font-sans">
-       <NavbarWrapper/>
+        <ReduxProvider>
+        <NavbarWrapper/>
         {children}
         <Footer/>
+       </ReduxProvider>
       </body>
     </html>
   );
