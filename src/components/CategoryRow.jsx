@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const CategoryRow = ({ title, items }) => {
   return (
@@ -10,10 +11,11 @@ const CategoryRow = ({ title, items }) => {
         <h3 className="md:text-2xl text-[20px] font-playfair text-black font-semibold">
           {title}
         </h3>
-
+        <Link href='/Products'>
         <span className="md:text-m text-[14px] font-cinzel text-black cursor-pointer hover:underline">
           View all →
         </span>
+        </Link>
       </div>
 
       <div className="w-16 h-[2px] bg-black mb-6 sm:mb-10" />

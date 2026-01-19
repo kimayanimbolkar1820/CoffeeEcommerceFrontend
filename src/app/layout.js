@@ -5,6 +5,8 @@ import { Cinzel_Decorative, Playfair_Display, Inter } from "next/font/google";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
 import { usePathname } from "next/navigation";
+import ReduxProvider from "@/redux/ReduxProvider";
+
 
 const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
@@ -46,6 +48,11 @@ export default function RootLayout({ children }) {
         {!hideLayout && <NavbarWrapper />}
         {children}
         {!hideLayout && <Footer />}
+        <ReduxProvider>
+        <NavbarWrapper/>
+        {children}
+        <Footer/>
+       </ReduxProvider>
       </body>
     </html>
   );
