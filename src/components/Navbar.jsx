@@ -94,7 +94,7 @@ export default function Navbar() {
           )}
         >
           <FiSearch className="hidden md:block" />
-          <AiOutlineUser className="hidden md:block" />
+          <Link href='/login'><AiOutlineUser className="hidden md:block" /> </Link>
           <MdOutlinePhone className="hidden md:block" />
 
           {/* MOBILE MENU */}

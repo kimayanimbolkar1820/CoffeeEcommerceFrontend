@@ -1,9 +1,10 @@
+"use client";
 
 import "./globals.css";
 import { Cinzel_Decorative, Playfair_Display, Inter } from "next/font/google";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
-
+import { usePathname } from "next/navigation";
 
 const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
@@ -27,15 +28,24 @@ const inter = Inter({
 });
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+
+  // pages where navbar & footer should be hidden
+  const hideLayout =
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/otp";
+
   return (
     <html
       lang="en"
       className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body className="bg-black text-white font-sans">
-       <NavbarWrapper/>
+        {!hideLayout && <NavbarWrapper />}
         {children}
-        <Footer/>
+        {!hideLayout && <Footer />}
       </body>
     </html>
   );
