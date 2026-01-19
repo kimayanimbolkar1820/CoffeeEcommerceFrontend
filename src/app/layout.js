@@ -45,13 +45,12 @@ export default function RootLayout({ children }) {
       className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body className="bg-black text-white font-sans">
-        {!hideLayout && <NavbarWrapper />}
-        {children}
-        {!hideLayout && <Footer />}
         <ReduxProvider>
+        {!hideLayout && <NavbarWrapper />}
         <NavbarWrapper/>
         {children}
         <Footer/>
+        {!hideLayout && <Footer />}
        </ReduxProvider>
       </body>
     </html>
