@@ -154,7 +154,7 @@ export default function PricingCards() {
               <motion.div
                 key={i}
                 whileHover={{ y: -6 }}
-                className="\r\n
+                className="
                   w-[280px] sm:w-[320px] lg:w-[380px]
                   rounded-3xl
                   p-8
@@ -164,8 +164,7 @@ export default function PricingCards() {
                   text-white
                   shadow-xl
                   md:mr-7
-                  ml-15
-                  h-full
+                  ml-15 h-full
                   
                 "
               >
@@ -192,12 +191,7 @@ export default function PricingCards() {
                 </ul>
 
                 <button
-                  className="
-                    w-full py-3 rounded-full
-                    bg-white text-[#2a1f1b]
-                    font-bold text-sm
-                    hover:scale-105 transition
-                  "
+                  className=" w-full py-3 rounded-full bg-white text-[#2a1f1b] font-bold text-sm hover:scale-105 transition"
                 >
                   SUBSCRIBE NOW
                 </button>

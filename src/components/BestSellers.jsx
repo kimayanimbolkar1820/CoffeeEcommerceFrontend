@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from "next/image";
-import CategoryRow from './CategoryRow';
+import CategoryRow from './BestSeller/CategoryRow';
 
 
 
@@ -72,7 +72,7 @@ import CategoryRow from './CategoryRow';
     </section>
   );
 };
-<CategoryRow/>
+<CategoryRow />
 
 
 export default BestSellers;

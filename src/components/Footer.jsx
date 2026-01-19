@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -15,6 +15,12 @@ export default function Footer() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [openSection, setOpenSection] = useState(null);
+  const [year, setYear] = useState(""); // For SSR-safe date
+
+  // SSR-safe year
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   const FOOTER_SECTIONS = [
     {
@@ -179,6 +185,7 @@ export default function Footer() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-5 py-3 rounded-full bg-transparent border border-[#e8d5b7]/50 text-sm focus:outline-none focus:border-amber-300"
+              suppressHydrationWarning
             />
 
             <button
@@ -193,7 +200,7 @@ export default function Footer() {
 
         {/* COPYRIGHT */}
         <div className="mt-16 pt-6 border-t border-amber-900/30 text-sm text-[#d4b38a]/80 text-center">
-          © {new Date().getFullYear()} Coffee & Joy • Handcrafted with passion in India
+          © {year || ""} Coffee & Joy • Handcrafted with passion in India
         </div>
       </div>
     </footer>
