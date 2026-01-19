@@ -45,14 +45,16 @@ export default function Navbar() {
         )}
       >
         {/* LOGO */}
+        <Link href="/">
         <div
           className={clsx(
-            "text-xl font-semibold font-cinzel transition-colors",
+            " cursor-pointer text-xl font-semibold font-cinzel transition-colors",
             scrollState === "top" ? "text-white" : "text-white/90"
           )}
         >
           Coffee & Joy
         </div>
+        </Link>
 
         {/* ================= DESKTOP NAV ================= */}
         <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel text-white">
