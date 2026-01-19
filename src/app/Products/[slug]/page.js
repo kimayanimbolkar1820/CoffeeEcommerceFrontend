@@ -29,6 +29,7 @@ export default function Page() {
       <h1 className="text-white">{Product.name}</h1>
       <p>{Product.description}</p>
       <p>Price: ${Product.price}</p>
+      <p>{Product.quantity} </p>
     </div>
   );
 }

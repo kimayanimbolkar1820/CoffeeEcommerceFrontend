@@ -47,9 +47,9 @@ export default function RootLayout({ children }) {
       <body className="bg-black text-white font-sans">
         <ReduxProvider>
         {!hideLayout && <NavbarWrapper />}
-        <NavbarWrapper/>
-        {children}
-        <Footer/>
+       <main className="min-h-screen">
+            {children}
+          </main>
         {!hideLayout && <Footer />}
        </ReduxProvider>
       </body>
