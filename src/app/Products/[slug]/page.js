@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProductBySlug } from "@/redux/features/productSlice";
+import Image from "next/image";
+import { getValidImage } from "@/utils/getValidImage";
 
 export default function Page() {
   const { slug } = useParams();
@@ -19,11 +21,14 @@ export default function Page() {
   if (error) return <p>Error: {error}</p>;
   if (!currentProduct) return <p>No product found</p>;
 
+  const Product  = currentProduct.product
+
   return (
     <div style={{ marginTop: "100px" }}>
-      <h1>{currentProduct.name}</h1>
-      <p>{currentProduct.description}</p>
-      <p>Price: ${currentProduct.price}</p>
+      <Image src={getValidImage(Product.images)} alt={Product.name} height={200} width={200}/>
+      <h1 className="text-white">{Product.name}</h1>
+      <p>{Product.description}</p>
+      <p>Price: ${Product.price}</p>
     </div>
   );
 }
