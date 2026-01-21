@@ -1,15 +1,21 @@
 "use client";
 
+import React from 'react'
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { KeyRound } from "lucide-react";
+import { useDispatch , useSelector } from 'react-redux';
 
-export default function OtpPage() {
+
+const Otp = () => {
+
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [timer, setTimer] = useState(30);
   const [verified, setVerified] = useState(false);
+  const {otpVerified ,loading ,error}= useSelector((state)=>state.auth)
+  const dispatch = useDispatch()
 
   // 🔁 Resend timer
   useEffect(() => {
@@ -42,7 +48,6 @@ export default function OtpPage() {
     setVerified(false);
     setTimer(30);
   };
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -135,5 +140,7 @@ export default function OtpPage() {
         </div>
       </motion.div>
     </motion.div>
-  );
+  )
 }
+
+export default Otp
