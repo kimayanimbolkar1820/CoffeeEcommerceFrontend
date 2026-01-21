@@ -1,17 +1,17 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
+import Footer from "./Footer";
 
-export default function NavbarWrapper() {
+export default function FooterWrapper() {
   const pathname = usePathname();
 
-  const hideNavbar =
+  const hideFooter =
     pathname === "/Auth/login" ||
     pathname === "/Auth/signup" ||
     pathname === "/Auth/forgot-password";
 
-  if (hideNavbar) return null;
+  if (hideFooter) return null;
 
-  return <Navbar />;
+  return <Footer />;
 }
