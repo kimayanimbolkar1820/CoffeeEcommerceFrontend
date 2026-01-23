@@ -24,7 +24,12 @@ export const loginThunk = createAsyncThunk(
     async (userData,{rejectWithValue})=>{
         try {
             const res = await login(userData)
-        return res.data
+            console.log(res)
+          if (res.success) {
+        return res.user; // only return the user
+      } else {
+        return rejectWithValue(res.message); // reject on failure
+      }
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message || "login failed"
@@ -98,11 +103,13 @@ const auth = createSlice({
          .addCase(loginThunk.fulfilled ,(state ,action)=>{
              state.loading =false
              state.user = action.payload
+             toast.success("login successfully")
          })
 
           .addCase(loginThunk.rejected , (state , action)=>{
             state.loading = false
             state.error = action.payload
+            toast.error(action.payload)
          })
 
          .addCase(otpThunk.pending , (state)=>{
@@ -113,7 +120,6 @@ const auth = createSlice({
          .addCase(otpThunk.fulfilled ,(state ,action)=>{
              state.loading =false
              state.otpVerified = true 
-             state.otpSent =false
 
              toast.success("accout created successfully")
          })

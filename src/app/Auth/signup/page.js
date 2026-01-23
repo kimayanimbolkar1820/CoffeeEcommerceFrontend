@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -10,11 +10,13 @@ import { FaFacebookF } from "react-icons/fa";
 import { useSelector ,useDispatch } from "react-redux";
 import { singupThunk} from "@/redux/features/authSlice"
 import  Otp from "@/components/Otp"
+import { useRouter } from "next/navigation"
 
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const {otpSent , loading , error} =useSelector((state)=>state.auth)
+  const {otpSent , loading , error,otpVerified} =useSelector((state)=>state.auth)
+  const router = useRouter();
   const dispatch = useDispatch()
   const [fromData , setFromData]= useState({
     name : "",
@@ -32,6 +34,12 @@ export default function LoginPage() {
   const handleSignup =()=>{
     dispatch(singupThunk(fromData))
   }
+
+   useEffect(() => {
+    if (otpVerified) {
+      router.push("/Auth/login");
+    }
+  }, [otpVerified, router]);
 
 if(otpSent){
   return <Otp email={fromData.email} />

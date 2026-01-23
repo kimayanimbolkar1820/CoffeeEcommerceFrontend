@@ -2,9 +2,9 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { getValidImage } from "@/utils/getValidImage"
+import { getValidImage } from "@/utils/getValidImage" // Import the utility here
 
-const CategoryRow = ({ title, items, viewAllLink }) => {
+const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
   // Ensure items is always an array
   const safeItems = Array.isArray(items) ? items : []
 
@@ -17,12 +17,11 @@ const CategoryRow = ({ title, items, viewAllLink }) => {
             {title}
           </h3>
 
-        
-            <Link href='/Products'>
-              <span className="md:text-md text-[14px] font-cinzel text-black cursor-pointer hover:underline whitespace-nowrap">
-                View all →
-              </span>
-            </Link>
+          <Link href={viewAllLink}>
+            <span className="md:text-md text-[14px] font-cinzel text-black cursor-pointer hover:underline whitespace-nowrap">
+              View all →
+            </span>
+          </Link>
         </div>
       )}
 

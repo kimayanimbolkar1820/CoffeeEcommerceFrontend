@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
+import { loginThunk } from "@/redux/features/authSlice";
+import { useSelector , useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 
 export default function LoginPage() {
@@ -16,11 +19,26 @@ export default function LoginPage() {
     password : ""
   })
 
+  const router = useRouter()
+  const dispatch = useDispatch()
+  const {user , loading , error } = useSelector((state)=>state.auth)
+
   const handleOnChnage = (e)=>{
     const {name , value} = e.target
     setFromData({...fromData , [name]: value})
   }
 
+
+ useEffect(() => {
+  console.log("User changed:", user);
+  if (user) {
+    console.log("Redirecting to home");
+    router.push("/");
+  }
+}, [user, router]);
+
+
+  console.log(fromData)
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -79,7 +97,7 @@ export default function LoginPage() {
           className="w-full md:w-1/2 h-full px-6 sm:px-10 py-10
                      flex flex-col justify-center overflow-y-hidden"
         >
-          <motion.h2
+          <motion.h1
             variants={{
               hidden: { y: 20, opacity: 0 },
               visible: { y: 0, opacity: 1 },
@@ -87,7 +105,7 @@ export default function LoginPage() {
             className="text-3xl sm:text-4xl font-cinzel text-center mb-10 text-white font-bold"
           >
             Sign In
-          </motion.h2>
+          </motion.h1>
 
           <motion.input
             variants={{
@@ -135,6 +153,7 @@ export default function LoginPage() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
+            onClick={()=> dispatch(loginThunk(fromData))}
             className="w-full py-3 rounded-full bg-gradient-to-r
                        from-amber-600 to-orange-900
                        font-playfair font-bold shadow-lg text-white cursor-pointer"

@@ -35,6 +35,15 @@ export default function ProductPage() {
   const images = normalizeImages(product.images);
 
   return (
+<<<<<<< HEAD
+    <div style={{ marginTop: "100px" }}>
+      <Image src={getValidImage(Product.images)} alt={Product.name} height={200} width={200}/>
+      <h1 className="text-white">{Product.name}</h1>
+      <p>{Product.description}</p>
+      <p>Price: ${Product.price}</p>
+      <p>{Product.quantity} </p>
+    </div>
+=======
     <section className="min-h-screen bg-[#0b0b0b] text-[#f5efe6] pt-28 pb-24 px-4 md:px-12 lg:px-24">
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
@@ -239,5 +248,6 @@ export default function ProductPage() {
       </div>
 
     </section>
+>>>>>>> 49af3255aaf6d21ccd27d62edaa20dc52cb8f892
   );
 }

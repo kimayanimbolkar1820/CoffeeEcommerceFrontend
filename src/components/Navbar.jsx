@@ -115,7 +115,7 @@ export default function Navbar() {
               )}
             </div>
 
-            <Link href="/login">
+            <Link href="/Auth/login">
               <AiOutlineUser className="text-xl cursor-pointer" />
             </Link>
 
