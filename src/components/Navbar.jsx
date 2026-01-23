@@ -46,7 +46,7 @@ export default function Navbar() {
           }
         )}
       >
-        {/* LOGO (ONE LINE ON MOBILE) */}
+        {/* LOGO */}
         <Link href="/">
           <div className="text-xl font-cinzel text-white cursor-pointer whitespace-nowrap">
             Coffee & Joy
@@ -75,7 +75,6 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-
 
         {/* RIGHT ICONS */}
         <div className="relative flex items-center w-full md:w-auto justify-end text-white">
@@ -117,30 +116,17 @@ export default function Navbar() {
             </div>
 
             <Link href="/login">
-              <AiOutlineUser className="text-xl" />
+              <AiOutlineUser className="text-xl cursor-pointer" />
             </Link>
 
             <Link href="/cart">
-              <HiOutlineShoppingBag className="text-xl hover:scale-110 transition" />
+              <HiOutlineShoppingBag className="text-xl hover:scale-110 transition cursor-pointer" />
             </Link>
           </div>
 
           {/* HAMBURGER */}
-        {/* ================= ICONS ================= */}
-        <div
-          className={clsx(
-            "flex items-center gap-6 text-xl transition-colors",
-            scrollState === "top" ? "text-white" : "text-white/90"
-          )}
-        >
-          <FiSearch className="hidden md:block" />
-          <Link href='/Auth/login'><AiOutlineUser className="hidden md:block" /> </Link>
-          <MdOutlinePhone className="hidden md:block" />
-
-          {/* MOBILE MENU */}
-
           <button
-            className=" md:hidden ml-4 text-2xl"
+            className="md:hidden ml-4 text-2xl cursor-pointer"
             onClick={() => setMenuOpen(true)}
           >
             <RxHamburgerMenu />
@@ -159,19 +145,17 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/20">
           <span className="text-lg font-cinzel">Menu</span>
 
-          {/* ✅ ACTIVE CROSS BUTTON (NO ROTATION) */}
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
-            className="text-2xl p-2 rounded-full font-bold cursor-pointer
-                       transition transform hover:scale-75 active:scale-95"
+            className="text-2xl p-2 rounded-full font-bold cursor-pointer transition transform hover:scale-75 active:scale-95"
           >
             ✕
           </button>
         </div>
 
         {/* MENU CONTENT */}
-        <nav className="px-8 py-5 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
+        <div className="px-8 py-5 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
           {navbarData.links.map((link, index) => {
             const isOpen = openMobileDropdown === index;
 
@@ -185,9 +169,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   {link.dropdown && (
-                    <span className="text-xl">
-                      {isOpen ? "−" : "+"}
-                    </span>
+                    <span className="text-xl">{isOpen ? "−" : "+"}</span>
                   )}
                 </button>
 
@@ -224,9 +206,9 @@ export default function Navbar() {
             );
           })}
 
-          <div className="right-0 left-50 flex absolute top-6 gap-6 pt-2">
+          <div className="flex absolute top-6 right-6 gap-6 pt-2">
             <Link
-              href="/login"
+              href="/Auth/login"
               className="flex items-center justify-center cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
             >
               <AiOutlineUser className="text-2xl font-bold" />
@@ -234,12 +216,12 @@ export default function Navbar() {
 
             <Link
               href="/cart"
-              className="flex items-center justify-center pr-2 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+              className="flex items-center justify-center pr-14 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
             >
               <HiOutlineShoppingBag className="text-2xl font-bold" />
             </Link>
           </div>
-        </nav>
+        </div>
       </div>
     </nav>
   );
