@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -15,6 +15,12 @@ export default function Footer() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [openSection, setOpenSection] = useState(null);
+  const [year, setYear] = useState(""); // For SSR-safe date
+
+  // SSR-safe year
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   const FOOTER_SECTIONS = [
     {
@@ -85,18 +91,18 @@ export default function Footer() {
 
           {/* BRAND */}
           <div className="text-center md:text-left">
-            <h2 className="text-3xl font-bold text-amber-200">
+            <h2 className="text-3xl font-bold font-cinzel text-amber-200">
               COFFEE & JOY
             </h2>
 
-            <p className="mt-3 max-w-md mx-auto md:mx-0 text-sm leading-relaxed pt-2 pb-5">
+            <p className="font-playfair mt-3 max-w-md mx-auto md:mx-0 text-sm leading-relaxed pt-2 pb-5">
               Crafting exceptional coffee experiences since 2025.
               From bean to cup, we are dedicated to quality,
               sustainability, and the art of coffee.
             </p>
 
             <div className="mt-6">
-              <h4 className="text-sm tracking-widest text-amber-200 mb-3">
+              <h4 className="font-playfair text-sm tracking-widest text-amber-200 mb-3">
                 FOLLOW US
               </h4>
               <div className="flex gap-4 justify-center md:justify-start">
@@ -116,7 +122,7 @@ export default function Footer() {
           </div>
 
           {/* LINKS */}
-          <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-3 md:gap-10">
+          <div className="space-y-4 font-playfair md:space-y-0 md:grid md:grid-cols-3 md:gap-10">
             {FOOTER_SECTIONS.map((section, index) => (
               <div
                 key={section.title}
@@ -169,7 +175,7 @@ export default function Footer() {
         {/* NEWSLETTER */}
         <div className="mt-16 md:mt-20 flex justify-center">
           <div className="w-full max-w-lg text-center">
-            <h3 className="text-xl font-semibold text-amber-200 mb-4">
+            <h3 className="text-xl font-playfair font-semibold text-amber-200 mb-4">
               Subscribe to our newsletter
             </h3>
 
@@ -179,6 +185,7 @@ export default function Footer() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-5 py-3 rounded-full bg-transparent border border-[#e8d5b7]/50 text-sm focus:outline-none focus:border-amber-300"
+              suppressHydrationWarning
             />
 
             <button
@@ -193,7 +200,7 @@ export default function Footer() {
 
         {/* COPYRIGHT */}
         <div className="mt-16 pt-6 border-t border-amber-900/30 text-sm text-[#d4b38a]/80 text-center">
-          © {new Date().getFullYear()} Coffee & Joy • Handcrafted with passion in India
+          © {year || ""} Coffee & Joy • Handcrafted with passion in India
         </div>
       </div>
     </footer>

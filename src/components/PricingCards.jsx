@@ -145,16 +145,26 @@ export default function PricingCards() {
         <AnimatePresence mode="wait">
           <motion.div
             key={isPods ? "pods" : "coffee"}
-            className="flex flex-col sm:flex-row gap-14 justify-end w-full h-full "
+            className="flex flex-col
+    items-center          
+    gap-6                 
+    sm:flex-row
+    sm:items-stretch
+    md:gap-7
+    md:justify-end
+    w-full
+    h-full "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
+           <div className="flex flex-col items-center sm:flex-row  md:gap-10 gap-8">
+
             {plans.map((plan, i) => (
               <motion.div
                 key={i}
                 whileHover={{ y: -6 }}
-                className="\r\n
+                className="
                   w-[280px] sm:w-[320px] lg:w-[380px]
                   rounded-3xl
                   p-8
@@ -163,9 +173,11 @@ export default function PricingCards() {
                   border border-white/20
                   text-white
                   shadow-xl
-                  md:mr-7
-                  ml-15
-                  h-full
+                 
+                 
+                   h-full
+                   
+                  
                   
                 "
               >
@@ -192,17 +204,13 @@ export default function PricingCards() {
                 </ul>
 
                 <button
-                  className="
-                    w-full py-3 rounded-full
-                    bg-white text-[#2a1f1b]
-                    font-bold text-sm
-                    hover:scale-105 transition
-                  "
+                  className=" w-full py-3 rounded-full bg-white text-[#2a1f1b] font-bold text-sm hover:scale-105 transition"
                 >
                   SUBSCRIBE NOW
                 </button>
               </motion.div>
             ))}
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
