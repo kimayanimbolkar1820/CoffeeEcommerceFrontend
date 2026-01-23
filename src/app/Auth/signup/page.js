@@ -7,12 +7,37 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
+import { useSelector ,useDispatch } from "react-redux";
+import { singupThunk} from "@/redux/features/authSlice"
+import  Otp from "@/components/Otp"
+
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const {otpSent , loading , error} =useSelector((state)=>state.auth)
+  const dispatch = useDispatch()
+  const [fromData , setFromData]= useState({
+    name : "",
+    email :"",
+    password:""
+  })
 
+  const handleOnclick = (e)=>{
+    const {name , value}=e.target
+    setFromData({...fromData , [name] : value})
+  }
+
+  console.log(fromData)
+
+  const handleSignup =()=>{
+    dispatch(singupThunk(fromData))
+  }
+
+if(otpSent){
+  return <Otp email={fromData.email} />
+} 
   return (
-    <motion.div
+     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
@@ -33,6 +58,7 @@ export default function LoginPage() {
       {/* MAIN CARD */}
       <div className="flex w-full max-w-5xl h-full md:h-[85vh] rounded-3xl overflow-hidden shadow-2xl">
 
+        {/* LEFT IMAGE */}
         <motion.div
           initial={{ x: -60, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -55,19 +81,16 @@ export default function LoginPage() {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT DIV */}
+        {/* RIGHT FORM */}
         <motion.div
           initial="hidden"
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.15 },
-            },
+            visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
           }}
           className="w-full md:w-1/2 h-full px-6 sm:px-10 py-10
-                     flex flex-col justify-center overflow-y-auto"
+                     flex flex-col justify-center overflow-y-hidden"
         >
           <motion.h2
             variants={{
@@ -76,71 +99,72 @@ export default function LoginPage() {
             }}
             className="text-3xl sm:text-4xl font-cinzel text-center mb-10 text-white font-bold"
           >
-            Sign In
+            Sign Up
           </motion.h2>
 
+          {/* FULL NAME */}
+          <motion.input
+            variants={{
+              hidden: { y: 15, opacity: 0 },
+              visible: { y: 0, opacity: 1 },
+            }}
+            type="text"
+            name="name"
+            value={fromData.name}
+            onChange={handleOnclick}
+            placeholder="Name"
+            className="w-full mb-6 bg-transparent border-b border-gray-300
+                       focus:border-amber-500 focus:outline-none py-2
+                       placeholder-gray-400 font-playfair text-white"
+          />
+
+          {/* EMAIL */}
           <motion.input
             variants={{
               hidden: { y: 15, opacity: 0 },
               visible: { y: 0, opacity: 1 },
             }}
             type="email"
+            name="email"
+            value={fromData.email}
+            onChange={handleOnclick}
             placeholder="Email"
-            className="w-full mb-6 bg-transparent border-b border-gray-300
-                       focus:border-amber-500 focus:outline-none py-2
-                       placeholder-gray-400 font-playfair font-semibold text-white"
+            className="w-full mb-6 bg-transparent border-b border-white/70
+             focus:border-amber-500 focus:outline-none py-2 placeholder-gray-400 font-playfair"
           />
 
           {/* PASSWORD */}
-          <motion.div
-            variants={{
-              hidden: { y: 15, opacity: 0 },
-              visible: { y: 0, opacity: 1 },
-            }}
-            className="relative mb-8"
-          >
+          <motion.div className="relative mb-6">
             <input
               type={showPassword ? "text" : "password"}
+              name="password"
+              value={fromData.password}
               placeholder="Password"
+              onChange={handleOnclick}
               className="w-full bg-transparent border-b border-gray-300
                          focus:border-amber-500 focus:outline-none py-2
-                         placeholder-gray-400 pr-10 font-playfair font-semibold text-white"
+                         placeholder-gray-400 pr-10 font-playfair text-white"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="cursor-pointer absolute right-2 top-2.5 text-gray-400 hover:text-white transition"
+              className="cursor-pointer absolute right-2 top-2.5 text-gray-400 hover:text-white"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </motion.div>
-
-          {/* SIGN IN BUTTON */}
           <motion.button
+            onClick={handleSignup} disabled={loading}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             className="w-full py-3 rounded-full bg-gradient-to-r
                        from-amber-600 to-orange-900
                        font-playfair font-bold shadow-lg text-white cursor-pointer"
           >
-            Sign In
+            {loading ? "Sending OTP" : "Create new account"}
           </motion.button>
 
-          {/* LINKS */}
-          <div className="text-center mt-6">
-            <Link href="/forgot-password" className="text-sm hover:underline text-white">
-              Forgot Password?
-            </Link>
-          </div>
-
-          <p className="text-center mt-6 text-sm text-gray-300">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-amber-500 hover:underline">
-              Create new account
-            </Link>
-          </p>
-
-          {/* SOCIAL LOGIN Logo */}
+          {/* SOCIAL LOGIN */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -157,6 +181,7 @@ export default function LoginPage() {
               <motion.button
                 whileHover={{ scale: 1.12 }}
                 whileTap={{ scale: 0.95 }}
+                // className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg"
                 className="w-12 h-12 rounded-full bg-white flex items-center justify-center
                            shadow-lg hover:shadow-[0_0_25px_#ffffff] cursor-pointer"
               >
@@ -166,6 +191,8 @@ export default function LoginPage() {
               <motion.button
                 whileHover={{ scale: 1.12 }}
                 whileTap={{ scale: 0.95 }}
+                // className="w-12 h-12 rounded-full bg-[#1877F2]
+                //            flex items-center justify-center shadow-lg"
                 className="w-12 h-12 rounded-full bg-[#1877F2]
                            flex items-center justify-center
                            shadow-lg hover:shadow-[0_0_25px_#1877F2] cursor-pointer"
@@ -173,6 +200,16 @@ export default function LoginPage() {
                 <FaFacebookF size={20} className="text-white" />
               </motion.button>
             </div>
+
+             <div className="mt-8 text-center">
+          <Link
+            href="/Auth/login"
+            className="text-sm text-gray-300 hover:text-amber-400 hover:underline"
+          >
+            ← Back to Sign In
+          </Link>
+        </div>
+        
           </motion.div>
         </motion.div>
       </div>

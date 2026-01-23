@@ -6,7 +6,8 @@ export default function TopCategories() {
 
   return (
     <section
-      className={`relative w-full py-28 px-6 h-full overflow-hidden bg-[${background.gradient}]`}
+      className={`relative w-full py-28 px-6 h-full overflow-hidden bg-[linear-gradient(135deg,#050505_0%,#0b0b0b_42%,#24140d_68%,#2e1a12_100%)]
+`}
     >
       {/* BEANS — TOP LEFT */}
       <div className="pointer-events-none absolute inset-0 z-[5]">
@@ -54,9 +55,21 @@ export default function TopCategories() {
         </div>
 
         {/* Glow */}
-        <div
-          className={`absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-[${background.glow}] blur-[140px]`}
-        />
+       <div
+  className="
+    absolute -top-32 left-1/2 -translate-x-1/2
+    w-[420px] h-[420px]
+    sm:w-[600px] sm:h-[600px]
+    lg:w-[900px] lg:h-[900px]
+    rounded-full
+    bg-[#f5e6cf]/5
+    blur-[80px]
+    sm:blur-[110px]
+    lg:blur-[140px]
+  "
+/>
+
+
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
