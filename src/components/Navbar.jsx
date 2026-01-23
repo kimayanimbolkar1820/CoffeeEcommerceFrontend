@@ -216,7 +216,7 @@ export default function Navbar() {
 
             <Link
               href="/cart"
-              className="flex items-center justify-center pr-14 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+              className="flex items-center justify-center pr-15 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
             >
               <HiOutlineShoppingBag className="text-2xl font-bold" />
             </Link>

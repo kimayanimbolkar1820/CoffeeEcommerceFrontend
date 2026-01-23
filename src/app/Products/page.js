@@ -1,69 +1,38 @@
-'use client'
+"use client";
 
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchProducts } from '@/redux/features/productSlice'
-import Image from 'next/image'
-import Link from 'next/link'
-import { getValidImage, normalizeImages } from '@/utils/getValidImage' 
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import Link from "next/link";
 
-"use client"
+import { fetchProducts } from "@/redux/features/productSlice";
+import { selectFilteredProducts } from "@/redux/selectors/productSelectors";
+import { getValidImage, normalizeImages } from "@/utils/getValidImage";
 
-import React, { useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { fetchProducts } from "@/redux/features/productSlice"
-import Image from "next/image"
-import Link from "next/link"
-import { getValidImage } from "@/utils/getValidImage"
-
-import CategoryBar from "@/components/product/CategoryBar"
-import FilterSidebar from "@/components/product/Filters/FilterSidebar"
-import ProductHero from "@/components/product/ProductHero"
-import { selectFilteredProducts } from "@/redux/selectors/productSelectors"
-
+import CategoryBar from "@/components/product/CategoryBar";
+import FilterSidebar from "@/components/product/Filters/FilterSidebar";
+import ProductHero from "@/components/product/ProductHero";
 
 const Page = () => {
-  const dispatch = useDispatch()
-  const { loading, error } = useSelector((state) => state.product)
-  const filteredProducts = useSelector(selectFilteredProducts)
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.product);
+  const filteredProducts = useSelector(selectFilteredProducts);
 
   useEffect(() => {
-    dispatch(fetchProducts())
-  }, [dispatch])
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
+  if (loading) {
+    return <p className="mt-20 text-center">Loading...</p>;
+  }
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error}</p>
-
-  return (
-    <section className="mt-20">
-      {data?.products?.map((item) => {
-        const images = normalizeImages(item.images); // 🔥 FIX
-
-        return (
-          <Link
-            key={item.slug}
-            href={`/Products/${item.slug}`}
-            className="block pt-20 pb-10 ml-[50px]"
-          >
-            <Image
-              src={getValidImage(images[0])}   // ✅ always valid
-              alt={item.name}
-              width={120}
-              height={120}
-              priority
-            />
-
-            <p>{item.name}</p>
-            <p>{item.description}</p>
-            <p>₹{item.price}</p>
-          </Link>
-        );
-      })}
-    </section>
-
-  if (loading) return <p className="mt-20 text-center">Loading...</p>
-  if (error) return <p className="mt-20 text-center text-red-500">{error}</p>
+  if (error) {
+    return (
+      <p className="mt-20 text-center text-red-500">
+        Error: {error}
+      </p>
+    );
+  }
 
   return (
     <>
@@ -74,87 +43,95 @@ const Page = () => {
         image="/images/pdp8.webp"
       />
 
-      {/* CATEGORY LEVEL 1 */}
+      {/* CATEGORY BAR */}
       <CategoryBar />
 
       {/* PRODUCTS + FILTERS */}
       <section className="bg-[#24160E]">
-        <div className="-mt-5 w-full px-8 lg:px-14 py-16 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-12 ">
+        <div className="-mt-5 w-full px-8 md:px-14 py-16 flex gap-12">
+          
           {/* FILTER SIDEBAR */}
-          <FilterSidebar />
-{/* PRODUCT GRID */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(4,minmax(260px,1fr))] gap-8 items-start pr-4 lg:pr-4">
+          <div className="hidden md:block w-[260px] flex-shrink-0">
+            <FilterSidebar />
+          </div>
 
-  {filteredProducts.map((item) => (
-    <Link
-      key={item.slug}
-      href={`/Products/${item.slug}`}
-      className="
-        group
-             bg-[#b2a28e]
-            rounded-2xl
-            p-6
-            h-[420px]
-            flex
-            flex-col
-            self-start
-            transition-all
-            duration-500
-            hover:shadow-2xl
-      "
-    >
-      {/* IMAGE */}
-      <div className="relative w-full h-48 mb-6 flex-shrink-0">
-        <Image
-          src={getValidImage(item.images)}
-          alt={item.name}
-          fill
-          className="object-contain transition-transform duration-500 group-hover:-translate-y-2"
-        />
-      </div>
+          {/* PRODUCT LIST */}
+          <div className="flex flex-wrap gap-8 flex-1">
+            {filteredProducts.map((item) => {
+              const images = normalizeImages(item.images);
+              const imageSrc = getValidImage(images[0]);
 
-      {/* TITLE */}
-      <h4 className="text-lg font-playfair text-black truncate">
-        {item.name}
-      </h4>
+              return (
+                <Link
+                  key={item.slug}
+                  href={`/Products/${item.slug}`}
+                  className="
+                    group
+                    bg-[#b2a28e]
+                    rounded-2xl
+                    p-6
+                    h-[350px]
+                    flex
+                    flex-col
+                    transition-all
+                    duration-500
+                    hover:shadow-2xl
+                    w-full
+                    md:w-[calc(25%-1.5rem)]
+                  "
+                >
+                  {/* IMAGE */}
+                  <div className="relative w-full h-40 mb-4 flex-shrink-0">
+                    <Image
+                      src={imageSrc}
+                      alt={item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                      className="object-contain transition-transform duration-500 group-hover:-translate-y-2"
+                    />
+                  </div>
 
-      {/* DESCRIPTION */}
-      <p className="text-sm text-gray-700 mt-2 line-clamp-2 min-h-[40px]">
-        {item.description}
-      </p>
+                  {/* TITLE */}
+                  <h4 className="text-lg font-playfair text-black truncate">
+                    {item.name}
+                  </h4>
 
-      {/* PRICE + CTA (STAYS AT BOTTOM) */}
-      <div className="mt-auto flex items-center justify-between pt-4">
-        <span className="font-semibold text-black text-base">
-          ${item.price}
-        </span>
+                  {/* DESCRIPTION */}
+                  <p className="text-sm text-gray-700 mt-2 line-clamp-2 ">
+                    {item.description}
+                  </p>
 
-        <button
-          onClick={(e) => e.preventDefault()}
-          className="
-            px-4
-            py-2
-            rounded-full
-            bg-black
-            text-[#F3E0C8]
-            text-sm
-            hover:bg-[#F3E0C8]
-            hover:text-black
-            transition
-          "
-        >
-          Add
-        </button>
-      </div>
-    </Link>
-  ))}
-</div>
+                  {/* PRICE + CTA */}
+                  <div className="mt-auto flex items-center justify-between pt-4">
+                    <span className="font-semibold text-black text-base">
+                      ₹{item.price}
+                    </span>
 
+                    <button
+                      onClick={(e) => e.preventDefault()}
+                      className="
+                        px-4
+                        py-2
+                        rounded-full
+                        bg-black
+                        text-[#F3E0C8]
+                        text-sm
+                        hover:bg-[#F3E0C8]
+                        hover:text-black
+                        transition
+                      "
+                    >
+                      Add
+                    </button>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
     </>
+  );
+};
 
-  )
-}
-
-export default Page
+export default Page;
