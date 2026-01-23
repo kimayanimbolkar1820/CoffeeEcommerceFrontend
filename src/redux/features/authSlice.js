@@ -9,7 +9,7 @@ export const singupThunk = createAsyncThunk(
          const res = await signup(userData)
         return {
             otpSent : true ,
-            tempUser : userData
+            tempUser : res.data
         }
       } catch (error) {
         return rejectWithValue(

@@ -34,7 +34,7 @@ export default function LoginPage() {
   }
 
 if(otpSent){
-  return <Otp/>
+  return <Otp email={fromData.email} />
 } 
   return (
      <motion.div
