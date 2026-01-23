@@ -135,18 +135,28 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/20">
           <span className="text-lg font-cinzel">Menu</span>
           <button
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+            className="text-2xl p-2 rounded-full font-bold cursor-pointer
+                       transition transform hover:scale-75 active:scale-95"
+
             onClick={() => {
               setMenuOpen(false);
               setOpenMobileDropdown(null);
             }}
             className="text-2xl p-3 rounded-full font-bold hover:scale-75 active:scale-95 transition"
+
           >
             ✕
           </button>
         </div>
 
         {/* MENU CONTENT */}
+
+        <nav className="px-8 py-5 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
+
         <nav className="px-6 py-6 space-y-6 overflow-y-auto h-full pb-32">
+
           {navbarData.links.map((link, index) => {
             const isOpen = openMobileDropdown === index;
 
@@ -200,8 +210,17 @@ export default function Navbar() {
             <Link href="/login">
               <AiOutlineUser className="text-2xl" />
             </Link>
+
+
+            <Link
+              href="/cart"
+              className="flex items-center justify-center pr-2 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+            >
+              <HiOutlineShoppingBag className="text-2xl font-bold" />
+
             <Link href="/cart">
               <HiOutlineShoppingBag className="text-2xl" />
+
             </Link>
           </div>
         </nav>
