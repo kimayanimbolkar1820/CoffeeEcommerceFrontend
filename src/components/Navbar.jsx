@@ -8,7 +8,6 @@ import { FiSearch } from "react-icons/fi";
 import { AiOutlineUser } from "react-icons/ai";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { MdOutlinePhone } from "react-icons/md";
 
 import navbarData from "@/data/navbar.json";
 
@@ -55,7 +54,7 @@ export default function Navbar() {
         </Link>
 
         {/* DESKTOP LINKS */}
-        <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel text-white">
+        <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel cursor-pointer text-white">
           {navbarData.links.map((link, index) => (
             <li key={index} className="relative group">
               <NavLink href={link.href}>{link.label}</NavLink>
@@ -78,45 +77,56 @@ export default function Navbar() {
         </ul>
 
         {/* RIGHT ICONS */}
-        <div className="relative flex items-center text-white">
-          {/* DESKTOP SEARCH */}
-          <div
-            className={clsx(
-              "hidden md:flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 overflow-hidden",
-              searchOpen
-                ? "w-64 bg-black/60 border-white/30"
-                : "w-10 border-transparent"
-            )}
-          >
-            <button onClick={() => setSearchOpen((p) => !p)}>
-              <FiSearch />
-            </button>
-
-            {searchOpen && (
+        <div className="relative flex items-center w-full md:w-auto justify-end text-white">
+          {/* MOBILE SEARCH */}
+          <div className="absolute cursor-pointer left-1/2 -translate-x-1/2 md:hidden w-[65%]">
+            <div className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-full bg-black/60 border border-white/20">
+              <FiSearch className="text-white/60 text-sm" />
               <input
-                autoFocus
                 type="text"
                 placeholder="Search coffee, beans..."
-                className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full"
-                onBlur={() => setSearchOpen(false)}
+                className="bg-transparent outline-none text-sm w-full text-white placeholder-white/50"
               />
-            )}
+            </div>
           </div>
 
           {/* DESKTOP ICONS */}
-          <div className="hidden md:flex items-center gap-6 ml-6">
-            <Link href="/Auth/login">
-              <AiOutlineUser className="text-xl" />
+          <div className="hidden md:flex items-center gap-5 ml-6">
+            <div
+              className={clsx(
+                "flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 overflow-hidden",
+                searchOpen
+                  ? "w-64 bg-black/60 border-white/30"
+                  : "w-10 bg-transparent border-transparent"
+              )}
+            >
+              <button onClick={() => setSearchOpen((p) => !p)}>
+                <FiSearch className="text-white cursor-pointer" />
+              </button>
+
+              {searchOpen && (
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search coffee, beans..."
+                  className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full"
+                  onBlur={() => setSearchOpen(false)}
+                />
+              )}
+            </div>
+
+            <Link href="/login">
+              <AiOutlineUser className="text-xl cursor-pointer" />
             </Link>
-            <MdOutlinePhone className="text-xl" />
+
             <Link href="/cart">
-              <HiOutlineShoppingBag className="text-xl hover:scale-110 transition" />
+              <HiOutlineShoppingBag className="text-xl hover:scale-110 transition cursor-pointer" />
             </Link>
           </div>
 
           {/* HAMBURGER */}
           <button
-            className="md:hidden ml-4 text-2xl"
+            className="md:hidden ml-4 text-2xl cursor-pointer"
             onClick={() => setMenuOpen(true)}
           >
             <RxHamburgerMenu />
@@ -127,36 +137,25 @@ export default function Navbar() {
       {/* ================= MOBILE MENU ================= */}
       <div
         className={clsx(
-          "fixed inset-y-0 right-0 z-[60] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
+          "cursor-pointer font-inter fixed inset-y-0 right-0 z-[60] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/20">
           <span className="text-lg font-cinzel">Menu</span>
+
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
-            className="text-2xl p-2 rounded-full font-bold cursor-pointer
-                       transition transform hover:scale-75 active:scale-95"
-
-            onClick={() => {
-              setMenuOpen(false);
-              setOpenMobileDropdown(null);
-            }}
-            className="text-2xl p-3 rounded-full font-bold hover:scale-75 active:scale-95 transition"
-
+            className="text-2xl p-2 rounded-full font-bold cursor-pointer transition transform hover:scale-75 active:scale-95"
           >
             ✕
           </button>
         </div>
 
         {/* MENU CONTENT */}
-
-        <nav className="px-8 py-5 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
-
-        <nav className="px-6 py-6 space-y-6 overflow-y-auto h-full pb-32">
-
+        <div className="px-8 py-5 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
           {navbarData.links.map((link, index) => {
             const isOpen = openMobileDropdown === index;
 
@@ -169,7 +168,9 @@ export default function Navbar() {
                   }
                 >
                   {link.label}
-                  {link.dropdown && <span>{isOpen ? "−" : "+"}</span>}
+                  {link.dropdown && (
+                    <span className="text-xl">{isOpen ? "−" : "+"}</span>
+                  )}
                 </button>
 
                 {link.dropdown && (
@@ -205,25 +206,22 @@ export default function Navbar() {
             );
           })}
 
-          {/* MOBILE ICONS */}
-          <div className="flex gap-6 pt-6">
-            <Link href="/login">
-              <AiOutlineUser className="text-2xl" />
+          <div className="flex absolute top-6 right-6 gap-6 pt-2">
+            <Link
+              href="/Auth/login"
+              className="flex items-center justify-center cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+            >
+              <AiOutlineUser className="text-2xl font-bold" />
             </Link>
-
 
             <Link
               href="/cart"
-              className="flex items-center justify-center pr-2 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+              className="flex items-center justify-center pr-15 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
             >
               <HiOutlineShoppingBag className="text-2xl font-bold" />
-
-            <Link href="/cart">
-              <HiOutlineShoppingBag className="text-2xl" />
-
             </Link>
           </div>
-        </nav>
+        </div>
       </div>
     </nav>
   );
