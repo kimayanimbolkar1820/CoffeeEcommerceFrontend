@@ -145,11 +145,21 @@ export default function PricingCards() {
         <AnimatePresence mode="wait">
           <motion.div
             key={isPods ? "pods" : "coffee"}
-            className="flex flex-col sm:flex-row gap-14 justify-end w-full h-full "
+            className="flex flex-col
+    items-center          
+    gap-6                 
+    sm:flex-row
+    sm:items-stretch
+    md:gap-7
+    md:justify-end
+    w-full
+    h-full "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
+           <div className="flex flex-col items-center sm:flex-row  md:gap-10 gap-8">
+
             {plans.map((plan, i) => (
               <motion.div
                 key={i}
@@ -163,8 +173,11 @@ export default function PricingCards() {
                   border border-white/20
                   text-white
                   shadow-xl
-                  md:mr-7
-                  ml-15 h-full
+                 
+                 
+                   h-full
+                   
+                  
                   
                 "
               >
@@ -197,6 +210,7 @@ export default function PricingCards() {
                 </button>
               </motion.div>
             ))}
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>

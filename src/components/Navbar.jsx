@@ -76,6 +76,7 @@ export default function Navbar() {
           ))}
         </ul>
 
+
         {/* RIGHT ICONS */}
         <div className="relative flex items-center w-full md:w-auto justify-end text-white">
           {/* MOBILE SEARCH */}
@@ -125,6 +126,19 @@ export default function Navbar() {
           </div>
 
           {/* HAMBURGER */}
+        {/* ================= ICONS ================= */}
+        <div
+          className={clsx(
+            "flex items-center gap-6 text-xl transition-colors",
+            scrollState === "top" ? "text-white" : "text-white/90"
+          )}
+        >
+          <FiSearch className="hidden md:block" />
+          <Link href='/Auth/login'><AiOutlineUser className="hidden md:block" /> </Link>
+          <MdOutlinePhone className="hidden md:block" />
+
+          {/* MOBILE MENU */}
+
           <button
             className=" md:hidden ml-4 text-2xl"
             onClick={() => setMenuOpen(true)}
