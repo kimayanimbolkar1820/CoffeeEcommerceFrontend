@@ -6,16 +6,18 @@ import clsx from "clsx";
 
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineUser } from "react-icons/ai";
-import { MdOutlinePhone } from "react-icons/md";
+import { HiOutlineShoppingBag } from "react-icons/hi";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 import navbarData from "@/data/navbar.json";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
-  const [scrollState, setScrollState] = useState("top"); // top | mid | past
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [scrollState, setScrollState] = useState("top");
+  const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
 
+  /* ================= SCROLL ================= */
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -32,7 +34,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 z-50 w-full">
-      {/* ================= NAV BAR ================= */}
+      {/* ================= DESKTOP NAVBAR ================= */}
       <div
         className={clsx(
           "flex items-center justify-between px-8 py-5 transition-all duration-300",
@@ -44,43 +46,29 @@ export default function Navbar() {
           }
         )}
       >
-        {/* LOGO */}
+        {/* LOGO (ONE LINE ON MOBILE) */}
         <Link href="/">
-        <div
-          className={clsx(
-            " cursor-pointer text-xl font-semibold font-cinzel transition-colors",
-            scrollState === "top" ? "text-white" : "text-white/90"
-          )}
-        >
-          Coffee & Joy
-        </div>
+          <div className="text-xl font-cinzel text-white cursor-pointer whitespace-nowrap">
+            Coffee & Joy
+          </div>
         </Link>
 
-        {/* ================= DESKTOP NAV ================= */}
-        <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel text-white">
-          {(navbarData?.links ?? []).map((link, index) => (
+        {/* DESKTOP LINKS */}
+        <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel cursor-pointer text-white">
+          {navbarData.links.map((link, index) => (
             <li key={index} className="relative group">
               <NavLink href={link.href}>{link.label}</NavLink>
 
-              {/* MEGA DROPDOWN */}
               {Array.isArray(link.dropdown) && (
                 <DropdownContainer scrollState={scrollState}>
-                  <div
-                    className={clsx(
-                      "grid gap-10 p-10 text-base",
-                      link.dropdown.length > 3
-                        ? "grid-cols-4"
-                        : "grid-cols-3"
-                    )}
-                  >
+                  <div className="grid grid-cols-3 gap-10 p-10">
                     {link.dropdown.map((col, i) => (
-  <DropdownColumn key={i} title={col.title}>
-    {(col.items ?? []).map((item, j) => (
-      <DropdownItem key={j} label={item} />
-    ))}
-  </DropdownColumn>
-))}
-
+                      <DropdownColumn key={i} title={col.title}>
+                        {col.items.map((item, j) => (
+                          <DropdownItem key={j} label={item} />
+                        ))}
+                      </DropdownColumn>
+                    ))}
                   </div>
                 </DropdownContainer>
               )}
@@ -88,20 +76,57 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* ================= ICONS ================= */}
-        <div
-          className={clsx(
-            "flex items-center gap-6 text-xl transition-colors",
-            scrollState === "top" ? "text-white" : "text-white/90"
-          )}
-        >
-          <FiSearch className="hidden md:block" />
-          <Link href='/login'><AiOutlineUser className="hidden md:block" /> </Link>
-          <MdOutlinePhone className="hidden md:block" />
+        {/* RIGHT ICONS */}
+        <div className="relative flex items-center w-full md:w-auto justify-end text-white">
+          {/* MOBILE SEARCH */}
+          <div className="absolute cursor-pointer left-1/2 -translate-x-1/2 md:hidden w-[65%]">
+            <div className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-full bg-black/60 border border-white/20">
+              <FiSearch className="text-white/60 text-sm" />
+              <input
+                type="text"
+                placeholder="Search coffee, beans..."
+                className="bg-transparent outline-none text-sm w-full text-white placeholder-white/50"
+              />
+            </div>
+          </div>
 
-          {/* MOBILE MENU */}
+          {/* DESKTOP ICONS */}
+          <div className="hidden md:flex items-center gap-5 ml-6">
+            <div
+              className={clsx(
+                "flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 overflow-hidden",
+                searchOpen
+                  ? "w-64 bg-black/60 border-white/30"
+                  : "w-10 bg-transparent border-transparent"
+              )}
+            >
+              <button onClick={() => setSearchOpen((p) => !p)}>
+                <FiSearch className="text-white cursor-pointer" />
+              </button>
+
+              {searchOpen && (
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search coffee, beans..."
+                  className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full"
+                  onBlur={() => setSearchOpen(false)}
+                />
+              )}
+            </div>
+
+            <Link href="/login">
+              <AiOutlineUser className="text-xl" />
+            </Link>
+
+            <Link href="/cart">
+              <HiOutlineShoppingBag className="text-xl hover:scale-110 transition" />
+            </Link>
+          </div>
+
+          {/* HAMBURGER */}
           <button
-            className="md:hidden text-2xl"
+            className=" md:hidden ml-4 text-2xl"
             onClick={() => setMenuOpen(true)}
           >
             <RxHamburgerMenu />
@@ -112,100 +137,130 @@ export default function Navbar() {
       {/* ================= MOBILE MENU ================= */}
       <div
         className={clsx(
-          "fixed inset-y-0 right-0 z-[60] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
+          "cursor-pointer font-inter fixed inset-y-0 right-0 z-[60] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/20">
           <span className="text-lg font-cinzel">Menu</span>
-          <button className="text-2xl" onClick={() => setMenuOpen(false)}>
+
+          {/* ✅ ACTIVE CROSS BUTTON (NO ROTATION) */}
+          <button
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+            className="text-2xl p-3 rounded-full font-bold cursor-pointer
+                       transition transform hover:scale-75 active:scale-95"
+          >
             ✕
           </button>
         </div>
 
-        {/* LINKS */}
-        <ul className="px-6 py-8 space-y-6 text-lg">
-          {(navbarData?.links ?? []).map((link, index) => (
-            <li key={index}>
-              <button
-                className="flex w-full justify-between items-center"
-                onClick={() =>
-                  setActiveMobileDropdown(
-                    activeMobileDropdown === index ? null : index
-                  )
-                }
-              >
-                <span>{link.label}</span>
-                {link.dropdown && (
-                  <span>{activeMobileDropdown === index ? "−" : "+"}</span>
-                )}
-              </button>
+        {/* MENU CONTENT */}
+        <nav className="px-6 py-6 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
+          {navbarData.links.map((link, index) => {
+            const isOpen = openMobileDropdown === index;
 
-              {Array.isArray(link.dropdown) &&
-                activeMobileDropdown === index && (
-                  <div className="mt-4 ml-4 space-y-6">
+            return (
+              <div key={index} className="border-b border-white/10 pb-4">
+                <button
+                  className="flex items-center justify-between w-full text-left text-lg font-cinzel"
+                  onClick={() =>
+                    setOpenMobileDropdown(isOpen ? null : index)
+                  }
+                >
+                  {link.label}
+                  {link.dropdown && (
+                    <span className="text-xl">
+                      {isOpen ? "−" : "+"}
+                    </span>
+                  )}
+                </button>
+
+                {link.dropdown && (
+                  <div
+                    className={clsx(
+                      "grid gap-6 overflow-hidden transition-all duration-300",
+                      isOpen ? "max-h-[800px] mt-6" : "max-h-0"
+                    )}
+                  >
                     {link.dropdown.map((col, i) => (
                       <div key={i}>
-                        <h4 className="text-sm uppercase tracking-widest text-white/70 mb-3">
+                        <h4 className="text-sm mb-3 text-white/70 uppercase">
                           {col.title}
                         </h4>
-                        <ul className="space-y-3 text-white/90">
-                          {(col.items ?? []).map((item, j) => (
-                            <li key={j}>{item}</li>
+                        <ul className="space-y-2">
+                          {col.items.map((item, j) => (
+                            <li key={j}>
+                              <Link
+                                href="#"
+                                onClick={() => setMenuOpen(false)}
+                                className="block text-white/80 hover:text-white transition"
+                              >
+                                {item}
+                              </Link>
+                            </li>
                           ))}
                         </ul>
                       </div>
                     ))}
                   </div>
                 )}
-            </li>
-          ))}
-        </ul>
+              </div>
+            );
+          })}
+
+          <div className="right-0 left-50 flex absolute top-6 gap-6 pt-2">
+            <Link
+              href="/login"
+              className="flex items-center justify-center cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+            >
+              <AiOutlineUser className="text-2xl font-bold" />
+            </Link>
+
+            <Link
+              href="/cart"
+              className="flex items-center justify-center cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
+            >
+              <HiOutlineShoppingBag className="text-2xl font-bold" />
+            </Link>
+          </div>
+        </nav>
       </div>
     </nav>
   );
 }
 
-/* ================= DROPDOWN ================= */
+/* ================= HELPERS ================= */
+
 function DropdownContainer({ children, scrollState }) {
   return (
     <div
       className={clsx(
-        "fixed top-[88px] left-12 right-12 z-40 rounded-2xl flex justify-center items-start p-8 transition-all duration-300 ease-out opacity-0 invisible group-hover:opacity-100 group-hover:visible",
-        scrollState !== "top"
-          ? "bg-black/70 backdrop-blur-2xl border border-white/20 shadow-2xl"
-          : "bg-black/20 backdrop-blur-lg border border-white/20"
+        "fixed top-[88px] left-12 right-12 rounded-2xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all",
+        scrollState === "top"
+          ? "bg-black/30 backdrop-blur-lg"
+          : "bg-black/70 backdrop-blur-2xl border border-white/20"
       )}
     >
-      <div className="w-full max-h-[calc(100vh-220px)] overflow-auto">
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
 
-/* ================= HELPERS ================= */
 function DropdownColumn({ title, children }) {
   return (
     <div>
-      <h4 className="text-2xl font-semibold mb-6 tracking-wide text-white">
-        {title}
-      </h4>
-      <ul className="space-y-4 text-white/80 text-lg">{children}</ul>
+      <h4 className="text-2xl mb-5 text-white">{title}</h4>
+      <ul className="space-y-3 text-white/80">{children}</ul>
     </div>
   );
 }
 
 function DropdownItem({ label }) {
   return (
-    <li>
-      <Link
-        href="#"
-        className="block transition-all duration-200 hover:text-white hover:translate-x-2"
-      >
-        {label}
-      </Link>
+    <li className="hover:text-white hover:translate-x-2 transition">
+      <Link href="#">{label}</Link>
     </li>
   );
 }
@@ -214,7 +269,7 @@ function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="relative inline-block after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 group-hover:after:w-full"
+      className="relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-white after:transition-all group-hover:after:w-full"
     >
       {children}
     </Link>
