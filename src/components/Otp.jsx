@@ -7,15 +7,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { KeyRound } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 
 const Otp = ({ email }) => {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [timer, setTimer] = useState(30);
 
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { otpVerified, loading, error } = useSelector((state) => state.auth);
+  const {otpVerified,loading, error } = useSelector((state) => state.auth);
 
   // Timer
   useEffect(() => {
@@ -24,12 +23,6 @@ const Otp = ({ email }) => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // Verified redirect
-  useEffect(() => {
-    if (otpVerified) {
-      router.push("/Auth/login");
-    }
-  }, [otpVerified, router]);
 
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
@@ -65,7 +58,7 @@ const Otp = ({ email }) => {
 
   const handleSubmit = () => {
     if (otp.some((digit) => digit === "")) {
-      alert("कृपया पूर्ण OTP भरा");
+      alert("Please Fill Full OTP");
       return;
     }
     const otpCode = otp.join("");

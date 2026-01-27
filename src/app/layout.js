@@ -25,10 +25,13 @@ const inter = Inter({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={`bg-black text-white font-sans ${cinzel.variable} ${playfair.variable} ${inter.variable}`}
-      >
+    <html
+      lang="en"
+      className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
+    >
+      <body className="bg-black text-white font-sans">
+       
+       
         <ReduxProvider>
           <NavbarWrapper />
 

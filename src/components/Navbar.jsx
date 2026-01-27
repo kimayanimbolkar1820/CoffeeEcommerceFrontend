@@ -153,7 +153,11 @@ export default function Navbar() {
             </div>
 
             <Link href="/Auth/login">
+
               <AiOutlineUser className="text-xl hover:scale-140 transition cursor-pointer hover:text-shadow-amber-50" />
+
+              <AiOutlineUser className="text-xl cursor-pointer" />
+
             </Link>
 
             <button
