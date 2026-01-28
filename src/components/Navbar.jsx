@@ -20,7 +20,7 @@ export default function Navbar() {
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
 
-  /* ================= SCROLL EFFECT ================= */
+  /* SCROLL EFFECT */
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -126,7 +126,7 @@ export default function Navbar() {
           </div>
 
           {/* DESKTOP ICONS (UNCHANGED) */}
-          <div className="hidden md:flex items-center gap-7 ml-6">
+          <div className="hidden md:flex items-center gap-8 ml-6">
 
             {/* Desktop Search */}
             <div
@@ -153,11 +153,7 @@ export default function Navbar() {
             </div>
 
             <Link href="/Auth/login">
-
               <AiOutlineUser className="text-xl hover:scale-140 transition cursor-pointer hover:text-shadow-amber-50" />
-
-              <AiOutlineUser className="text-xl cursor-pointer" />
-
             </Link>
 
             <button
