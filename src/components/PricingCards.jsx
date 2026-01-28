@@ -48,8 +48,8 @@ export default function PricingCards() {
   const plans = isPods ? podsPlans : coffeePlans;
 
   return (
-      
-    <section className="relative w-full px-0 md:px-16 py-10 md:py-20 min-h-full ">
+      <section id="subscribe" className="scroll-mt-28">
+    <section  className="relative w-full px-0 md:px-16 py-10 md:py-20 min-h-full ">
 
       {/* Background */}
       <div className="absolute inset-0 bg-[#2a1f1b]/40 z-0" />
@@ -214,6 +214,7 @@ export default function PricingCards() {
           </motion.div>
         </AnimatePresence>
       </div>
+    </section>
     </section>
   );
 }
