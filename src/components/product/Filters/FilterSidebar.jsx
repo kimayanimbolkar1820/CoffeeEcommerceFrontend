@@ -9,6 +9,8 @@ import {
   resetFilters,
 } from "@/redux/features/filterSlice"
 
+import { FaFilter } from "react-icons/fa";
+
 const FilterSidebar = () => {
   const dispatch = useDispatch()
   const filter = useSelector((state) => state.filter)
@@ -30,8 +32,8 @@ const FilterSidebar = () => {
     >
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white text-sm font-semibold uppercase">
-          Filters
+        <h3 className="text-white text-sm font-semibold uppercase flex gap-1">
+          Filters <FaFilter/>
         </h3>
 
         <button
@@ -79,7 +81,7 @@ const FilterSidebar = () => {
       </div>
 
       {/* ROAST COLOR */}
-      <div className="rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
+      <div className="mb-6 rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
         <h4 className="text-sm font-semibold mb-3">Roast Color</h4>
 
         {["light", "medium", "dark"].map((color) => (
@@ -94,6 +96,26 @@ const FilterSidebar = () => {
           </label>
         ))}
       </div>
+
+      {/* CATEGORY LEVEL 3 */}
+<div className=" rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
+  <h4 className="text-sm font-semibold mb-3">Brew Type</h4>
+
+  {["Espresso", "Pour Over", "French Press", "Cold Brew"].map(
+    (item) => (
+      <label key={item} className="flex items-center gap-2 text-sm mb-2">
+        <input
+          type="checkbox"
+          checked={filter.categoryLevel3 === item}
+          onChange={() => dispatch(setCategoryLevel3(item))}
+          className="accent-black"
+        />
+        {item}
+      </label>
+    )
+  )}
+</div>
+
     </aside>
   )
 }
