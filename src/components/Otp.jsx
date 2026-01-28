@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { otpThunk } from "@/redux/features/authSlice";
+import { otpThunk ,resendThunk } from "@/redux/features/authSlice";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -66,9 +66,7 @@ const Otp = ({ email }) => {
   };
 
   const handleResend = () => {
-    setOtp(Array(6).fill(""));
-    setTimer(30);
-    // Optional: dispatch resend OTP thunk here
+     dispatch(resendThunk({email}))
   };
 
   return (

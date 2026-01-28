@@ -191,7 +191,7 @@ export default function Navbar() {
               type="text"
               placeholder="Search products..."
               className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full text-center"
-              onBlur={() => setSearchOpen(false), 150}
+              onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
             />
           </motion.div>
         )}
