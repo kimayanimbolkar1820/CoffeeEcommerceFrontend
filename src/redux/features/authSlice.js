@@ -1,5 +1,5 @@
 import  { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
-import {  signup ,login ,verifyOtp } from '@/api/authApi'
+import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword } from '@/api/authApi'
 import { toast } from "react-toastify";
 
 export const singupThunk = createAsyncThunk(
@@ -48,6 +48,35 @@ export const otpThunk = createAsyncThunk(
            return rejectWithValue(
                 error.response?.data?.message || "verification failed"
             ) 
+        }
+    }
+)
+
+export const resendThunk = createAsyncThunk(
+    "auth/resendOtp",
+    async (resendotp ,{rejectWithValue})=>{
+        try {
+            const res = await resendOtp(resendotp)
+            return  res
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "OTP not send"
+            )
+        }
+    }
+)
+
+export const forgotpassThunk = createAsyncThunk(
+    "auth/forgotPassword",
+    async (forgetpass ,{rejectWithValue })=>{
+        try {
+            const res = await forgetPassword(forgetpass)
+            return res
+            
+        } catch (error) {
+            return rejectWithValue(
+            error.response?.data?.message || "Password not forgot"
+            )
         }
     }
 )
@@ -129,6 +158,33 @@ const auth = createSlice({
             state.error = action.payload
             toast.error(action.payload)
          })
+
+         .addCase(resendThunk.pending ,(state)=>{
+            state.loading = true 
+            state.error = null
+         })
+
+         .addCase(resendThunk.fulfilled , (state)=>{
+            state.loading =false
+            state.otpSent = true
+            toast.success("OTP sent successfully")
+         })
+
+         .addCase(resendThunk.rejected ,(state , action)=>{
+             state.loading = false 
+             state.error = action.payload
+             toast.error(action.payload)
+         })
+
+         .addCase(forgotpassThunk.pending , (state)=>{
+            state.loading = true 
+            state.error =null
+         })
+
+         .addCase(forgotpassThunk.fulfilled , (state)=>{
+            state.loading =false
+         })
+
     }
     
 
