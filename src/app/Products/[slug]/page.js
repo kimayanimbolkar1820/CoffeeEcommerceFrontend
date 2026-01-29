@@ -8,6 +8,7 @@ import Image from "next/image";
 import { normalizeImages, getValidImage } from "@/utils/getValidImage";
 import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import { AddToCartThunk } from "@/redux/features/cartSlice";
 
 export default function ProductPage() {
   const { slug } = useParams();
@@ -16,6 +17,13 @@ export default function ProductPage() {
   const { currentProduct, loading, error } = useSelector(
     (state) => state.product
   );
+
+  const handleAddToCart = ()=>{
+     dispatch(AddToCartThunk({
+      product_id : product._id,
+      quantity :qty
+     }))
+  }
 
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
@@ -189,6 +197,7 @@ export default function ProductPage() {
           <div className="mt-10 flex flex-col gap-4">
             <motion.button
               whileTap={{ scale: 0.95 }}
+              onClick={handleAddToCart}
               className="w-full flex items-center justify-center gap-3
                 bg-[#c7a17a] text-black py-4 rounded-3xl font-bold"
             >
