@@ -1,41 +1,67 @@
-"use client"
+"use client";
 
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCategoryLevel2,
   setCategoryLevel3,
   setRoastLevel,
-  setRoastColor,
-  resetFilters,
-} from "@/redux/features/filterSlice"
+ 
+} from "@/redux/features/filterSlice";
 
 import { FaFilter } from "react-icons/fa";
 
 const FilterSidebar = () => {
-  const dispatch = useDispatch()
-  const filter = useSelector((state) => state.filter)
+  const dispatch = useDispatch();
+  const filter = useSelector((state) => state.filter);
+  const activeCategory = useSelector((state) => state.category.activeCategory);
+
+  /* ---------------- LEVEL 2 OPTIONS (DEPEND ON CATEGORY) ---------------- */
+  const categoryLevel2Options = {
+    coffee: ["Whole Bean", "Ground Coffee", "Instant Coffee","Blends","Decaf"],
+    machine: ["Espresso", "Capsule", "Manual", "Drip"],
+    grinders: ["Manual Grinder", "Electric Grinder"],
+    accessories: ["Mugs", "Filters", "Scoops"],
+    pods: ["Nespresso Pods", "Compatible Pods","Coffee Capsules","Coffee Pods"],
+  };
+
+  /* ---------------- LEVEL 3 OPTIONS (DEPEND ON LEVEL 2) ---------------- */
+  const categoryLevel3Map = {
+    Espresso: ["Commercial", "Fully Automatic", "Semi Automatic"],
+    Capsule: ["Nespresso", "Dolce Gusto", "Multi-Pod"],
+    Manual: ["French Press", "Moka Pot", "AeroPress"],
+    Drip: ["Pour Over", "Auto Drip"],
+
+    
+   
+    "Instant Coffee": ["Classic", "Flavoured" ,"Speciality"],
+
+    
+  };
+
+  const level3Options =
+    filter.categoryLevel2
+      ? categoryLevel3Map[filter.categoryLevel2] || []
+      : [];
+
+ 
+
+  /* ---------------- HANDLERS ---------------- */
+
+  const handleCategoryLevel2Change = (item) => {
+    dispatch(setCategoryLevel2(item)); // 🔥 single select
+  };
+
+  const handleCategoryLevel3Change = (item) => {
+    dispatch(setCategoryLevel3(item));
+  };
 
   return (
-    <aside
-      className="
-        sticky
-        top-28
-        h-fit
-        rounded-2xl
-        bg-black/50
-        backdrop-blur-2xl
-        border-3 border-[#F3E0C8]/60 
-    
-        
-        p-5
-      "
-    >
+    <aside className="sticky top-28 h-fit rounded-2xl bg-black/50 backdrop-blur-2xl border-3 border-[#F3E0C8]/60 p-5">
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-white text-sm font-semibold uppercase flex gap-1">
-          Filters <FaFilter/>
+          Filters <FaFilter />
         </h3>
-
         <button
           onClick={() => dispatch(resetFilters())}
           className="text-xs text-[#f1d6b5] underline"
@@ -44,80 +70,51 @@ const FilterSidebar = () => {
         </button>
       </div>
 
-      {/* CATEGORY LEVEL 2 */}
-      <div className="mb-6 rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
-        <h4 className="text-sm font-semibold mb-3">Type</h4>
+      {/* ---------------- CATEGORY LEVEL 2 ---------------- */}
+      {categoryLevel2Options[activeCategory] && (
+        <div className="mb-6 rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
+          <h4 className="text-sm font-semibold mb-3">Type</h4>
 
-        {["Whole Bean", "Ground Coffee", "Instant Coffee", "Coffee Pods"].map(
-          (item) => (
+          {categoryLevel2Options[activeCategory].map((item) => (
             <label key={item} className="flex items-center gap-2 text-sm mb-2">
               <input
-                type="checkbox"
+                type="radio"
                 checked={filter.categoryLevel2 === item}
-                onChange={() => dispatch(setCategoryLevel2(item))}
+                onChange={() => handleCategoryLevel2Change(item)}
                 className="accent-black"
               />
               {item}
             </label>
-          )
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* ROAST LEVEL */}
-      <div className="mb-6 rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
-        <h4 className="text-sm font-semibold mb-3">Roast Level</h4>
+      {/* ---------------- CATEGORY LEVEL 3 ---------------- */}
+      {filter.categoryLevel2 && level3Options.length > 0 && (
+        <div className="mb-6 rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
+          <h4 className="text-sm font-semibold mb-3">
+            {filter.categoryLevel2} Types
+          </h4>
 
-        {["light", "medium", "dark"].map((level) => (
-          <label key={level} className="flex items-center gap-2 text-sm mb-2">
-            <input
-              type="checkbox"
-              checked={filter.roastLevel === level}
-              onChange={() => dispatch(setRoastLevel(level))}
-              className="accent-black"
-            />
-            {level}
-          </label>
-        ))}
-      </div>
+          {level3Options.map((item) => (
+            <label key={item} className="flex items-center gap-2 text-sm mb-2">
+              <input
+                type="radio"
+                checked={filter.categoryLevel3 === item}
+                onChange={() => handleCategoryLevel3Change(item)}
+                className="accent-black"
+              />
+              {item}
+            </label>
+          ))}
+        </div>
+      )}
 
-      {/* ROAST COLOR */}
-      <div className="mb-6 rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
-        <h4 className="text-sm font-semibold mb-3">Roast Color</h4>
-
-        {["light", "medium", "dark"].map((color) => (
-          <label key={color} className="flex items-center gap-2 text-sm mb-2">
-            <input
-              type="checkbox"
-              checked={filter.roastColor === color}
-              onChange={() => dispatch(setRoastColor(color))}
-              className="accent-black"
-            />
-            {color}
-          </label>
-        ))}
-      </div>
-
-      {/* CATEGORY LEVEL 3 */}
-<div className=" rounded-xl bg-[#B2A28E]/70 backdrop-blur-lg p-4 text-black">
-  <h4 className="text-sm font-semibold mb-3">Brew Type</h4>
-
-  {["Espresso", "Pour Over", "French Press", "Cold Brew"].map(
-    (item) => (
-      <label key={item} className="flex items-center gap-2 text-sm mb-2">
-        <input
-          type="checkbox"
-          checked={filter.categoryLevel3 === item}
-          onChange={() => dispatch(setCategoryLevel3(item))}
-          className="accent-black"
-        />
-        {item}
-      </label>
-    )
-  )}
-</div>
-
+   
+        
+    
     </aside>
-  )
-}
+  );
+};
 
-export default FilterSidebar
+export default FilterSidebar;
