@@ -1,30 +1,64 @@
-import { createSelector } from "@reduxjs/toolkit"
+import { createSelector } from "@reduxjs/toolkit";
 
 export const selectFilteredProducts = createSelector(
   [
     (state) => state.product.data.products,
+    (state) => state.category.activeCategory,
     (state) => state.filter,
   ],
-  (products, filter) => {
-    if (!products) return []
+  (products, activeCategory, filter) => {
+    if (!products) return [];
 
     return products.filter((p) => {
-      if (filter.categoryLevel1 !== "All" &&
-          p.category_level_1 !== filter.categoryLevel1) return false
+      // ---------------- TOP LEVEL CATEGORY ----------------
+      if (
+        activeCategory &&
+        activeCategory.toLowerCase() !== "all" &&
+        p.category_level_1.toLowerCase() !== activeCategory.toLowerCase()
+      ) {
+        return false;
+      }
 
-      if (filter.categoryLevel2 !== "All" &&
-          p.category_level_2 !== filter.categoryLevel2) return false
+      // ---------------- FILTER SLICE ----------------
+      if (
+        filter.categoryLevel1 &&
+        filter.categoryLevel1 !== "All" &&
+        p.category_level_1.toLowerCase() !== filter.categoryLevel1.toLowerCase()
+      ) {
+        return false;
+      }
 
-      if (filter.categoryLevel3 !== "All" &&
-          p.category_level_3 !== filter.categoryLevel3) return false
+      if (
+        filter.categoryLevel2 &&
+        filter.categoryLevel2 !== "All" &&
+        p.category_level_2.toLowerCase() !== filter.categoryLevel2.toLowerCase()
+      ) {
+        return false;
+      }
 
-      if (filter.roastLevel !== "All" &&
-          p.roast_level !== filter.roastLevel) return false
+      /* ✅ IMPORTANT FIX — LEVEL 3 DEPENDS ON LEVEL 2 */
+      if (
+        filter.categoryLevel3 &&
+        filter.categoryLevel3 !== "All"
+      ) {
+        // if level 2 is selected, enforce valid pairing
+        if (
+          filter.categoryLevel2 &&
+          p.category_level_2.toLowerCase() !== filter.categoryLevel2.toLowerCase()
+        ) {
+          return false;
+        }
 
-      if (filter.roastColor !== "All" &&
-          p.roast_color !== filter.roastColor) return false
+        if (
+          p.category_level_3.toLowerCase() !== filter.categoryLevel3.toLowerCase()
+        ) {
+          return false;
+        }
+      }
 
-      return true
-    })
+      
+
+      return true;
+    });
   }
-)
+);
