@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineUser } from "react-icons/ai";
@@ -10,14 +11,16 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import { RxHamburgerMenu } from "react-icons/rx";
 
 import navbarData from "@/data/navbar.json";
+import Cart from "@/components/Cart";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrollState, setScrollState] = useState("top");
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
+  const [cartOpen, setCartOpen] = useState(false);
 
-  /* ================= SCROLL ================= */
+  /* SCROLL EFFECT */
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -34,10 +37,10 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 z-50 w-full">
-      {/* ================= DESKTOP NAVBAR ================= */}
+      {/* ================= NAVBAR ================= */}
       <div
         className={clsx(
-          "flex items-center justify-between px-8 py-5 transition-all duration-300",
+          "flex items-center justify-between px-5 md:px-8 py-4 md:py-5 transition-all duration-300",
           {
             "bg-transparent": scrollState === "top",
             "bg-black/30 backdrop-blur-lg": scrollState === "mid",
@@ -53,7 +56,7 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* DESKTOP LINKS */}
+        {/* ================= DESKTOP LINKS ================= */}
         <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel cursor-pointer text-white">
           {navbarData.links.map((link, index) => (
             <li key={index} className="relative group">
@@ -76,52 +79,89 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* RIGHT ICONS */}
-        <div className="relative flex items-center w-full md:w-auto justify-end text-white">
-          {/* MOBILE SEARCH */}
-          <div className="absolute cursor-pointer left-1/2 -translate-x-1/2 md:hidden w-[65%]">
-            <div className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-full bg-black/60 border border-white/20">
-              <FiSearch className="text-white/60 text-sm" />
-              <input
-                type="text"
-                placeholder="Search coffee, beans..."
-                className="bg-transparent outline-none text-sm w-full text-white placeholder-white/50"
-              />
-            </div>
+        {/* ================= RIGHT ICONS ================= */}
+        <div className="relative flex items-center text-white">
+
+          {/* ========== MOBILE ICONS (ANIMATED) ========== */}
+          <div className="flex md:hidden items-center gap-4">
+
+            {/* 🔍 Search */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              animate={searchOpen ? { scale: 1.1 } : { scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 18 }}
+              onClick={() => setSearchOpen((p) => !p)}
+              className={clsx(
+                "p-2 rounded-full transition-all duration-300",
+                searchOpen &&
+                  "bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.35)]"
+              )}
+            >
+              <FiSearch className="text-white text-xl" />
+            </motion.button>
+
+            {/* 👤 Login */}
+            
+            <motion.div
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300, damping: 18 }}
+              className="p-2 rounded-full hover:bg-white/10 hover:shadow-[0_0_12px_rgba(255,255,255,0.25)]"
+            >
+              <Link href="/Auth/login">
+                <AiOutlineUser className="text-white text-xl" />
+              </Link>
+            </motion.div>
+
+            {/* 🛒 Cart */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300, damping: 18 }}
+              onClick={() => setCartOpen(true)}
+              className="p-2 rounded-full hover:bg-white/10 hover:shadow-[0_0_12px_rgba(255,255,255,0.25)]"
+            >
+              <HiOutlineShoppingBag className="text-white text-xl" />
+            </motion.button>
           </div>
 
-          {/* DESKTOP ICONS */}
-          <div className="hidden md:flex items-center gap-5 ml-6">
+          {/* DESKTOP ICONS (UNCHANGED) */}
+          <div className="hidden md:flex items-center gap-8 ml-6">
+
+            {/* Desktop Search */}
             <div
               className={clsx(
-                "flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 overflow-hidden",
+                "flex items-center px-2 py-2 rounded-full border transition-all duration-300 overflow-hidden",
                 searchOpen
-                  ? "w-64 bg-black/60 border-white/30"
+                  ? "w-44 bg-black/60 border-white/40"
                   : "w-10 bg-transparent border-transparent"
               )}
             >
               <button onClick={() => setSearchOpen((p) => !p)}>
-                <FiSearch className="text-white cursor-pointer" />
+                <FiSearch className="text-white hover:scale-140 transition cursor-pointer" />
               </button>
 
               {searchOpen && (
                 <input
                   autoFocus
                   type="text"
-                  placeholder="Search coffee, beans..."
+                  placeholder="Search Coffee, Beans..."
                   className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full"
-                  onBlur={() => setSearchOpen(false)}
+                  onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
                 />
               )}
             </div>
 
             <Link href="/Auth/login">
-              <AiOutlineUser className="text-xl cursor-pointer" />
+              <AiOutlineUser className="text-xl hover:scale-140 transition cursor-pointer hover:text-shadow-amber-50" />
             </Link>
 
-            <Link href="/cart">
-              <HiOutlineShoppingBag className="text-xl hover:scale-110 transition cursor-pointer" />
-            </Link>
+            <button
+              onClick={() => setCartOpen(true)}
+              className="text-xl hover:scale-140 transition cursor-pointer hover:text-shadow-amber-50"
+            >
+              <HiOutlineShoppingBag />
+            </button>
           </div>
 
           {/* HAMBURGER */}
@@ -134,28 +174,52 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ================= MOBILE MENU ================= */}
+      {/* SEARCH DROPDOWN */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 6, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="fixed left-48 top-[70px] -translate-x-1/2 z-[100]
+            w-[80vw] max-w-sm bg-black/80 backdrop-blur-xl font-playfair
+            border border-white/20 rounded-2xl px-3 py-3 shadow-2xl md:hidden"
+          >
+            <input
+              autoFocus
+              type="text"
+              placeholder="Search products..."
+              className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full text-center"
+              onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* CART DRAWER */}
+      {cartOpen && <Cart onClose={() => setCartOpen(false)} />}
+
+      {/* MOBILE MENU */}
       <div
         className={clsx(
-          "cursor-pointer font-inter fixed inset-y-0 right-0 z-[60] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
+          "fixed inset-y-0 right-5 z-[6] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/20">
+        <div className="sticky top-0 z-50 flex items-center justify-between px-6 py-5 border-b border-white/20 bg-black">
           <span className="text-lg font-cinzel">Menu</span>
-
           <button
             onClick={() => setMenuOpen(false)}
-            aria-label="Close menu"
-            className="text-2xl p-2 rounded-full font-bold cursor-pointer transition transform hover:scale-75 active:scale-95"
+            className="text-2xl p-2 rounded-full font-bold cursor-pointer transition hover:scale-75"
           >
             ✕
           </button>
         </div>
 
         {/* MENU CONTENT */}
-        <div className="px-8 py-5 cursor-pointer space-y-6 overflow-y-auto h-full pb-32">
+        <div className="px-6 py-6 space-y-6 overflow-y-auto h-full pb-32">
           {navbarData.links.map((link, index) => {
             const isOpen = openMobileDropdown === index;
 
@@ -173,61 +237,48 @@ export default function Navbar() {
                   )}
                 </button>
 
-                {link.dropdown && (
-                  <div
-                    className={clsx(
-                      "grid gap-6 overflow-hidden transition-all duration-300",
-                      isOpen ? "max-h-[800px] mt-6" : "max-h-0"
-                    )}
-                  >
-                    {link.dropdown.map((col, i) => (
-                      <div key={i}>
-                        <h4 className="text-sm mb-3 text-white/70 uppercase">
-                          {col.title}
-                        </h4>
-                        <ul className="space-y-2">
-                          {col.items.map((item, j) => (
-                            <li key={j}>
-                              <Link
-                                href="#"
-                                onClick={() => setMenuOpen(false)}
-                                className="block text-white/80 hover:text-white transition"
-                              >
-                                {item}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {link.dropdown && isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.25 }}
+                      className="mt-4 grid gap-5"
+                    >
+                      {link.dropdown.map((col, i) => (
+                        <div key={i}>
+                          <h4 className="text-sm mb-2 text-white/60 uppercase">
+                            {col.title}
+                          </h4>
+                          <ul className="space-y-2">
+                            {col.items.map((item, j) => (
+                              <li key={j}>
+                                <Link
+                                  href="#"
+                                  onClick={() => setMenuOpen(false)}
+                                  className="block text-white/80 hover:text-white transition"
+                                >
+                                  {item}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
-
-          <div className="flex absolute top-6 right-6 gap-6 pt-2">
-            <Link
-              href="/Auth/login"
-              className="flex items-center justify-center cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
-            >
-              <AiOutlineUser className="text-2xl font-bold" />
-            </Link>
-
-            <Link
-              href="/cart"
-              className="flex items-center justify-center pr-15 cursor-pointer text-white/80 transition transform hover:scale-75 active:scale-115"
-            >
-              <HiOutlineShoppingBag className="text-2xl font-bold" />
-            </Link>
-          </div>
         </div>
       </div>
     </nav>
   );
 }
 
-/* ================= HELPERS ================= */
+/* HELPERS */
 
 function DropdownContainer({ children, scrollState }) {
   return (

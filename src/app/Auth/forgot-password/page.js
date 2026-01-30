@@ -8,7 +8,7 @@ import { Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { forgotpassThunk } from "@/redux/features/authSlice";
 import { useDispatch , useSelector } from "react-redux";
-import Otp from "@/components/Otp";
+import ResetPasswordPage from "@/components/ResetPassword";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
  console.log(email)
 
   if(forgotSteps === "OTP"){
-    return <Otp/>
+    return <ResetPasswordPage/>
   }
 
   return (

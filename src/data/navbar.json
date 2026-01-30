@@ -89,11 +89,11 @@
     },
     {
       "label": "ABOUT US",
-      "href": "/about"
+      "href": "#about-us"
     },
     {
       "label": "SUBSCRIPTION",
-      "href": "/subscription"
+      "href": "#subscribe"
     }
   ]
 }

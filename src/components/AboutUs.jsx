@@ -32,8 +32,9 @@ const cardAnim = {
   },
 };
 
-export default function Home() {
+export default function AboutUs() {
   return (
+     <section id="about-us" className="scroll-mt-16">
     <main className="min-h-screen bg-[#1c120b] px-4 sm:px-6 lg:px-12 pt-16 pb-10 text-[#efcca4]">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
@@ -158,5 +159,6 @@ export default function Home() {
         </motion.div>
       </div>
     </main>
+    </section>
   );
 }
