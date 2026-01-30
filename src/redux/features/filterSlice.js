@@ -1,40 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  categoryLevel1: "All",
-  categoryLevel2: "All",
-  categoryLevel3: "All",
-  roastLevel: "All",
-  roastColor: "All",
-}
+  categoryLevel1: "",
+  categoryLevel2: "",
+  categoryLevel3: "",
+ 
+};
 
 const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
     setCategoryLevel1: (state, action) => {
-      state.categoryLevel1 = action.payload
-      state.categoryLevel2 = "All"
-      state.categoryLevel3 = "All"
+      state.categoryLevel1 = action.payload;
     },
+
     setCategoryLevel2: (state, action) => {
-      state.categoryLevel2 = action.payload
-      state.categoryLevel3 = "All"
+      state.categoryLevel2 = action.payload;
+      state.categoryLevel3 = ""; // ✅ VERY IMPORTANT (dependency fix)
     },
+
     setCategoryLevel3: (state, action) => {
-      state.categoryLevel3 = action.payload
+      state.categoryLevel3 = action.payload;
     },
-    setRoastLevel: (state, action) => {
-      state.roastLevel = action.payload
-    },
-    setRoastColor: (state, action) => {
-      state.roastColor = action.payload
-    },
-  resetFilters: () => ({
-      ...initialState,
-    }),
+
+    
+
+  
+    resetFilters: () => initialState,
   },
-})
+});
 
 export const {
   setCategoryLevel1,
@@ -42,7 +37,7 @@ export const {
   setCategoryLevel3,
   setRoastLevel,
   setRoastColor,
-  resetFilters,
-} = filterSlice.actions
+  resetFilters, // ✅ NOW EXISTS
+} = filterSlice.actions;
 
-export default filterSlice.reducer
+export default filterSlice.reducer;
