@@ -47,7 +47,7 @@ export default function Hero() {
 
        <div className='\r\n 
   flex flex-col justify-center
-  px-20 py-50 sm:px-8 md:px-16 md:py-20
+  px-6 sm:px-8 md:px-16 py-50  md:py-20
   pt-32 md:pt-28
   text-white font-serif z-20
   text-center md:text-left'>

@@ -36,7 +36,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full">
+    <nav className="fixed top-0 left-0 z-50 w-full ">
       {/* ================= NAVBAR ================= */}
       <div
         className={clsx(
@@ -182,8 +182,8 @@ export default function Navbar() {
             animate={{ opacity: 6, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="fixed left-48 top-[70px] -translate-x-1/2 z-[100]
-            w-[80vw] max-w-sm bg-black/80 backdrop-blur-xl font-playfair
+            className="fixed left-1/2  -translate-x-1/2 
+            w-[90vw] max-w-sm bg-black/80 backdrop-blur-xl font-playfair
             border border-white/20 rounded-2xl px-3 py-3 shadow-2xl md:hidden"
           >
             <input
@@ -203,7 +203,7 @@ export default function Navbar() {
       {/* MOBILE MENU */}
       <div
         className={clsx(
-          "fixed inset-y-0 right-5 z-[6] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
+          "fixed inset-y-0 right-0  w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden overflow-x-hidden will-change-transform",
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
