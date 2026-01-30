@@ -13,7 +13,7 @@ export default function TopCategories() {
       <div className="pointer-events-none absolute inset-0 z-[5]">
         <img
           src={beans.topLeft}
-          alt=""
+          alt="jjgjhg"
           className="
             absolute
             top-20 sm:-top-4
