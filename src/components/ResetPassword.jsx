@@ -8,9 +8,12 @@ import { Lock, Eye, EyeOff } from "lucide-react";
 import { Mailbox } from "lucide-react";
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    email : "",
+    newPassword :""
+  });
   const [showPass, setShowPass] = useState(false);
+  const [otp , setOtp] = useState(Array(6).fill(""))
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,6 +31,40 @@ export default function ResetPasswordPage() {
     console.log("Reset password:", password);
     // connect api / redux here
   };
+
+  const handleChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      document.getElementById(`otp-${index - 1}`)?.focus();
+    } else if (e.key === "ArrowLeft" && index > 0) {
+      document.getElementById(`otp-${index - 1}`)?.focus();
+    } else if (e.key === "ArrowRight" && index < 5) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    const paste = e.clipboardData.getData("text").trim();
+    if (!/^\d{1,6}$/.test(paste)) return;
+    const pasteDigits = paste.split("").slice(0, 6);
+    const newOtp = [...otp];
+    pasteDigits.forEach((digit, i) => (newOtp[i] = digit));
+    setOtp(newOtp);
+    const nextIndex = pasteDigits.length < 6 ? pasteDigits.length : 5;
+    document.getElementById(`otp-${nextIndex}`)?.focus();
+  };
+
+console.log(userInfo , otp)
 
   return (
     <motion.div
@@ -70,16 +107,30 @@ export default function ResetPasswordPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* New Password */}
           <div className="space-y-1">
+            <label className="text-sm text-gray-200">Email</label>
+            <div className="relative">
+              <input
+                type="email"
+                value={userInfo.email}
+                placeholder="Enter Your Email"
+                onChange={(e) => setUserInfo(e.target.value)}
+                className="w-full pl-5 pr-10 py-3 rounded-xl bg-black/30 border border-white/20 focus:border-orange-400 outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-1">
             <label className="text-sm text-gray-200">New password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
               <input
-                type={showPass ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-10 py-3 rounded-xl bg-black/30 border border-white/20 focus:border-orange-400 outline-none"
+                type="password"
+                value={userInfo.newPassword}
+                onChange={(e) => setUserInfo(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/30 border border-white/20 focus:border-orange-400 outline-none"
               />
-              <button
+               <button
                 type="button"
                 onClick={() => setShowPass(!showPass)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300"
@@ -89,17 +140,23 @@ export default function ResetPasswordPage() {
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div className="space-y-1">
-            <label className="text-sm text-gray-200">Re-enter password</label>
+            <label className="text-sm text-gray-200">Enter OTP</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/30 border border-white/20 focus:border-orange-400 outline-none"
-              />
+              {
+                otp.map((digit , i)=>(
+                  <input 
+                   key={i}
+                   id={`otp-${i}`}
+                   value={digit}
+                   maxLength={1}
+                   onChange={(e) => handleChange(e.target.value, i)}
+                   onKeyDown={(e) => handleKeyDown(e, i)}
+                   onPaste={handlePaste}
+                   className=" w-10 h-12 sm:w-12 sm:h-12 text-center ml-2 mt-2 text-lg bg-transparent border border-white/40 focus:border-amber-500 rounded-xl"
+                  />
+                ))
+              }
             </div>
           </div>
 

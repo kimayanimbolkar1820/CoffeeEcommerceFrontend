@@ -6,18 +6,24 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { forgotpassThunk } from "@/redux/features/authSlice";
+import { useDispatch , useSelector } from "react-redux";
+import ResetPasswordPage from "@/components/ResetPassword";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  const router = useRouter();
+  const {forgotSteps} = useSelector((state)=>state.auth)
+  const dispatch = useDispatch()
 
   const handleSendOtp = () => {
-    setSent(true);
-    setTimeout(() => {
-      router.push("/otp");
-    }, 1200); // small delay for UX
+    dispatch(forgotpassThunk({email}))
   };
+
+ console.log(email)
+
+  if(forgotSteps === "OTP"){
+    return <ResetPasswordPage/>
+  }
 
   return (
     <motion.div
@@ -61,8 +67,6 @@ export default function ForgotPasswordPage() {
         <p className="text-sm text-gray-300 text-center mb-8">
           Enter your email and we’ll send you an OTP
         </p>
-
-        {!sent ? (
           <>
             <input
               type="email"
@@ -77,8 +81,7 @@ export default function ForgotPasswordPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
               // onClick={handleSendOtp}
-              onClick={() => setSent(true)}
-              disabled={!email}
+              onClick={handleSendOtp}
               className="w-full py-3 rounded-full
                          bg-gradient-to-r hover:from-amber-600 to-orange-800
                          font-bold font-playfair disabled:opacity-50"
@@ -86,15 +89,6 @@ export default function ForgotPasswordPage() {
               Send OTP
             </motion.button>
           </>
-        ) : (
-          <p
-             onClick={handleSendOtp}
-            href="/otp"
-            className="text-sm text-center text-orange-400 hover:text-amber-100 hover:underline cursor-pointer">
-            An OTP has been sent to your email 🡢
-          </p>
-        )}
-
         <div className="mt-8 text-center">
           <Link
             href="/Auth/login"

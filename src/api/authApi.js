@@ -21,7 +21,7 @@ export const resendOtp = async (resendotp)=>{
     return response.data
 }
 
-export const forgetPassword = async (forgetpass)=>{
-    const response = await api.post("/auth/forgot-password",forgetpass)
+export const forgetPassword = async (data)=>{
+    const response = await api.post("/auth/forgot-password",data)
     return response.data
 }
