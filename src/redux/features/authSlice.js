@@ -75,7 +75,7 @@ export const forgotpassThunk = createAsyncThunk(
             
         } catch (error) {
             return rejectWithValue(
-            error.response?.data?.message || "Password not forgot"
+            error.response?.data?.message || "User not found "
             )
         }
     }
@@ -91,7 +91,8 @@ const auth = createSlice({
         error:null,
         otpSent : false,
         otpVerified : false,
-        tempUser :null
+        tempUser :null,
+        forgotSteps : "EMAIL"
     },
     reducers:{
         resetOtpState : (state)=>{
@@ -148,6 +149,7 @@ const auth = createSlice({
 
          .addCase(otpThunk.fulfilled ,(state ,action)=>{
              state.loading =false
+             state.forgotSteps="RESET"
              state.otpVerified = true 
 
              toast.success("accout created successfully")
@@ -183,6 +185,14 @@ const auth = createSlice({
 
          .addCase(forgotpassThunk.fulfilled , (state)=>{
             state.loading =false
+            state.forgotSteps = "OTP"
+            toast.success("OTP send successfully")
+         })
+
+         .addCase(forgotpassThunk.rejected , (state ,action)=>{
+            state.loading=false
+            state.error = action.payload
+            toast.error(action.payload)
          })
 
     }
