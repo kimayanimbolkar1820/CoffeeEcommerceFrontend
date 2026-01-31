@@ -47,6 +47,16 @@ export default function TopCategories() {
           src={beans.topLeft}
           alt=""
           className="absolute top-20 sm:-top-4 left-[-10%] sm:left-[-6rem] w-[40%] sm:w-[30%] max-w-none rotate-[180deg] opacity-90"
+          alt="jjgjhg"
+          className="
+            absolute
+            top-20 sm:-top-4
+            left-[-10%] sm:left-[-6rem]
+            w-[40%] sm:w-[30%]
+            max-w-none
+            rotate-[180deg]
+            opacity-90
+          "
         />
       </div>
 
