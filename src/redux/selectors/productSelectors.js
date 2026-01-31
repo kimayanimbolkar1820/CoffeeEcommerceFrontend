@@ -56,9 +56,33 @@ export const selectFilteredProducts = createSelector(
         }
       }
 
+
       
 
       return true;
+
+
+      
     });
   }
 );
+
+export const selectBestSellersByCategory = (category) =>
+  createSelector(
+    [(state) => state.product.data?.products],
+    (products) => {
+      if (!Array.isArray(products)) return []
+
+      return products
+        .filter(
+          (p) =>
+            p.best_seller === 1 &&
+            p.category_level_1?.toLowerCase() === category.toLowerCase()
+        )
+        .slice(0, 4) // ✅ ONLY 4 ITEMS
+    }
+  )
+
+
+
+
