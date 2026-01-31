@@ -203,7 +203,7 @@ export default function Navbar() {
       {/* MOBILE MENU */}
       <div
         className={clsx(
-          "fixed inset-y-0 right-5 z-[6] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
+          "fixed inset-y-0 right-0 z-[6] w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden",
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >

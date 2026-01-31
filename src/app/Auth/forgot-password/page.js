@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
               whileTap={{ scale: 0.96 }}
               // onClick={handleSendOtp}
               onClick={handleSendOtp}
-              className="w-full py-3 rounded-full
+              className=" cursor-pointer w-full py-3 rounded-full
                          bg-gradient-to-r hover:from-amber-600 to-orange-800
                          font-bold font-playfair disabled:opacity-50"
             >
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
         <div className="mt-8 text-center">
           <Link
             href="/Auth/login"
-            className="text-sm text-gray-300 hover:text-amber-400 hover:underline"
+            className=" cursor-pointer text-sm text-gray-300 hover:text-amber-400 hover:underline"
           >
             ← Back to Sign In
           </Link>
