@@ -3,6 +3,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveCategory } from "@/redux/features/categorySlice";
 import { resetFilters } from "@/redux/features/filterSlice";
+import { clearSearch } from "@/redux/features/searchSlice";
+
 
 const CategoryBar = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,7 @@ const CategoryBar = () => {
   const handleClick = (value) => {
     dispatch(setActiveCategory(value));
     dispatch(resetFilters()); 
+     dispatch(clearSearch());
   };
 
   return (

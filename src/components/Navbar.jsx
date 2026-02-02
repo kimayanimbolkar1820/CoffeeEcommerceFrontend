@@ -13,12 +13,34 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import navbarData from "@/data/navbar.json";
 import Cart from "@/components/Cart";
 
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { setSearchQuery } from "@/redux/features/searchSlice";
+import { setActiveCategory } from "@/redux/features/categorySlice";
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrollState, setScrollState] = useState("top");
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+    const dispatch = useDispatch();
+  const router = useRouter();
+
+//search bar func
+ const onChange = (e) => {
+  const value = e.target.value;
+  setSearchValue(value);
+  dispatch(setSearchQuery(value));
+};
+
+const onSubmit = (e) => {
+  e.preventDefault();
+  router.push("/Products");
+  setSearchOpen(false);
+};
 
   /* SCROLL EFFECT */
   useEffect(() => {
@@ -141,15 +163,20 @@ export default function Navbar() {
                 <FiSearch className="text-white hover:scale-140 transition cursor-pointer" />
               </button>
 
-              {searchOpen && (
-                <input
-                  autoFocus
-                  type="text"
-                  placeholder="Search Coffee, Beans..."
-                  className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full"
-                  onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
-                />
-              )}
+         {searchOpen && (
+  <form onSubmit={onSubmit} className="w-full">
+    <input
+      autoFocus
+      type="text"
+      value={searchValue}
+      onChange={onChange}
+      placeholder="Search Coffee, Beans..."
+      className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full"
+      onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
+    />
+  </form>
+)}
+
             </div>
 
             <Link href="/Auth/login">
@@ -186,13 +213,18 @@ export default function Navbar() {
             w-[90vw] max-w-sm bg-black/80 backdrop-blur-xl font-playfair
             border border-white/20 rounded-2xl px-3 py-3 shadow-2xl md:hidden"
           >
-            <input
-              autoFocus
-              type="text"
-              placeholder="Search products..."
-              className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full text-center"
-              onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
-            />
+           <form onSubmit={onSubmit}>
+  <input
+    autoFocus
+    type="text"
+    value={searchValue}
+    onChange={onChange}
+    placeholder="Search products..."
+    className="bg-transparent outline-none text-sm text-white placeholder-white/50 w-full text-center"
+    onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
+  />
+</form>
+
           </motion.div>
         )}
       </AnimatePresence>
