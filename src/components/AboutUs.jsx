@@ -35,7 +35,7 @@ const cardAnim = {
 export default function AboutUs() {
   return (
      <section id="about-us" className="scroll-mt-16">
-    <main className="min-h-screen bg-[#1c120b] px-4 sm:px-6 lg:px-12 pt-16 pb-10 text-[#efcca4]">
+    <main className="min-h-full overflow-x-hidden bg-[#1c120b] px-4 sm:px-6 lg:px-12 pt-16 pb-10 text-[#efcca4]">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
         {/* LEFT SECTION */}
@@ -61,6 +61,7 @@ export default function AboutUs() {
           </p>
 
           {/* LEFT MAIN IMAGE – ANIMATION ADDED */}
+          <div className="overflow-x-hidden">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -78,15 +79,18 @@ export default function AboutUs() {
               className="object-cover cursor-pointer"
             />
           </motion.div>
+          </div>
         </motion.div>
+        
 
         {/* RIGHT SECTION */}
+        
         <motion.div
           variants={fadeRight}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="space-y-6"
+          className="space-y-6 overflow-x-hidden"
         >
           <motion.p variants={fadeUp} className="text-[#d6b28e] font-inter text-sm sm:text-base">
             We are passionate about coffee and the art behind every perfect cup.
@@ -102,6 +106,8 @@ export default function AboutUs() {
           <motion.p variants={fadeUp} className="text-[#d6b28e] font-inter text-sm sm:text-base">
             This is our story—one cup at a time.
           </motion.p>
+          
+          
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
             {/* RIGHT IMAGE CARD 1 – ANIMATION ADDED */}
@@ -130,13 +136,14 @@ export default function AboutUs() {
                 aroma and bold character.
               </p>
             </motion.div>
+            
 
             {/* RIGHT IMAGE CARD 2 – ANIMATION ADDED */}
             <motion.div
               variants={cardAnim}
               whileHover={{ y: -6 }}
               transition={{ type: "spring", stiffness: 200, damping: 18 }}
-              className="bg-[#2a1a12] p-4 rounded-xl"
+              className="bg-[#2a1a12] p-4 rounded-xl overflow-x-hidden"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}

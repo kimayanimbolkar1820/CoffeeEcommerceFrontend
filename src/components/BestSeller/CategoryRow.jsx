@@ -2,7 +2,7 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { getValidImage } from "@/utils/getValidImage" // Import the utility here
+import { getValidImage,normalizeImages } from "@/utils/getValidImage" // Import the utility here
 
 const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
   // Ensure items is always an array
@@ -25,7 +25,7 @@ const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
         </div>
       )}
 
-      {title && <div className="w-16 h-[2px] bg-black mb-6 sm:mb-10" />}
+      {title && <div className="w-16  bg-black mb-6 sm:mb-10" />}
 
       {/* Cards */}
       <div className="sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-8 overflow-x-auto sm:overflow-visible flex space-x-4 sm:space-x-0 px-2 sm:px-0">
@@ -38,7 +38,8 @@ const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
             {/* Image */}
             <div className="relative w-full h-36 sm:h-44 mb-4 sm:mb-6">
               <Image
-                src={getValidImage(item.images || [item.img])} // support array or single image
+               src={getValidImage(normalizeImages(item.images )[0])}
+
                 alt={item.name}
                 fill
                 className="object-contain transition-transform duration-500 group-hover:-translate-y-2"
