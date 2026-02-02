@@ -1,5 +1,8 @@
 "use client";
 
+import { clearSearch } from "@/redux/features/searchSlice";
+
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCategoryLevel2,
@@ -49,10 +52,12 @@ const FilterSidebar = () => {
 
   const handleCategoryLevel2Change = (item) => {
     dispatch(setCategoryLevel2(item)); // 🔥 single select
+    dispatch(clearSearch());
   };
 
   const handleCategoryLevel3Change = (item) => {
     dispatch(setCategoryLevel3(item));
+    dispatch(clearSearch());
   };
 
   return (
@@ -63,7 +68,10 @@ const FilterSidebar = () => {
           Filters <FaFilter />
         </h3>
         <button
-          onClick={() => dispatch(resetFilters())}
+         onClick={() => {
+    dispatch(resetFilters());
+    dispatch(clearSearch()); // ✅ ADD
+  }}
           className="text-xs text-[#f1d6b5] underline"
         >
           Reset
