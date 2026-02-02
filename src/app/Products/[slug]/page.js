@@ -18,6 +18,7 @@ export default function ProductPage() {
     (state) => state.product
   );
 
+
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
 
@@ -36,6 +37,13 @@ export default function ProductPage() {
   const product = currentProduct.product;
   const images = normalizeImages(product.images);
 
+
+    const handleAddToCart = ()=>{
+     dispatch(AddToCartThunk({
+      product_id : product._id,
+      quantity :qty
+     }))
+  }
   const handleAddToCart = () => {
     dispatch(
       AddToCartThunk({
@@ -131,6 +139,27 @@ export default function ProductPage() {
             ))}
           </div>
 
+          {/* Mobile Gallery */}
+          <div className="lg:hidden">
+            <div className="flex gap-4 overflow-x-hidden snap-x snap-mandatory scrollbar-hide">
+              {images.map((img, index) => (
+                <div
+                  key={index}
+                  className="min-w-full snap-center flex justify-center items-center
+                    bg-gradient-to-br from-[#1a120c] to-[#0b0b0b]
+                    rounded-2xl p-6 border border-[#3a2a1a]/40"
+                >
+                  <Image
+                    src={getValidImage(img)}
+                    alt={`product-${index}`}
+                    width={360}
+                    height={360}
+                    className="object-contain"
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
+            </div>
             
           </div>
 
