@@ -29,6 +29,8 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
     >
+    
+      
       <body className="bg-black text-white font-sans">
        
        

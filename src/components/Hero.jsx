@@ -41,6 +41,8 @@ export default function Hero() {
         {/* LEFT – TEXT CONTENT */}
         <div className="flex flex-col justify-center px-4 sm:px-8 md:px-16 py-20 pt-32 text-white font-serif z-20 text-center md:text-left">
 
+
+
           <p className="
             inline-flex items-center
             uppercase tracking-widest text-white/90 px-5 py-2.5 rounded-full
@@ -50,6 +52,7 @@ export default function Hero() {
           ">
             Freshly Roasted
           </p>
+
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-cinzel font-bold mt-4 leading-tight">
             Modern Coffee.
