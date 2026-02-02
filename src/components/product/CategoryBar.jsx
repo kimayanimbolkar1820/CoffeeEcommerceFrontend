@@ -29,7 +29,7 @@ const CategoryBar = () => {
     <div className="sticky top-0 z-30 bg-[#24160E] border-b border-[#3a2a1f]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center ">
         {/* Scrollable container */}
-      <div className="flex gap-3 overflow-x-hidden scrollbar-hide whitespace-nowrap justify-start md:justify-center px-2 md:px-52">
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide whitespace-nowrap justify-start md:justify-center px-2 md:px-52">
 
 
           {categories.map((cat) => (

@@ -236,8 +236,10 @@ const onSubmit = (e) => {
       <div
         className={clsx(
 
+
           "fixed inset-y-0 right-0  w-[85%] max-w-sm bg-black text-white transform transition-transform duration-500 md:hidden overflow-x-hidden will-change-transform",
 
+      
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >

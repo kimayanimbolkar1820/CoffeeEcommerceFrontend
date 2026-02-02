@@ -14,7 +14,8 @@ const store = configureStore({
           auth : authReducer,
           cart : cartReducer,
           category: categoryReducer,
-           search: searchReducer,
+          search: searchReducer,
+
     }
 })
 
