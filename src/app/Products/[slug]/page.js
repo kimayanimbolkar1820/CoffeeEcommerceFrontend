@@ -49,11 +49,8 @@ export default function ProductPage() {
     <section className="min-h-screen bg-[#24160E] text-[#f5efe6]">
       <div className="flex flex-col lg:flex-row min-h-screen items-stretch">
 
-        {/* ================= LEFT : IMAGE CARD (60%) ================= */}
-        <div className="lg:w-[45%]">
-
-          {/* Decorative beans – top left */}
-          <div className="pointer-events-none absolute -top-20 -left-59 w-[35%] z-[20]">
+         {/* Decorative beans – top left */}
+          <div className="pointer-events-none absolute -top-1 md:-top-20  -left-27  md:-left-55 md:w-[35%] w-[65%] z-[10]">
             <img
               src="/images/bean13.png"
               alt=""
@@ -66,92 +63,126 @@ export default function ProductPage() {
             <img
               src="/images/beans14.png"
               alt=""
-              className="absolute -bottom-10 lg:right-0 w-[35%] max-w-none opacity-80 sepia
+              className="absolute md:-bottom-10 lg:right-0 md:w-[35%] -bottom-50 w-[105%] right-0 max-w-none opacity-80 sepia
               hue-rotate-[18deg]
               saturate-[0.6]
               brightness-[1.25]"
             />
           </div>
 
+        {/* ================= LEFT : IMAGE CARD (60%) ================= */}
+        <div className="lg:w-[45%] relative overflow-hidden">
+
+
+        
+
+
           <div
-            className="
-              bg-[#b2a28e]
-              w-[650px] 
-              h-[520px] lg:h-[680px]
-              rounded-br-[58px]
-              flex flex-col gap-3 items-center justify-center pt-16
-              shadow-[0_40px_80px_rgba(0,0,0,0.45)]
-              relative 
-            "
-          >
-            <Image
-              src={getValidImage(images[activeImage])}
-              alt={product.name}
-              width={420}
-              height={420}
-              priority
-              className="
-                object-contain
-                scale-110
-                drop-shadow-[0_25px_35px_rgba(0,0,0,0.55)]
-                rounded-3xl
-              "
-            />
+  
+  className="
+    bg-[#b2a28e]
+    w-full
+    max-w-[650px]
+    aspect-[4/3] lg:aspect-auto
+    lg:h-[680px]
+    mx-auto lg:mx-0
+    rounded-br-[58px]
+    flex flex-col items-center justify-center
+    pt-12 pb-3  lg:pt-16   /* 👈 more top padding only for mobile */
+    shadow-[0_40px_80px_rgba(0,0,0,0.45)]
+    relative
+    
+  "
+>
 
-            {/* Thumbnails */}
-            <div className="flex gap-6 mt-10 justify-center">
-              {images.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveImage(index)}
-                  className={`
-                    w-16 h-16 rounded-xl overflow-hidden
-                    border transition-all
-                    ${
-                      activeImage === index
-                        ? "border-[#c7a17a]"
-                        : "border-[#3a2a1a] opacity-60 hover:opacity-100"
-                    }
-                  `}
-                >
-                  <Image
-                    src={getValidImage(img)}
-                    alt="thumbnail"
-                    width={64}
-                    height={64}
-                    className="object-contain p-2"
-                  />
-                </button>
-              ))}
-            </div>
 
-            {/* Mobile Gallery */}
-            <div className="lg:hidden">
-              <div className="flex gap-4 overflow-x-hidden snap-x snap-mandatory scrollbar-hide">
-                {images.map((img, index) => (
-                  <div
-                    key={index}
-                    className="min-w-full snap-center flex justify-center items-center
-                      bg-gradient-to-br from-[#1a120c] to-[#0b0b0b]
-                      rounded-2xl p-6 border border-[#3a2a1a]/40"
-                  >
-                    <Image
-                      src={getValidImage(img)}
-                      alt={`product-${index}`}
-                      width={360}
-                      height={360}
-                      className="object-contain"
-                      priority={index === 0}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+
+{/* ================= MOBILE IMAGE SLIDER ================= */}
+<div className="lg:hidden w-full">
+  <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+    {images.map((img, index) => (
+      <div
+        key={index}
+        className="min-w-full snap-center flex justify-center"
+      >
+        <Image
+          src={getValidImage(img)}
+          alt={`product-${index}`}
+          width={360}
+          height={360}
+          priority={index === 0}
+          className="
+            object-contain
+            w-[75%]
+            h-auto
+            drop-shadow-[0_20px_30px_rgba(0,0,0,0.45)]
+            rounded-3xl
+          "
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
+
+
+
+
+{/* ================= DESKTOP IMAGE ================= */}
+<div className="hidden lg:flex flex-col items-center gap-6">
+  <Image
+    src={getValidImage(images[activeImage])}
+    alt={product.name}
+    width={500}
+    height={500}
+    priority
+    className="
+      object-contain
+      w-[420px]
+      h-auto
+      drop-shadow-[0_25px_35px_rgba(0,0,0,0.55)]
+      rounded-3xl
+    "
+  />
+
+  <div className="flex flex-wrap gap-4 justify-center px-4">
+    {images.map((img, index) => (
+      <button
+        key={index}
+        onClick={() => setActiveImage(index)}
+        className={`
+          w-16 h-16 rounded-xl overflow-hidden
+          border transition-all
+          ${
+            activeImage === index
+              ? "border-[#c7a17a]"
+              : "border-[#3a2a1a] opacity-60 hover:opacity-100"
+          }
+        `}
+      >
+        <Image
+          src={getValidImage(img)}
+          alt="thumbnail"
+          width={64}
+          height={64}
+          className="object-contain p-2"
+        />
+      </button>
+    ))}
+  </div>
+</div>
+
+
+
+
+
+           
           </div>
         </div>
 
         {/* ================= RIGHT : PRODUCT DETAILS (40%) ================= */}
-        <div className="lg:w-[50%] w-full px-6 lg:px-16 py-14 flex flex-col justify-between relative z-[10] h-[520px] pt-8 pb-6">
+        <div className="lg:w-[50%] w-full px-6 lg:px-16 py-14 flex flex-col justify-between relative z-[10] h-auto lg:h-[520px]
+ pt-8 pb-6">
 
           <div>
             {product.categoryLevel3 && (
@@ -223,7 +254,7 @@ export default function ProductPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col gap-4 mt-3">
+          <div className="flex flex-col gap-4 mt-3 pb-6 lg:pb-0">
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleAddToCart}
