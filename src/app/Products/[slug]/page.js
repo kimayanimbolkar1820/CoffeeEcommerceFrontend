@@ -301,7 +301,7 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
-      </div>
+     
     </section>
   );
 }
