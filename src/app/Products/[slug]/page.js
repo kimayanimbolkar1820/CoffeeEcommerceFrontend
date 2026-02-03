@@ -37,13 +37,6 @@ export default function ProductPage() {
   const product = currentProduct.product;
   const images = normalizeImages(product.images);
 
-
-    const handleAddToCart = ()=>{
-     dispatch(AddToCartThunk({
-      product_id : product._id,
-      quantity :qty
-     }))
-  }
   const handleAddToCart = () => {
     dispatch(
       AddToCartThunk({
@@ -276,6 +269,7 @@ export default function ProductPage() {
             </motion.button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
