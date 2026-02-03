@@ -39,7 +39,7 @@ export default function ProductPage() {
   const handleAddToCart = () => {
     dispatch(
       AddToCartThunk({
-        product_id: product._id,
+        product_id:  product.id,
         quantity: qty,
       })
     );
@@ -172,7 +172,7 @@ export default function ProductPage() {
               <Spec label="Roast Colour" value={product.roastColour} />
               <Spec
                 label="Stock"
-                value={product.inStock ? "In Stock" : "Out of Stock"}
+                value={product.inStock === 1 ? "In Stock" : "Out of Stock"}
                 valueClass={product.inStock ? "text-green-400" : "text-red-500"}
               />
               <Spec label="Quantity" value={product.quantity} />
@@ -205,7 +205,7 @@ export default function ProductPage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleAddToCart}
-              className="w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+              className=" cursor-pointer w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
             >
               <ShoppingCart size={20} />
               Add to Cart
@@ -213,7 +213,7 @@ export default function ProductPage() {
 
             <motion.button
               whileTap={{ scale: 0.95 }}
-              className="w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
+              className=" cursor-pointer w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
             >
               <Zap size={20} />
               Buy Now
