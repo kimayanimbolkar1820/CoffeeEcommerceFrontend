@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
+
 :root {
   --background: #000000;
   --foreground: #ffffff;
 
+  /* Font variables from next/font */
   --font-cinzel: var(--font-cinzel);
   --font-playfair: var(--font-playfair);
   --font-inter: var(--font-inter);
@@ -22,6 +24,11 @@
 }
 
 
+
+html,
+body {
+  height: 100%;
+}
 
 body {
   background-color: var(--background);
@@ -45,4 +52,3 @@ body {
 .font-inter {
   font-family: var(--font-inter), sans-serif;
 }
-

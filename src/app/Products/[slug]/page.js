@@ -127,6 +127,17 @@ export default function ProductPage() {
 
 
 
+          {/* Decorative beans – bottom right */}
+          <div className="pointer-events-none absolute inset-0 z-[0]">
+            <img
+              src="/images/beans14.png"
+              alt=""
+              className="absolute -bottom-10 lg:right-0 w-[35%] max-w-none opacity-80 sepia
+              hue-rotate-[18deg]
+              saturate-[0.6]
+              brightness-[1.25]"
+            />
+          </div>
 
 {/* ================= DESKTOP IMAGE ================= */}
 <div className="hidden lg:flex flex-col items-center gap-6">
@@ -289,6 +300,7 @@ export default function ProductPage() {
             </motion.button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
