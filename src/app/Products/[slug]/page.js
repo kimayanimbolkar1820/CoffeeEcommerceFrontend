@@ -9,10 +9,14 @@ import { normalizeImages, getValidImage } from "@/utils/getValidImage";
 import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { AddToCartThunk } from "@/redux/features/cartSlice";
+import AddressPopup from "@/components/checkout/AddressPopup";
+
 
 export default function ProductPage() {
   const { slug } = useParams();
   const dispatch = useDispatch();
+  
+
 
   const { currentProduct, loading, error } = useSelector(
     (state) => state.product
@@ -20,6 +24,8 @@ export default function ProductPage() {
 
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
+  const [showAddressPopup, setShowAddressPopup] = useState(false);
+
 
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));
@@ -44,6 +50,20 @@ export default function ProductPage() {
       })
     );
   };
+
+  const handleBuyNow = () => {
+  // Optionally add to cart first
+  dispatch(
+    AddToCartThunk({
+      product_id: product._id || product.id,
+      quantity: qty,
+    })
+  );
+
+  // Open address popup
+  setShowAddressPopup(true);
+};
+
 
   return (
     <section className="min-h-screen bg-[#24160E] text-[#f5efe6]">
@@ -212,21 +232,40 @@ export default function ProductPage() {
               Add to Cart
             </motion.button>
 
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
-            >
-              <Zap size={20} />
-              Buy Now
-            </motion.button>
+           <motion.button
+  whileTap={{ scale: 0.95 }}
+  onClick={handleBuyNow}
+  className="w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
+>
+  <Zap size={20} />
+  Buy Now
+</motion.button>
+
           </div>
 
         </div>
       </div>
+
+      <AddressPopup
+  open={showAddressPopup}
+  onClose={() => setShowAddressPopup(false)}
+  onSubmit={(addressData) => {
+    console.log("Address from PDP:", addressData);
+
+    // Later:
+    // 1. Save address via shipment API
+    // 2. Create order
+    // 3. Redirect to payment
+
+    setShowAddressPopup(false);
+  }}
+/>
      
     </section>
   );
 }
+
+
 
 /* ================= SPEC CARD ================= */
 function Spec({ label, value, valueClass = "text-[#c7a17a]" }) {
