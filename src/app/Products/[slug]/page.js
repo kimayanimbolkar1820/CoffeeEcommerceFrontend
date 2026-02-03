@@ -34,12 +34,12 @@ export default function ProductPage() {
   if (!currentProduct?.product) return null;
 
   const product = currentProduct.product;
-  const images = normalizeImages(product.images);
+  const images = normalizeImages(product.images || []);
 
   const handleAddToCart = () => {
     dispatch(
       AddToCartThunk({
-        product_id: product._id,
+        product_id: product._id || product.id,
         quantity: qty,
       })
     );
@@ -47,10 +47,11 @@ export default function ProductPage() {
 
   return (
     <section className="min-h-screen bg-[#24160E] text-[#f5efe6]">
-      <div className="flex flex-col lg:flex-row min-h-screen items-stretch">
+     <div className="flex flex-col lg:flex-row min-h-screen items-start relative">
 
-         {/* Decorative beans – top left */}
-          <div className="pointer-events-none absolute -top-1 md:-top-20  -left-27  md:-left-55 md:w-[35%] w-[65%] z-[10]">
+
+       {/* Decorative beans – top left */}
+        <div className="pointer-events-none absolute top-0 -left-0 md:-top-16 md:-left-50  w-[60%] md:w-[35%] z-[20]">
             <img
               src="/images/bean13.png"
               alt=""
@@ -69,131 +70,72 @@ export default function ProductPage() {
               brightness-[1.25]"
             />
           </div>
+        {/* ================= LEFT : IMAGE CARD ================= */}
+        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center py-10">
 
-        {/* ================= LEFT : IMAGE CARD (60%) ================= */}
-        <div className="lg:w-[45%] relative overflow-hidden">
+          {/* Desktop Image */}
+          <div className="hidden lg:flex flex-col items-center justify-center gap-6
+            bg-[#b2a28e] w-full max-w-[650px] h-[680px] rounded-br-[58px]
+            shadow-[0_40px_80px_rgba(0,0,0,0.45)] relative z-10"
+          >
+            {images[activeImage] && (
+              <Image
+                src={getValidImage(images[activeImage])}
+                alt={product.name}
+                width={420}
+                height={420}
+                priority
+                className="object-contain w-[420px] h-auto drop-shadow-[0_25px_35px_rgba(0,0,0,0.55)] rounded-3xl"
+              />
+            )}
 
-
-        
-
-
-          <div
-  
-  className="
-    bg-[#b2a28e]
-    w-full
-    max-w-[650px]
-    aspect-[4/3] lg:aspect-auto
-    lg:h-[680px]
-    mx-auto lg:mx-0
-    rounded-br-[58px]
-    flex flex-col items-center justify-center
-    pt-12 pb-3  lg:pt-16   /* 👈 more top padding only for mobile */
-    shadow-[0_40px_80px_rgba(0,0,0,0.45)]
-    relative
-    
-  "
->
-
-
-
-{/* ================= MOBILE IMAGE SLIDER ================= */}
-<div className="lg:hidden w-full">
-  <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-    {images.map((img, index) => (
-      <div
-        key={index}
-        className="min-w-full snap-center flex justify-center"
-      >
-        <Image
-          src={getValidImage(img)}
-          alt={`product-${index}`}
-          width={360}
-          height={360}
-          priority={index === 0}
-          className="
-            object-contain
-            w-[75%]
-            h-auto
-            drop-shadow-[0_20px_30px_rgba(0,0,0,0.45)]
-            rounded-3xl
-          "
-        />
-      </div>
-    ))}
-  </div>
-</div>
-
-
-
-
-          {/* Decorative beans – bottom right */}
-          <div className="pointer-events-none absolute inset-0 z-[0]">
-            <img
-              src="/images/beans14.png"
-              alt=""
-              className="absolute -bottom-10 lg:right-0 w-[35%] max-w-none opacity-80 sepia
-              hue-rotate-[18deg]
-              saturate-[0.6]
-              brightness-[1.25]"
-            />
+            {/* Thumbnails */}
+            <div className="flex flex-wrap justify-center gap-4 px-4">
+              {images.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveImage(index)}
+                  className={`w-16 h-16 rounded-xl overflow-hidden border transition-all
+                    ${activeImage === index ? "border-[#c7a17a]" : "border-[#3a2a1a] opacity-60 hover:opacity-100"}`}
+                >
+                  <Image
+                    src={getValidImage(img)}
+                    alt={`thumbnail-${index}`}
+                    width={64}
+                    height={64}
+                    className="object-contain p-2"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
-{/* ================= DESKTOP IMAGE ================= */}
-<div className="hidden lg:flex flex-col items-center gap-6">
-  <Image
-    src={getValidImage(images[activeImage])}
-    alt={product.name}
-    width={500}
-    height={500}
-    priority
-    className="
-      object-contain
-      w-[420px]
-      h-auto
-      drop-shadow-[0_25px_35px_rgba(0,0,0,0.55)]
-      rounded-3xl
-    "
-  />
-
-  <div className="flex flex-wrap gap-4 justify-center px-4">
-    {images.map((img, index) => (
-      <button
-        key={index}
-        onClick={() => setActiveImage(index)}
-        className={`
-          w-16 h-16 rounded-xl overflow-hidden
-          border transition-all
-          ${
-            activeImage === index
-              ? "border-[#c7a17a]"
-              : "border-[#3a2a1a] opacity-60 hover:opacity-100"
-          }
-        `}
-      >
-        <Image
-          src={getValidImage(img)}
-          alt="thumbnail"
-          width={64}
-          height={64}
-          className="object-contain p-2"
-        />
-      </button>
-    ))}
-  </div>
-</div>
-
-
-
-
-
-           
+          {/* Mobile Slider */}
+          <div className="lg:hidden w-full px-4">
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4">
+              {images.map((img, index) => (
+                <div
+                  key={index}
+                  className="min-w-full snap-center flex justify-center items-center
+                  bg-[#1a120c] rounded-2xl p-6 border border-[#3a2a1a]/40"
+                >
+                  <Image
+                    src={getValidImage(img)}
+                    alt={`product-${index}`}
+                    width={320}
+                    height={320}
+                    className="object-contain"
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
+
         </div>
 
-        {/* ================= RIGHT : PRODUCT DETAILS (40%) ================= */}
-        <div className="lg:w-[50%] w-full px-6 lg:px-16 py-14 flex flex-col justify-between relative z-[10] h-auto lg:h-[520px]
- pt-8 pb-6">
+        {/* ================= RIGHT : PRODUCT DETAILS ================= */}
+        <div className="lg:w-[50%] w w-full px-6 lg:px-16 pt-6 pb-6 flex flex-col justify-between relative z-[10] h-auto lg:h-[520px] pt-8 pb-6">
 
           <div>
             {product.categoryLevel3 && (
@@ -237,12 +179,7 @@ export default function ProductPage() {
 
             {/* Quantity Selector */}
             <div className="mt-4">
-              <div className="
-                inline-flex items-center
-                border border-[#3a2a1a]
-                rounded-full
-                overflow-hidden
-              ">
+              <div className="inline-flex items-center border border-[#3a2a1a] rounded-full overflow-hidden">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
@@ -269,15 +206,7 @@ export default function ProductPage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleAddToCart}
-              className="
-                w-full
-                bg-[#c7a17a]
-                text-black
-                py-4
-                rounded-full
-                font-bold
-                flex items-center justify-center gap-3
-              "
+              className="w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
             >
               <ShoppingCart size={20} />
               Add to Cart
@@ -285,22 +214,14 @@ export default function ProductPage() {
 
             <motion.button
               whileTap={{ scale: 0.95 }}
-              className="
-                w-full
-                border border-[#c7a17a]
-                text-[#c7a17a]
-                py-4
-                rounded-full
-                font-bold
-                flex items-center justify-center gap-3
-              "
+              className="w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
             >
               <Zap size={20} />
               Buy Now
             </motion.button>
           </div>
+
         </div>
-      </div>
       </div>
     </section>
   );

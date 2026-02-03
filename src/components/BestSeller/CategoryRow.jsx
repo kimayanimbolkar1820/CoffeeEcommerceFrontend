@@ -3,10 +3,21 @@ import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { getValidImage,normalizeImages } from "@/utils/getValidImage" // Import the utility here
+import { AddToCartThunk } from "@/redux/features/cartSlice"
+import { useDispatch } from "react-redux"
 
 const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
   // Ensure items is always an array
   const safeItems = Array.isArray(items) ? items : []
+  const dispatch = useDispatch()
+
+
+  const handleAddToCart =(item)=>{
+    dispatch(AddToCartThunk({
+      product_id : item.id,
+      quantity: item.qty,
+    }))
+  }
 
   return (
     <div>
@@ -61,8 +72,11 @@ const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
               </span>
 
               <button
-                onClick={(e) => e.preventDefault()}
-                className="px-3 py-1 sm:px-4 sm:py-2 rounded-full bg-black text-[#F3E0C8] group-hover:bg-[#F3E0C8] group-hover:text-black text-sm sm:text-base transition"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleAddToCart(item)
+                }}
+                className=" cursor-pointer px-3 py-1 sm:px-4 sm:py-2 rounded-full bg-black text-[#F3E0C8] group-hover:bg-[#F3E0C8] group-hover:text-black text-sm sm:text-base transition"
               >
                 Add
               </button>
