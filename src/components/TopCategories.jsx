@@ -46,8 +46,7 @@ export default function TopCategories() {
         <img
           src={beans.topLeft}
           alt=""
-
-
+         
           className="
             absolute
             top-20 sm:-top-4
