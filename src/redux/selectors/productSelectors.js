@@ -5,8 +5,10 @@ export const selectFilteredProducts = createSelector(
     (state) => state.product.data.products,
     (state) => state.category.activeCategory,
     (state) => state.filter,
+     (state) => state.search.query, 
+    
   ],
-  (products, activeCategory, filter) => {
+  (products, activeCategory, filter,searchQuery) => {
     if (!products) return [];
 
     return products.filter((p) => {
@@ -55,6 +57,17 @@ export const selectFilteredProducts = createSelector(
           return false;
         }
       }
+
+      
+    // ---------------- 🔍 SEARCH FILTER (LAST) ----------------
+    if (searchQuery && searchQuery.trim() !== "") {
+      const q = searchQuery.toLowerCase();
+
+      return (
+        p.name?.toLowerCase().includes(q) ||
+        p.slug?.toLowerCase().includes(q)
+      );
+    }
 
 
       

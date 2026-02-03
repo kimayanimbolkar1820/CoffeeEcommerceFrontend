@@ -26,7 +26,7 @@ export const normalizeImages = (images) => {
 };
 
 export const getValidImage = (img) => {
-  if (!img) return "/images/placeholder.jpg";
+  if (!img) return "/images/placeholder.png";
 
   // String URL
   if (typeof img === "string") {
@@ -44,5 +44,5 @@ export const getValidImage = (img) => {
     return img.url;
   }
 
-  return "/images/placeholder.jpg";
+  return "/images/placeholder.png";
 };
