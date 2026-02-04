@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { setSearchQuery } from "@/redux/features/searchSlice";
 import { setActiveCategory } from "@/redux/features/categorySlice";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function Navbar() {
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const {user} = useSelector((state)=>state.auth)
 
     const dispatch = useDispatch();
   const router = useRouter();
@@ -56,6 +58,15 @@ const onSubmit = (e) => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+ const handleProfileButton = ()=>{
+   if (user){
+    router.push("/account")
+  }
+  else{
+    router.push('/Auth/login')
+  }
+ }
 
   return (
     <nav className="fixed top-0 left-0 z-50 w-full ">
@@ -127,12 +138,13 @@ const onSubmit = (e) => {
             <motion.div
               whileTap={{ scale: 0.9 }}
               whileHover={{ scale: 1.05 }}
+              onClick={handleProfileButton}
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
               className="p-2 rounded-full hover:bg-white/10 hover:shadow-[0_0_12px_rgba(255,255,255,0.25)]"
             >
-              <Link href="/Auth/login">
+              
                 <AiOutlineUser className="text-white text-xl" />
-              </Link>
+              
             </motion.div>
 
             {/* 🛒 Cart */}
@@ -179,9 +191,9 @@ const onSubmit = (e) => {
 
             </div>
 
-            <Link href="/Auth/login">
+            <button onClick={handleProfileButton}>
               <AiOutlineUser className="text-xl hover:scale-140 transition cursor-pointer hover:text-shadow-amber-50" />
-            </Link>
+            </button>
 
             <button
               onClick={() => setCartOpen(true)}
