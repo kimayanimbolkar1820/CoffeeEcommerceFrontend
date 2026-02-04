@@ -23,24 +23,22 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+export const metadata = {
+   title: "Coffee & Joy",
+   description: "Next.js layout with navbar sidebar footer",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}
-    >
-    
-      
-      <body className="bg-black text-white font-sans">
-       
-       
+      className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}>
+      <body className="bg-black text-white font-sans">  
         <ReduxProvider>
           <NavbarWrapper />
-
-          <main className="min-h-screen">
+           <main className="min-h-screen">
             {children}
           </main>
-
           <FooterWrapper />
           <ToastProvider />
         </ReduxProvider>
