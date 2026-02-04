@@ -4,6 +4,7 @@ import NavbarWrapper from "@/components/NavbarWrapper";
 import FooterWrapper from "@/components/FooterWrapper";
 import ReduxProvider from "@/redux/ReduxProvider";
 import ToastProvider from "@/components/ToastProvider";
+import AuthInit from "@/components/AuthInit";
 
 const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
        
        
         <ReduxProvider>
+          <AuthInit/>
           <NavbarWrapper />
 
           <main className="min-h-screen">

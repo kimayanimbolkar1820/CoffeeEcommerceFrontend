@@ -1,5 +1,5 @@
 import  { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
-import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword } from '@/api/authApi'
+import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword , userInfo } from '@/api/authApi'
 import { toast } from "react-toastify";
 
 export const singupThunk = createAsyncThunk(
@@ -81,12 +81,24 @@ export const forgotpassThunk = createAsyncThunk(
     }
 )
 
+export const userInfoThunk = createAsyncThunk(
+    "auth/userInfo",
+    async( {rejectWithValue} )=>{
+         try {
+            const res = await userInfo()
+         } catch (error) {
+            return rejectWithValue()
+         }
+    }
+)
+
 
 
 const auth = createSlice({
     name:"auth",
     initialState :{
         user : null,
+        isAutherised :false,
         loading:false,
         error:null,
         otpSent : false,
@@ -193,6 +205,15 @@ const auth = createSlice({
             state.loading=false
             state.error = action.payload
             toast.error(action.payload)
+         })
+
+         .addCase(userInfoThunk.fulfilled , (state , action)=>{
+            state.user = action.payload
+            state.isAutherised = true
+         })
+         .addCase(userInfoThunk.rejected , (state )=>{
+            state.user = null
+            state.isAutherised = false
          })
 
     }
