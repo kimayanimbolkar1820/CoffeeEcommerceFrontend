@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { addShippingAddressThunk } from "@/redux/features/shippingSlice";
 
 export default function AddressPopup({ open, onClose, onSubmit }) {
   const [form, setForm] = useState({
@@ -17,6 +19,7 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
     country: "India",
     is_default: true,
   });
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -25,10 +28,17 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(form);
+    
+    const payload = {...form , address_type : form.address_type.toLowerCase(),
+       is_default: form.is_default ? 1 : 0,
+    }
+
+    onSubmit(dispatch(addShippingAddressThunk(payload)));
   };
 
   if (!open) return null;
+
+  console.log(form)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -71,24 +81,28 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
               <Field
                 label="Full Name"
                 name="full_name"
+                value={form.full_name}
                 placeholder="Enter your full name"
                 onChange={handleChange}
               />
               <Field
                 label="Phone Number"
                 name="phone"
+                value={form.phone}
                 placeholder="Enter your phone number"
                 onChange={handleChange}
               />
               <Field
                 label="Address Line 1"
                 name="address_line1"
+                value={form.address_line1}
                 placeholder="House no, street, area"
                 onChange={handleChange}
               />
               <Field
                 label="Address Line 2 (Optional)"
                 name="address_line2"
+                value={form.address_line2}
                 placeholder="Apartment, landmark"
                 onChange={handleChange}
               />
@@ -99,18 +113,21 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
               <Field
                 label="City"
                 name="city"
+                value={form.city}
                 placeholder="City"
                 onChange={handleChange}
               />
               <Field
                 label="State"
                 name="state"
+                value={form.state}
                 placeholder="State"
                 onChange={handleChange}
               />
               <Field
                 label="Postal Code"
                 name="postal_code"
+                value={form.postal_code}
                 placeholder="PIN code"
                 onChange={handleChange}
               />
