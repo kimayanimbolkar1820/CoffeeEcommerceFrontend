@@ -52,15 +52,6 @@ export default function ProductPage() {
   };
 
   const handleBuyNow = () => {
-  // Optionally add to cart first
-  dispatch(
-    AddToCartThunk({
-      product_id: product._id || product.id,
-      quantity: qty,
-    })
-  );
-
-  // Open address popup
   setShowAddressPopup(true);
 };
 
