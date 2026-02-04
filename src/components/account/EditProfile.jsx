@@ -7,24 +7,14 @@ import { X, Loader2 } from "lucide-react";
 
 export default function EditProfile({ user = {}, setUser, onClose }) {
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    email: "",
+    name: user.name || "",
+    phone: user.phone || "",
+    email: user.email || "",
   });
 
   const [preview, setPreview] = useState(user.image);
   const [loading, setLoading] = useState(false);
-  const [snapshot, setSnapshot] = useState(null); // ❌ revert support
-
-  useEffect(() => {
-    setForm({
-      name: user.name || "",
-      phone: user.phone || "",
-      email: user.email || "",
-    });
-    setPreview(user.image);
-    setSnapshot(user); // save original
-  }, [user]);
+  const [snapshot] = useState(user); // ❌ revert support
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });

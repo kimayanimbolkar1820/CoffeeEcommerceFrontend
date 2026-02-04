@@ -12,6 +12,7 @@ import { getValidImage, normalizeImages } from "@/utils/getValidImage";
 import CategoryBar from "@/components/product/CategoryBar";
 import FilterSidebar from "@/components/product/Filters/FilterSidebar";
 import ProductHero from "@/components/product/ProductHero";
+import { AddToCartThunk } from "@/redux/features/cartSlice";
 import { FaFilter } from "react-icons/fa";
 
 
@@ -31,6 +32,15 @@ const Page = () => {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  const handleAddToCart = (item) => {
+      dispatch(
+        AddToCartThunk({
+          product_id: item.id,
+          quantity: item.qty,
+        })
+      );
+    };
 
   if (loading) return <p className="mt-20 text-center">Loading...</p>;
   if (error)
@@ -150,7 +160,10 @@ const Page = () => {
                         ₹{item.price}
                       </span>
                       <button
-                        onClick={(e) => e.preventDefault()}
+                        onClick={(e)=>{
+                          e.preventDefault()
+                          handleAddToCart(item)
+                        }}
                         className="px-3 sm:px-4 py-1 sm:py-2 rounded-full bg-black text-[#F3E0C8] text-xs sm:text-sm hover:bg-[#F3E0C8] hover:text-black transition"
                       >
                         Add

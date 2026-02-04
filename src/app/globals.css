@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
+
 :root {
   --background: #000000;
   --foreground: #ffffff;
 
+  /* Font variables from next/font */
   --font-cinzel: var(--font-cinzel);
   --font-playfair: var(--font-playfair);
   --font-inter: var(--font-inter);
@@ -23,6 +25,11 @@
 
 
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -31,9 +38,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===============================
-   OPTIONAL UTILITY HELPERS
-   =============================== */
 .font-cinzel {
   font-family: var(--font-cinzel), serif;
 }
@@ -47,9 +51,6 @@ body {
 }
 
 /* My Account   */
-
-
-
 @layer components {
   .card {
     @apply bg-[#fff7f1] rounded-2xl shadow-lg p-6;
@@ -90,31 +91,3 @@ body {
   }
 } 
 
-
-/* 
-.card {
-  @apply bg-[#2c2018] text-white md:bg-white md:text-[#3b2a1f]
-  p-6 rounded-xl transition-all;
-}
-
-.title {
-  @apply text-xl font-semibold mb-4;
-}
-
-.input {
-  @apply w-full mb-3 px-4 py-2 rounded
-  bg-[#2a1d14] text-white
-  md:bg-[#f6efe9] md:text-[#3b2a1f]
-  border border-[#6b4a34];
-}
-
-.btn-primary {
-  @apply bg-[#583e2d] text-white px-6 py-3 rounded
-  hover:scale-105 transition;
-}
-
-.modal {
-  @apply w-full max-w-md bg-[#3b2a1f] text-white
-  md:bg-white md:text-[#3b2a1f]
-  p-6 rounded-xl;
-} */

@@ -25,13 +25,14 @@ export default function Hero() {
       {/* MOBILE BACKGROUND VIDEO */}
       <div className="absolute inset-0 z-0 md:hidden">
         <video
-          src="/images/coffeevideo.mp4.mp4"
+          src="/images/coffeevideo.mp4"
           autoPlay
           muted
           loop
           playsInline
           className="w-full h-full object-cover"
         />
+        {/* Dark overlay for readability */}
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
@@ -39,20 +40,18 @@ export default function Hero() {
       <div className="relative z-10 grid min-h-screen md:grid-cols-[30%_70%]">
 
         {/* LEFT – TEXT CONTENT */}
-        <div className="flex flex-col justify-center px-4 sm:px-8 md:px-16 py-20 pt-32 text-white font-serif z-20 text-center md:text-left">
-
-
-
+        <div className="flex flex-col justify-center px-8 md:px-16 pt-32 md:pt-28 text-white font-serif z-20 text-center md:text-left">
+          
           <p className="
             inline-flex items-center
             uppercase tracking-widest text-white/90 px-5 py-2.5 rounded-full
-            md:w-55 md:h-10 w-55 h-10
-            ml-4 bg-white/10 backdrop-blur-xl
-            border border-white/20 shadow-lg
+            md:w-55 md:h-10 w-55 h-10 ml-4
+            bg-white/10 backdrop-blur-xl
+            border border-white/20
+            shadow-lg
           ">
             Freshly Roasted
           </p>
-
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-cinzel font-bold mt-4 leading-tight">
             Modern Coffee.
@@ -75,7 +74,6 @@ export default function Hero() {
 
         {/* RIGHT – MEDIA */}
         <div className="relative w-full h-full overflow-hidden hidden md:block">
-
           {media.map((item, index) => (
             <div
               key={index}
@@ -90,7 +88,7 @@ export default function Hero() {
                   width={item.width}
                   height={item.height}
                   alt="Coffee visual"
-                  className="w-full h-full object-cover transition-transform duration-700"
+                  className="w-full h-full object-cover scale-105 transition-transform duration-700"
                   priority={index === active}
                 />
               ) : (
@@ -100,17 +98,17 @@ export default function Hero() {
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover transition-transform duration-700"
+                  className="w-full h-full object-cover scale-105 transition-transform duration-700"
                 />
               )}
-
               {/* Gradient overlay for luxury feel */}
               <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/20 to-black" />
             </div>
           ))}
-
         </div>
+
       </div>
+
     </section>
   );
 }

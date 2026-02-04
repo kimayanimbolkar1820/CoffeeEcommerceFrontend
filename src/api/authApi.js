@@ -26,7 +26,7 @@ export const forgetPassword = async (data)=>{
     return response.data
 }
 
-export const resetPassword = async (userInfo)=>{
-    const response = await api.post("/auth/reset-password",userInfo)
-    return response.data
+export const userInfo = async ()=>{
+    const response = await api.get("/auth/me")
+    return response.user
 }
