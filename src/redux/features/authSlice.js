@@ -86,6 +86,7 @@ export const userInfoThunk = createAsyncThunk(
     async( {rejectWithValue} )=>{
          try {
             const res = await userInfo()
+            return res
          } catch (error) {
             return rejectWithValue()
          }
