@@ -2,13 +2,16 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useDispatch  } from "react-redux";
+import { userLogoutThunk } from "@/redux/features/authSlice";
 
 export default function LogoutPage() {
   const router = useRouter();
+  const dispatch = useDispatch()
 
   const handleLogout = () => {
-    localStorage.clear(); // later connect to backend API
-    router.replace("/login");
+    dispatch(userLogoutThunk())
+    router.replace("/");
   };
 
   return (

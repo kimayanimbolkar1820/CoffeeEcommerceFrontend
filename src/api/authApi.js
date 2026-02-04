@@ -30,3 +30,8 @@ export const userInfo = async ()=>{
     const response = await api.get("/auth/me")
     return response.user
 }
+
+export const userLogOut = async()=>{
+    const response = await api.delete("/auth/logout")
+    return response
+} 

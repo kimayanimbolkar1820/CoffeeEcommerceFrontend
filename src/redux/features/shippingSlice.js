@@ -22,7 +22,8 @@ const shippingSlice = createSlice({
     initialState:{
         address : [],
         loading : false,
-        error :null
+        error :null,
+        isSaved :  false 
     },
     reducers:{},
     extraReducers:(builder)=>{
@@ -36,11 +37,13 @@ const shippingSlice = createSlice({
        .addCase(addShippingAddressThunk.fulfilled , (state , action)=>{
         state.loading = false
         state.address = action.payload
+        state.isSaved = true
         state.error = null
        })
 
        .addCase(addShippingAddressThunk.rejected , (state , action)=>{
         state.loading = false
+        state.isSaved = false
         state.error = action.payload
        })
 
