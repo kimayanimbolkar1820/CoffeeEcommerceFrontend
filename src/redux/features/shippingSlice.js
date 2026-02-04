@@ -47,3 +47,6 @@ const shippingSlice = createSlice({
 
     }
 })
+
+
+export default shippingSlice.reducer
