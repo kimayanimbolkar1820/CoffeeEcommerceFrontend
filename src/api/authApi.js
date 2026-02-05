@@ -25,10 +25,14 @@ export const forgetPassword = async (data)=>{
     const response = await api.post("/auth/forgot-password",data)
     return response.data
 }
+export const resetPassword = async (newPassword)=>{
+    const response = await api.post("/auth/reset-password",newPassword)
+    return response.data
+}
 
 export const userInfo = async ()=>{
     const response = await api.get("/auth/me")
-    return response.user
+    return response.data
 }
 
 export const userLogOut = async()=>{

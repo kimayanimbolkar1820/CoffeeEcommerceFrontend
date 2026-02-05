@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { Mailbox } from "lucide-react";
+import { useDispatch , useSelector  } from "react-redux";
+import { resetPasswordThunk } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
   const [userInfo, setUserInfo] = useState({
@@ -14,23 +17,9 @@ export default function ResetPasswordPage() {
   });
   const [showPass, setShowPass] = useState(false);
   const [otp , setOtp] = useState(Array(6).fill(""))
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!password || !confirmPassword) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    console.log("Reset password:", password);
-    // connect api / redux here
-  };
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const {isResetPass} = useSelector((state)=>state.auth)
 
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
@@ -65,6 +54,35 @@ export default function ResetPasswordPage() {
   };
 
 console.log(userInfo , otp)
+
+const handleResetPass = (e) => {
+  e.preventDefault();
+
+  if (!userInfo.email || !userInfo.newPassword) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const otpCode = otp.join("");
+  if (otpCode.length !== 6) {
+    alert("Please enter valid OTP");
+    return;
+  }
+
+  const payload = {
+    email: userInfo.email,
+    newPassword: userInfo.newPassword,
+    otp: otpCode,
+  };
+
+  dispatch(resetPasswordThunk(payload));
+};
+
+useEffect(()=>{
+   if(isResetPass){
+    router.push("/Auth/login")
+   }
+},[ isResetPass , router])
 
   return (
     <motion.div
@@ -104,8 +122,8 @@ console.log(userInfo , otp)
           Reset password
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* New Password */}
+        <form onSubmit={handleResetPass} className="space-y-5">
+          {/* email */}
           <div className="space-y-1">
             <label className="text-sm text-gray-200">Email</label>
             <div className="relative">
@@ -113,21 +131,21 @@ console.log(userInfo , otp)
                 type="email"
                 value={userInfo.email}
                 placeholder="Enter Your Email"
-                onChange={(e) => setUserInfo(e.target.value)}
+                onChange={(e) => setUserInfo({...userInfo , email : e.target.value})}
                 className="w-full pl-5 pr-10 py-3 rounded-xl bg-black/30 border border-white/20 focus:border-orange-400 outline-none"
               />
             </div>
           </div>
 
-          {/* Confirm Password */}
+          {/* New Password */}
           <div className="space-y-1">
             <label className="text-sm text-gray-200">New password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
               <input
-                type="password"
+                type={showPass ? "text" : "password"}
                 value={userInfo.newPassword}
-                onChange={(e) => setUserInfo(e.target.value)}
+                onChange={(e) => setUserInfo({...userInfo , newPassword : e.target.value})}
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/30 border border-white/20 focus:border-orange-400 outline-none"
               />
                <button
@@ -174,7 +192,7 @@ console.log(userInfo , otp)
         {/* Back */}
         <div className="mt-6 text-center">
           <Link
-            href="/Auth/forgot-password"
+            href="/Auth/login"
             className="text-sm text-gray-200 hover:text-orange-400 transition"
           >
             ← Back to Sign In
