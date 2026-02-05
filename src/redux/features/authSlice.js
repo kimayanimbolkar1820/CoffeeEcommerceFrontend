@@ -1,5 +1,5 @@
 import  { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
-import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword , userInfo ,userLogOut } from '@/api/authApi'
+import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword ,resetPassword , userInfo ,userLogOut } from '@/api/authApi'
 import { toast } from "react-toastify";
 
 export const singupThunk = createAsyncThunk(
@@ -81,14 +81,33 @@ export const forgotpassThunk = createAsyncThunk(
     }
 )
 
+export const resetPasswordThunk = createAsyncThunk(
+    "auth/resetPassword",
+    async (newPassword ,{rejectWithValue })=>{
+        try {
+            const res = await resetPassword(newPassword)
+            return res
+            
+        } catch (error) {
+            return rejectWithValue(
+            error.response?.data?.message || "User not found "
+            )
+        }
+    }
+)
+
+
+
 export const userInfoThunk = createAsyncThunk(
     "auth/userInfo",
-    async( {rejectWithValue} )=>{
+    async(_, {rejectWithValue} )=>{
          try {
             const res = await userInfo()
             return res
          } catch (error) {
-            return rejectWithValue()
+            return rejectWithValue(
+                  error.response?.data?.message || "Not authenticated"
+            )
          }
     }
 )
@@ -111,11 +130,13 @@ const auth = createSlice({
     initialState :{
         user : null,
         isAutherised :false,
+        authChecked:false,
         loading:false,
         error:null,
         otpSent : false,
         otpVerified : false,
         tempUser :null,
+        isResetPass : false,
         forgotSteps : "EMAIL"
     },
     reducers:{
@@ -156,7 +177,9 @@ const auth = createSlice({
 
          .addCase(loginThunk.fulfilled ,(state ,action)=>{
              state.loading =false
-             state.user = action.payload
+              state.user = action.payload
+              state.isAutherised = true
+              state.authChecked = true
              toast.success("login successfully")
          })
 
@@ -219,18 +242,41 @@ const auth = createSlice({
             toast.error(action.payload)
          })
 
+         .addCase(resetPasswordThunk.pending , (state)=>{
+            state.loading = true 
+            state.error =null
+         })
+
+         .addCase(resetPasswordThunk.fulfilled , (state)=>{
+            state.loading = false 
+            state.isResetPass = true
+            toast.success("Password reset successfully")
+         })
+
+         .addCase(resetPasswordThunk.rejected , (state , action)=>{
+            state.loading = false 
+            state.isResetPass = false
+            state.error = action.payload
+         })
+
          .addCase(userInfoThunk.fulfilled , (state , action)=>{
             state.user = action.payload
             state.isAutherised = true
+            state.authChecked = true
+            state.loading = false
          })
 
          .addCase(userInfoThunk.rejected , (state )=>{
             state.user = null
             state.isAutherised = false
+            state.authChecked = true 
+            state.loading = false 
          })
 
          .addCase(userLogoutThunk.fulfilled , (state)=>{
+              state.user = null
               state.isAutherised = false
+              state.authChecked = true
          })
 
          .addCase(userLogoutThunk.rejected , (state , action)=>{

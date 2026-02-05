@@ -26,7 +26,7 @@ export default function Navbar() {
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const {user} = useSelector((state)=>state.auth)
+  const {user ,authChecked} = useSelector((state)=>state.auth)
 
     const dispatch = useDispatch();
   const router = useRouter();
@@ -60,6 +60,8 @@ const onSubmit = (e) => {
   }, []);
 
  const handleProfileButton = ()=>{
+    if(!authChecked) return ;
+
    if (user){
     router.push("/account")
   }
