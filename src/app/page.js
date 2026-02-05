@@ -6,12 +6,10 @@ import PricingCards from '@/components/PricingCards'
 import Blogs from '@/components/Blogs'
 import AboutUs from '@/components/AboutUs'
 import ReviewCard from '@/components/ReviewCard'
-// import Sidebar from '@/components/account/Sidebar'
 
 const Page = () => {
   return (
     <div> 
-     {/* <Sidebar /> */}
      <Hero />
      <TopCategories/>
      <BestSellers/>

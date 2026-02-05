@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${cinzel.variable} ${playfair.variable} ${inter.variable}`}>
-      <body className="bg-black text-white font-sans">  
+      <body className="bg-black text-white font-sans min-h-screen">  
         <ReduxProvider>
           <AuthInit/>
           <NavbarWrapper />
