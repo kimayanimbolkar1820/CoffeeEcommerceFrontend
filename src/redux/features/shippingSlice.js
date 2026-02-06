@@ -1,5 +1,5 @@
 import { createAsyncThunk ,createSlice } from "@reduxjs/toolkit";
-import { addAddress } from "@/api/shippingApi";
+import { addAddress , showAddress} from "@/api/shippingApi";
 
 
 export const addShippingAddressThunk = createAsyncThunk(
@@ -14,6 +14,20 @@ export const addShippingAddressThunk = createAsyncThunk(
         )
        }
     }
+)
+
+export const showShippingAddressThunk = createAsyncThunk(
+  "shipping/showAddress",
+  async(_,{rejectWithValue})=>{
+    try {
+      const res = await showAddress()
+      return res 
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "address not fetched"
+      )
+    }
+  }
 )
 
 
@@ -44,6 +58,21 @@ const shippingSlice = createSlice({
        .addCase(addShippingAddressThunk.rejected , (state , action)=>{
         state.loading = false
         state.isSaved = false
+        state.error = action.payload
+       })
+
+       .addCase(showShippingAddressThunk.pending , (state)=>{
+        state.loading = true
+        state.error = null
+       })
+
+       .addCase(showShippingAddressThunk.fulfilled ,(state , action)=>{
+        state.loading = false 
+        state.address = action.payload
+       })
+
+       .addCase(showShippingAddressThunk.rejected ,(state , payload)=>{
+        state.loading = false
         state.error = action.payload
        })
 
