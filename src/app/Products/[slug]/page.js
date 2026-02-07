@@ -30,6 +30,8 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1);
   const [showAddressPopup, setShowAddressPopup] = useState(false);
 
+  
+
 
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));

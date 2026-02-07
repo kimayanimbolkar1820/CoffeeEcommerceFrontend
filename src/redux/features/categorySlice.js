@@ -11,7 +11,7 @@ const categorySlice = createSlice({
     setActiveCategory(state, action) {
       state.activeCategory = action.payload
     },
-  },
+  }, 
 })
 
 export const { setActiveCategory } = categorySlice.actions

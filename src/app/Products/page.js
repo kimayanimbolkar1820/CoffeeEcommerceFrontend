@@ -18,10 +18,18 @@ import { FaFilter } from "react-icons/fa";
 
 const Page = () => {
   const dispatch = useDispatch();
+  const activeCategory = useSelector((state) => state.category.activeCategory); 
   const { loading, error } = useSelector((state) => state.product);
   const filteredProducts = useSelector(selectFilteredProducts);
+   const allProducts = useSelector((state) => state.product.data.products || []);
 
   const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const ITEMS_PER_PAGE = 8;
+
+const [currentPage, setCurrentPage] = useState(1);
+
+
+
 
   useEffect(() => {
   document.body.style.overflow = showMobileFilter ? "hidden" : "";
@@ -33,6 +41,14 @@ const Page = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
+  useEffect(() => {
+  setCurrentPage(1);
+}, [filteredProducts, activeCategory]);
+
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, [currentPage]);
+
   const handleAddToCart = (item) => {
       dispatch(
         AddToCartThunk({
@@ -42,8 +58,18 @@ const Page = () => {
       );
     };
 
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+
+const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+
   if (loading) return <p className="mt-20 text-center">Loading...</p>;
   if (error)
+
+    
     return (
       <p className="mt-20 text-center text-red-500">Error: {error}</p>
     );
@@ -121,58 +147,111 @@ const Page = () => {
 
 
 
-            {/* PRODUCT LIST */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredProducts.map((item) => {
-                const images = normalizeImages(item.images);
-                const imageSrc = getValidImage(images[0]);
+      {/* PRODUCT LIST */}
+<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {paginatedProducts.map((item) => {
+    const images = normalizeImages(item.images);
+    const imageSrc = getValidImage(images[0]);
 
-                return (
-                  <Link
-                    key={item.slug}
-                    href={`/Products/${item.slug}`}
-                    className="group bg-[#b2a28e] rounded-2xl p-4 sm:p-6 flex flex-col h-full transition-all duration-500 hover:shadow-2xl"
-                  >
-                    {/* IMAGE */}
-                    <div className="relative w-full h-32 sm:h-40 mb-3 sm:mb-4 flex-shrink-0">
-                      <Image
-                        src={imageSrc}
-                        alt={item.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                        className="object-contain transition-transform duration-500 group-hover:-translate-y-2"
-                      />
-                    </div>
+    return (
+      <Link
+        key={item.slug}
+        href={`/Products/${item.slug}`}
+        className="group bg-[#b2a28e] rounded-2xl p-4 sm:p-6 flex flex-col h-full transition-all duration-500 hover:shadow-2xl"
+      >
+        {/* IMAGE */}
+        <div className="relative w-full h-32 sm:h-40 mb-3 sm:mb-4 flex-shrink-0">
+          <Image
+            src={imageSrc}
+            alt={item.name}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+            className="object-contain transition-transform duration-500 group-hover:-translate-y-2"
+          />
+        </div>
 
-                    {/* TITLE */}
-                    <h4 className="text-base sm:text-lg font-playfair text-black truncate">
-                      {item.name}
-                    </h4>
+        {/* TITLE */}
+        <h4 className="text-base sm:text-lg font-playfair text-black truncate">
+          {item.name}
+        </h4>
 
-                    {/* DESCRIPTION */}
-                    <p className="text-xs sm:text-sm text-gray-700 mt-1 line-clamp-2">
-                      {item.description}
-                    </p>
+        {/* DESCRIPTION */}
+        <p className="text-xs sm:text-sm text-gray-700 mt-1 line-clamp-2">
+          {item.description}
+        </p>
 
-                    {/* PRICE + CTA */}
-                    <div className="mt-auto flex items-center justify-between pt-3">
-                      <span className="font-semibold text-black text-sm sm:text-base">
-                        ₹{item.weights?.[0]?.price}
-                      </span>
-                      <button
-                        onClick={(e)=>{
-                          e.preventDefault()
-                          handleAddToCart(item)
-                        }}
-                        className="px-3 sm:px-4 py-1 sm:py-2 rounded-full bg-black text-[#F3E0C8] text-xs sm:text-sm hover:bg-[#F3E0C8] hover:text-black transition"
-                      >
-                        Add
-                      </button>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+        {/* PRICE + CTA */}
+        <div className="mt-auto flex items-center justify-between pt-3">
+          <span className="font-semibold text-black text-sm sm:text-base">
+            ₹{item.price}
+          </span>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleAddToCart(item);
+            }}
+            className="px-3 sm:px-4 py-1 sm:py-2 rounded-full bg-black text-[#F3E0C8] text-xs sm:text-sm hover:bg-[#F3E0C8] hover:text-black transition"
+          >
+            Add
+          </button>
+        </div>
+        
+      </Link>
+    );
+  })}
+</div>
+
+
+{/* PAGINATION – BELOW PRODUCTS */}
+{totalPages > 1 && (
+  <div className="flex justify-center items-center gap-2 mt-16 mb-6 flex-wrap">
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage((p) => p - 1)}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition
+        ${
+          currentPage === 1
+            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+            : "bg-black text-[#F3E0C8] hover:bg-[#F3E0C8] hover:text-black"
+        }`}
+    >
+      Prev
+    </button>
+
+    {Array.from({ length: totalPages }).map((_, idx) => {
+      const page = idx + 1;
+      return (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`w-9 h-9 rounded-full text-sm font-semibold transition
+            ${
+              currentPage === page
+                ? "bg-[#F3E0C8] text-black"
+                : "bg-black text-[#F3E0C8] hover:bg-[#F3E0C8] hover:text-black"
+            }`}
+        >
+          {page}
+        </button>
+      );
+    })}
+
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage((p) => p + 1)}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition
+        ${
+          currentPage === totalPages
+            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+            : "bg-black text-[#F3E0C8] hover:bg-[#F3E0C8] hover:text-black"
+        }`}
+    >
+      Next
+    </button>
+  </div>
+)}
+
+
           </div>
         </div>
       </section>

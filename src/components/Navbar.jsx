@@ -16,7 +16,6 @@ import Cart from "@/components/Cart";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { setSearchQuery } from "@/redux/features/searchSlice";
-import { setActiveCategory } from "@/redux/features/categorySlice";
 import { useSelector } from "react-redux";
 
 export default function Navbar() {
@@ -27,6 +26,8 @@ export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const {user ,authChecked} = useSelector((state)=>state.auth)
+
+  
 
     const dispatch = useDispatch();
   const router = useRouter();
@@ -43,6 +44,7 @@ const onSubmit = (e) => {
   router.push("/Products");
   setSearchOpen(false);
 };
+
 
   /* SCROLL EFFECT */
   useEffect(() => {
@@ -103,8 +105,11 @@ const onSubmit = (e) => {
                     {link.dropdown.map((col, i) => (
                       <DropdownColumn key={i} title={col.title}>
                         {col.items.map((item, j) => (
-                          <DropdownItem key={j} label={item} />
-                        ))}
+ <DropdownItem key={j} label={item.label} slug={item.slug} />
+
+))}
+
+                        
                       </DropdownColumn>
                     ))}
                   </div>
@@ -304,14 +309,16 @@ const onSubmit = (e) => {
                           <ul className="space-y-2">
                             {col.items.map((item, j) => (
                               <li key={j}>
-                                <Link
-                                  href="#"
-                                  onClick={() => setMenuOpen(false)}
-                                  className="block text-white/80 hover:text-white transition"
-                                >
-                                  {item}
-                                </Link>
-                              </li>
+ <Link
+  href={`/Navbarproduct/${item.slug}`}
+  onClick={() => setMenuOpen(false)}
+  className="block text-white/80 hover:text-white transition"
+>
+  {item.label}
+</Link>
+
+</li>
+
                             ))}
                           </ul>
                         </div>
@@ -354,13 +361,18 @@ function DropdownColumn({ title, children }) {
   );
 }
 
-function DropdownItem({ label }) {
+function DropdownItem({ label, slug }) {
   return (
-    <li className="hover:text-white hover:translate-x-2 transition">
-      <Link href="#">{label}</Link>
-    </li>
+    <Link
+      href={`/navbarproducts/${slug}`}
+      className="hover:text-white hover:translate-x-2 transition block"
+    >
+      {label}
+    </Link>
   );
 }
+
+
 
 function NavLink({ href, children }) {
   return (
