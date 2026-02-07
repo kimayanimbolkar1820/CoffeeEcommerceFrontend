@@ -1,13 +1,14 @@
-// "use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+
+import Profile from "@/app/account/profile/page";
+import Orders from "@/app/account/orders/page";
 import Address from "@/app/account/address/page";
 import ChangePassword from "@/app/account/change-password/page";
-import Logout from "@/app/account/logout/page";
-import Profile from "@/app/account/profile/page";
 import Subscriptions from "@/app/account/subscriptions/page";
-import Orders from "@/app/account/orders/page";   
+import Logout from "@/app/account/logout/page";
 import EditProfile from "@/components/account/EditProfile";
 
 export default function ProfileView({ user, setUser }) {
@@ -23,24 +24,24 @@ export default function ProfileView({ user, setUser }) {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  // Mobile back function for Cancel buttons
+  // 🔙 Back handler for cancel buttons (mobile)
   const handleBack = () => {
-    if (isMobile) {
-      setActive("/account/profile"); // Go back to Profile tab
-      setShowContent(false);         // Show sidebar again
-    }
-  };
+  if (isMobile) {
+    setActive("/account/profile");
+    setShowContent(false); // sidebar + profile image show
+  }
+};
 
   return (
     <div className="w-full min-h-[60dvh] px-2 sm:px-4 lg:px-8 mt-16">
       <div className="relative grid grid-cols-1 md:grid-cols-[250px_1fr] gap-1 min-h-[80dvh]">
 
-        {/* Sidebar */}
+        {/* SIDEBAR */}
         <aside
-          className={`bg-[#d7bf9a] rounded-xl p-2 space-y-1 relative
+          className={`bg-[#d7bf9a] rounded-xl p-2 space-y-1
           ${showContent ? "hidden md:block" : "block"}`}
         >
-          {/* 📱 Mobile – center profile image */}
+          {/* 📱 Mobile profile image */}
           {isMobile && (
             <div className="flex justify-center my-6">
               <button
@@ -61,7 +62,7 @@ export default function ProfileView({ user, setUser }) {
             </div>
           )}
 
-          {/* Menu */}
+          {/* MENU */}
           {[
             !isMobile && ["Profile", "/account/profile"],
             ["Orders", "/account/orders"],
@@ -82,11 +83,12 @@ export default function ProfileView({ user, setUser }) {
                     setShowContent(true);
                   }}
                   className={`w-full text-left px-5 py-3 mt-5 rounded-lg font-playfair font-semibold
-                    ${active === href
-                      ? isLogout
-                        ? "bg-red-700 text-white"
-                        : "bg-[#1d150f] text-white"
-                      : isLogout
+                    ${
+                      active === href
+                        ? isLogout
+                          ? "bg-red-700 text-white"
+                          : "bg-[#1d150f] text-white"
+                        : isLogout
                         ? "text-red-700 hover:bg-[#835f42]"
                         : "text-[#211a14] hover:bg-[#835f42]"
                     }`}
@@ -97,7 +99,7 @@ export default function ProfileView({ user, setUser }) {
             })}
         </aside>
 
-        {/* Content */}
+        {/* CONTENT */}
         <main
           className={`bg-[#d7bf9a] rounded-xl p-4 sm:p-8
           ${showContent ? "block" : "hidden md:block"}`}
@@ -106,17 +108,18 @@ export default function ProfileView({ user, setUser }) {
             <Profile
               user={user}
               onEditClick={() => setIsEditOpen(true)}
+              onBack={handleBack}   // ✅ THIS MAKES CANCEL WORK
             />
           )}
 
           {active === "/account/orders" && (
             <Orders onBack={handleBack} />
-           )}
+          )}
 
           {active === "/account/address" && (
-           <Address onBack={handleBack} />
-           )}
-          
+            <Address onBack={handleBack} />
+          )}
+
           {active === "/account/change-password" && (
             <ChangePassword onBack={handleBack} />
           )}
@@ -131,7 +134,7 @@ export default function ProfileView({ user, setUser }) {
         </main>
       </div>
 
-      {/* Edit Profile */}
+      {/* EDIT PROFILE MODAL / PAGE */}
       {isEditOpen && (
         <EditProfile
           user={user}
