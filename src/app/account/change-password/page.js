@@ -4,13 +4,21 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 
+export default function ChangePassword({ onBack }) {
+
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
+
 export default function ChangePassword() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
+    <div className="min-h-screen flex justify-center items-start bg-[#d7bf9a] px-4 sm:px-6 py-6">
     <div className="flex justify-center px-4 sm:px-6">
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -20,8 +28,32 @@ export default function ChangePassword() {
           w-full max-w-md sm:max-w-lg lg:max-w-xl
           mt-10 sm:mt-16
           p-6 sm:p-8
+          relative
+          bg-[#2a1c12] rounded-lg shadow-lg
         "
       >
+        {/* BACK BUTTON - mobile only */}
+        <motion.div
+          className="absolute top-4 left-4 z-20 block sm:hidden"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          <motion.button
+            type="button"
+            onClick={onBack} // This now works
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-[20px] sm:text-[22px] md:text-[24px] btn-glow font-bold flex items-center"
+          >
+            ⟵
+          </motion.button>
+        </motion.div>
+
+        <h2 className="title text-center mb-20 mt-8 underline underline-offset-2 decoration-1 text-[rgb(228,185,154)] font-semibold text-2xl sm:text-3xl">
+          Change Password
+        </h2>
+       
         <h2 className="title text-center mb-6">Change Password</h2>
 
         <div className="space-y-4">
@@ -71,6 +103,28 @@ export default function ChangePassword() {
           </div>
         </div>
 
+        {/* Update Button */}
+        <div className="flex justify-center">
+          <motion.button
+            whileTap={{ scale: 0.94 }}
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 260 }}
+            onClick={() => console.log("Update Password clicked")}
+            className="btn-primary btn-glow w-60 py-3 mt-6 rounded-4xl text-base sm:text-lg flex items-center justify-center bg-amber-900"
+          >
+            Update Password
+          </motion.button>
+        </div>
+      </motion.div>
+
+      <style jsx global>{`
+        .input {
+          width: 100%;
+          border: 1px solid #e5e7eb;
+          padding: 0.75rem 1rem;
+          border-radius: 0.5rem;
+        }
+      `}</style>
         {/* Animated Button */}
  <div className="flex justify-center ">
   <motion.button
@@ -91,9 +145,10 @@ export default function ChangePassword() {
   >
     Update Password
   </motion.button>
+     </motion.div>
 </div>
 
-      </motion.div>
     </div>
   );
+}
 }
