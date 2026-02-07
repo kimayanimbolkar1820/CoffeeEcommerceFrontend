@@ -10,17 +10,21 @@ import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { AddToCartThunk } from "@/redux/features/cartSlice";
 import AddressPopup from "@/components/checkout/AddressPopup";
+import { showAddress } from "@/api/shippingApi";
+import { useRouter } from "next/navigation";
 
 
 export default function ProductPage() {
   const { slug } = useParams();
   const dispatch = useDispatch();
+  const router = useRouter()
   
 
 
   const { currentProduct, loading, error } = useSelector(
     (state) => state.product
   );
+
 
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
@@ -37,23 +41,37 @@ export default function ProductPage() {
   if (error)
     return <div className="mt-40 text-center text-red-500">{error}</div>;
 
-  if (!currentProduct?.product) return null;
+  if (!currentProduct) return null;
 
-  const product = currentProduct.product;
+  const product = currentProduct;
+  console.log(product)
   const images = normalizeImages(product.images || []);
 
   const handleAddToCart = () => {
     dispatch(
       AddToCartThunk({
-        product_id: product._id || product.id,
+        product_id:product.id,
         quantity: qty,
       })
     );
   };
 
-  const handleBuyNow = () => {
-  setShowAddressPopup(true);
+  const handleBuyNow = async () => {
+    try {
+      const res = await showAddress()
+    const address = res?.data || []
+    
+    if(address.length > 0){
+      router.push(`/checkout?slug=${product.slug}&qty=${qty}`)
+    }
+    else{
+      setShowAddressPopup(true)
+    }
+    } catch (error) {
+      router.push("/Auth/login")
+    }
 };
+
 
 
   return (
@@ -151,7 +169,7 @@ export default function ProductPage() {
           <div>
             {product.categoryLevel3 && (
               <p className="text-sm uppercase tracking-widest text-[#c7a17a] mb-6">
-                {product.categoryLevel3}
+                {product.categoryLevel2}
               </p>
             )}
 
@@ -162,11 +180,11 @@ export default function ProductPage() {
             {/* Price */}
             <div className="mt-2 flex items-center gap-5">
               <p className="text-3xl font-bold text-[#c7a17a]">
-                ₹{product.discountPrice || product.price}
+                ₹{product.weights[0].discountPrice || product.weights[0].price}
               </p>
               {product.discountPrice && (
                 <p className="line-through text-gray-500 text-lg">
-                  ₹{product.price}
+                  ₹{ product.weights[0].price}
                 </p>
               )}
             </div>
@@ -182,10 +200,10 @@ export default function ProductPage() {
               <Spec label="Roast Colour" value={product.roastColour} />
               <Spec
                 label="Stock"
-                value={product.inStock ? "In Stock" : "Out of Stock"}
-                valueClass={product.inStock ? "text-green-400" : "text-red-500"}
+                value={product.weights[0].inStock ? "In Stock" : "Out of Stock"}
+                valueClass={ product.weights[0].inStock ? "text-green-400" : "text-red-500"}
               />
-              <Spec label="Quantity" value={product.quantity} />
+              <Spec label="Quantity" value={product.weights[0].quantity} />
             </div>
 
             {/* Quantity Selector */}
@@ -226,7 +244,7 @@ export default function ProductPage() {
            <motion.button
   whileTap={{ scale: 0.95 }}
   onClick={handleBuyNow}
-  className="w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
+  className=" cursor-pointer w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
 >
   <Zap size={20} />
   Buy Now
@@ -239,6 +257,8 @@ export default function ProductPage() {
 
       <AddressPopup
   open={showAddressPopup}
+  slug={product.slug}
+  quantity={product.qty}
   onClose={() => setShowAddressPopup(false)}
   onSubmit={(addressData) => {
     console.log("Address from PDP:", addressData);

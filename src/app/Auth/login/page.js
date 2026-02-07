@@ -37,8 +37,13 @@ export default function LoginPage() {
   }
 }, [user, router]);
 
-
   console.log(fromData)
+
+
+  const handleGoogleAuth = ()=>{
+    window.location.href="http://coffeewebapi.barecms.com/api/auth/google"
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -192,6 +197,7 @@ export default function LoginPage() {
               <motion.button
                 whileHover={{ scale: 1.12 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleGoogleAuth}
                 className="w-12 h-12 rounded-full bg-white flex items-center justify-center
                            shadow-lg hover:shadow-[0_0_25px_#ffffff] cursor-pointer"
               >

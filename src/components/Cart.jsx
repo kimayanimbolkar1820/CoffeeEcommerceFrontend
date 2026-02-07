@@ -90,7 +90,7 @@ export default function Cart({ onClose }) {
                 >
                   {/* IMAGE */}
                   <Image
-                    src={JSON.parse(item.images)?.[0] || "/placeholder.png"}
+                    src={(item.images)?.[0] || "/placeholder.png"}
                     width={80}
                     height={80}
                     alt={item.name}
