@@ -3,7 +3,7 @@ import { createSelector } from "@reduxjs/toolkit";
 export const selectFilteredProducts = createSelector(
   [
     (state) => state.product.data.products,
-    (state) => state.category.activeCategory,
+    (state) => state.category.activeCategory,   
     (state) => state.filter,
      (state) => state.search.query, 
     
