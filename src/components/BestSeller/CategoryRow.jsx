@@ -68,7 +68,7 @@ const CategoryRow = ({ title, items, viewAllLink = "/Products" }) => {
 
             <div className="mt-4 sm:mt-6 flex items-center justify-between">
               <span className="font-medium text-black group-hover:text-[#F3E0C8] text-sm sm:text-base">
-                ${item.price}
+                 ₹{item.weights?.[0]?.price}
               </span>
 
               <button

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState , } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { addShippingAddressThunk } from "@/redux/features/shippingSlice";
+import { useRouter } from "next/navigation";
 
-export default function AddressPopup({ open, onClose, onSubmit }) {
+export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }) {
   const [form, setForm] = useState({
     full_name: "",
     phone: "",
@@ -20,23 +21,27 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
     is_default: true,
   });
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const payload = {...form , address_type : form.address_type.toLowerCase(),
        is_default: form.is_default ? 1 : 0,
     }
 
-    onSubmit(dispatch(addShippingAddressThunk(payload)));
+    await dispatch(addShippingAddressThunk(payload));
+    router.push(`/checkout?slug=${slug}&qty=${quantity}`)
   };
 
   if (!open) return null;
+
+
 
   console.log(form)
 
@@ -148,14 +153,14 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
               <div>
                 <Label>Save address as</Label>
                 <div className="flex gap-3 mt-2">
-                  {["HOME", "WORK", "OTHER"].map((type) => (
+                  {["HOME", "OFFICE", "OTHER"].map((type) => (
                     <button
                       key={type}
                       type="button"
                       onClick={() =>
                         setForm({ ...form, address_type: type })
                       }
-                      className={`py-3 px-6 rounded-xl border text-sm transition ${
+                      className={` cursor-pointer py-3 px-6 rounded-xl border text-sm transition ${
                         form.address_type === type
                           ? "bg-white text-black"
                           : "border-white/30 text-white/70 hover:border-white/60"
@@ -174,7 +179,7 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
                   name="is_default"
                   checked={form.is_default}
                   onChange={handleChange}
-                  className="mt-1"
+                  className=" cursor-pointer mt-1"
                 />
                 Save this address for faster checkout next time
               </label>
@@ -183,7 +188,7 @@ export default function AddressPopup({ open, onClose, onSubmit }) {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="bg-white text-black py-3 px-6 rounded-xl font-semibold hover:bg-white/90"
+                  className=" cursor-pointer bg-white text-black py-3 px-6 rounded-xl font-semibold hover:bg-white/90"
                 >
                   Continue
                 </button>
