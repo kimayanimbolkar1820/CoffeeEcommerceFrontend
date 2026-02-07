@@ -97,7 +97,7 @@ const onSubmit = (e) => {
         <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel cursor-pointer text-white">
           {navbarData.links.map((link, index) => (
             <li key={index} className="relative group">
-              <NavLink href={link.href}>{link.label}</NavLink>
+              <NavLink href="/Products">{link.label}</NavLink>
 
               {Array.isArray(link.dropdown) && (
                 <DropdownContainer scrollState={scrollState}>

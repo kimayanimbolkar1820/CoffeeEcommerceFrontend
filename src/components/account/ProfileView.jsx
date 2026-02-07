@@ -1,224 +1,148 @@
-// "use client";
-
-// import Image from "next/image";
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-
-// const links = [
-//   { name: "Profile", href: "/account" },
-//   { name: "Orders", href: "/account/orders" },
-//   { name: "Manage address", href: "/account/address" },
-//   { name: "Change Password", href: "/account/change-password" },
-//   { name: "Subscriptions", href: "/account/subscriptions" },
-//   { name: "Logout", href: "/account/logout", isLogout: true },
-// ];
-
-// export default function ProfileWithMenu({ user = {}, onEdit }) {
-//   const pathname = usePathname();
-
-//   return (
-//     <div className="w-full px-4 sm:px-6 lg:px-8 mt-6">
-
-//       {/* ================= PROFILE CARD ================= */}
-//       <div className="bg-white rounded-2xl shadow-md 
-//         max-w-3xl mx-auto p-5 sm:p-7 lg:p-10 mt-20">
-
-//         <div className="flex flex-col sm:flex-row 
-//           items-center sm:items-start gap-6 sm:gap-8">
-
-//           {/* Profile Image */}
-//           <div className="relative 
-//             w-24 h-24 sm:w-28 sm:h-28 
-//             rounded-full overflow-hidden 
-//             border-2 border-amber-700 shrink-0">
-//             <Image
-//               src={
-//                 user?.image && user.image.length > 0
-//                   ? user.image
-//                   : "/images/profile.webp"
-//               }
-//               alt="profile"
-//               fill
-//               className="object-cover"
-//             />
-//           </div>
-
-//           {/* User Info */}
-//           <div className="text-center sm:text-left">
-//             <h3 className="font-cinzel 
-//               text-xl sm:text-2xl 
-//               text-amber-950 mb-2">
-//               Your Profile
-//             </h3>
-
-//             <p className="text-sm sm:text-base 
-//               font-playfair text-amber-900 font-bold">
-//               Name: {user?.name || "—"}
-//             </p>
-
-//             <p className="text-sm sm:text-base 
-//               font-playfair text-amber-900">
-//               {user?.phone || "—"}
-//             </p>
-
-//             <p className="text-sm sm:text-base 
-//               font-playfair text-amber-900">
-//               {user?.email || "—"}
-//             </p>
-//           </div>
-//         </div>
-
-//         {/* Edit Button */}
-//         <button
-//           onClick={onEdit}
-//           className="btn-primary btn-glow
-//             mt-6 w-full sm:w-auto
-//             px-6 py-3 rounded-full">
-//           Edit Profile
-//         </button>
-//       </div>
-
-//       {/* MENU */}
-//       <div className="max-w-3xl mx-auto mt-3">
-//         <div className="bg-[#b48f70] rounded-2xl p-4 space-y-2">
-//           {links.map((item) => {
-//             const active = pathname === item.href && !item.isLogout;
-
-//             return (
-//               <Link
-//                 key={item.href}
-//                 href={item.href}
-//                 className={`block px-4 py-3 rounded-lg transition-all font-playfair font-bold
-//                   ${
-//                     item.isLogout
-//                       ? "text-red-700 hover:bg-[#b57f55]"
-//                       : active
-//                       ? "bg-[#5b412e] text-white shadow-lg scale-[1.02]"
-//                       : "text-[#3b2a1f] hover:bg-[#b57f55]"
-//                   }`}
-//               >
-//                 {item.name}
-//               </Link>
-//             );
-//           })}
-//         </div>
-//       </div>
-
-//     </div>
-//   );
-// }
-
-
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-const links = [
-  { name: "Profile", href: "/account/profile" },
-  { name: "Orders", href: "/account/orders" },
-  { name: "Manage address", href: "/account/address" },
-  { name: "Change Password", href: "/account/change-password" },
-  { name: "Subscriptions", href: "/account/subscriptions" },
-  { name: "Logout", href: "/account/logout", isLogout: true },
-];
+import Profile from "@/app/account/profile/page";
+import Orders from "@/app/account/orders/page";
+import Address from "@/app/account/address/page";
+import ChangePassword from "@/app/account/change-password/page";
+import Subscriptions from "@/app/account/subscriptions/page";
+import Logout from "@/app/account/logout/page";
+import EditProfile from "@/components/account/EditProfile";
 
-export default function ProfileWithMenu({ user = {}, onEdit }) {
-  const pathname = usePathname();
+export default function ProfileView({ user, setUser }) {
+  const [active, setActive] = useState("/account/profile");
+  const [showContent, setShowContent] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreen = () => setIsMobile(window.innerWidth < 768);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
+  // 🔙 Back handler for cancel buttons (mobile)
+  const handleBack = () => {
+  if (isMobile) {
+    setActive("/account/profile");
+    setShowContent(false); // sidebar + profile image show
+  }
+};
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 mt-6">
+    <div className="w-full min-h-[60dvh] px-2 sm:px-4 lg:px-8 mt-16">
+      <div className="relative grid grid-cols-1 md:grid-cols-[250px_1fr] gap-1 min-h-[80dvh]">
 
-      {/* ===== ONE SINGLE CONTAINER ===== */}
-      <div className="bg-[#b48f70] rounded-2xl shadow-md 
-        max-w-3xl mx-auto p-5 sm:p-7 lg:p-10 mt-20">
-
-        {/* ================= PROFILE ================= */}
-        <div className="bg-white rounded-2xl p-5 sm:p-7 lg:p-10">
-
-          <div className="flex flex-col sm:flex-row 
-            items-center sm:items-start gap-6 sm:gap-8">
-
-            {/* Profile Image */}
-            <div className="relative 
-              w-24 h-24 sm:w-28 sm:h-28 
-              rounded-full overflow-hidden 
-              border-2 border-amber-700 shrink-0">
-              <Image
-                src={
-                  user?.image && user.image.length > 0
-                    ? user.image
-                    : "/images/profile.webp"
-                }
-                alt="profile"
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            {/* User Info */}
-            <div className="text-center sm:text-left">
-              <h3 className="font-cinzel 
-                text-xl sm:text-2xl 
-                text-amber-950 mb-2">
-                Your Profile
-              </h3>
-
-              <p className="text-sm sm:text-base 
-                font-playfair text-amber-900 font-bold">
-                Name: {user?.name || "—"}
-              </p>
-
-              <p className="text-sm sm:text-base 
-                font-playfair text-amber-900">
-                {user?.phone || "—"}
-              </p>
-
-              <p className="text-sm sm:text-base 
-                font-playfair text-amber-900">
-                {user?.email || "—"}
-              </p>
-            </div>
-          </div>
-
-          {/* Edit Button */}
-          <button
-            onClick={onEdit}
-            className="btn-primary btn-glow
-              mt-6 w-full sm:w-auto
-              px-6 py-3 rounded-full">
-            Edit Profile
-          </button>
-        </div>
-
-        <hr className="mt-10 border-2 "></hr>
-
-        {/* ================= MENU (SAME BACKGROUND) ================= */}
-        <div className="mt-6 space-y-2">
-          {links.map((item) => {
-            const active = pathname === item.href && !item.isLogout;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`block px-4 py-3 rounded-lg transition-all font-playfair font-bold
-                  ${
-                    item.isLogout
-                      ? "text-red-700 hover:bg-[#523e2e]"
-                      : active
-                      ? "bg-[#1d150f] text-white shadow-lg scale-[1.02]"
-                      : "text-[#211a14] hover:bg-[#523e2e]"
-                  }`}
+        {/* SIDEBAR */}
+        <aside
+          className={`bg-[#d7bf9a] rounded-xl p-2 space-y-1
+          ${showContent ? "hidden md:block" : "block"}`}
+        >
+          {/* 📱 Mobile profile image */}
+          {isMobile && (
+            <div className="flex justify-center my-6">
+              <button
+                onClick={() => {
+                  setActive("/account/profile");
+                  setShowContent(true);
+                }}
+                className="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-700 bg-white"
               >
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
+                <Image
+                  src={user?.image || "/images/profile.webp"}
+                  alt="profile"
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            </div>
+          )}
 
+          {/* MENU */}
+          {[
+            !isMobile && ["Profile", "/account/profile"],
+            ["Orders", "/account/orders"],
+            ["Manage address", "/account/address"],
+            ["Change Password", "/account/change-password"],
+            ["Subscriptions", "/account/subscriptions"],
+            ["Logout", "/account/logout"],
+          ]
+            .filter(Boolean)
+            .map(([name, href]) => {
+              const isLogout = href === "/account/logout";
+
+              return (
+                <button
+                  key={href}
+                  onClick={() => {
+                    setActive(href);
+                    setShowContent(true);
+                  }}
+                  className={`w-full text-left px-5 py-3 mt-5 rounded-lg font-playfair font-semibold
+                    ${
+                      active === href
+                        ? isLogout
+                          ? "bg-red-700 text-white"
+                          : "bg-[#1d150f] text-white"
+                        : isLogout
+                        ? "text-red-700 hover:bg-[#835f42]"
+                        : "text-[#211a14] hover:bg-[#835f42]"
+                    }`}
+                >
+                  {name}
+                </button>
+              );
+            })}
+        </aside>
+
+        {/* CONTENT */}
+        <main
+          className={`bg-[#d7bf9a] rounded-xl p-4 sm:p-8
+          ${showContent ? "block" : "hidden md:block"}`}
+        >
+          {active === "/account/profile" && (
+            <Profile
+              user={user}
+              onEditClick={() => setIsEditOpen(true)}
+              onBack={handleBack}   // ✅ THIS MAKES CANCEL WORK
+            />
+          )}
+
+          {active === "/account/orders" && (
+            <Orders onBack={handleBack} />
+          )}
+
+          {active === "/account/address" && (
+            <Address onBack={handleBack} />
+          )}
+
+          {active === "/account/change-password" && (
+            <ChangePassword onBack={handleBack} />
+          )}
+
+          {active === "/account/subscriptions" && (
+            <Subscriptions onBack={handleBack} />
+          )}
+
+          {active === "/account/logout" && (
+            <Logout onBack={handleBack} />
+          )}
+        </main>
       </div>
+
+      {/* EDIT PROFILE MODAL / PAGE */}
+      {isEditOpen && (
+        <EditProfile
+          user={user}
+          setUser={setUser}
+          onClose={() => setIsEditOpen(false)}
+          fullPage={isMobile}
+        />
+      )}
     </div>
   );
 }

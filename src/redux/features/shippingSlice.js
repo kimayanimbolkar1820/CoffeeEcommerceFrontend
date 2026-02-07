@@ -1,5 +1,6 @@
 import { createAsyncThunk ,createSlice } from "@reduxjs/toolkit";
-import { addAddress } from "@/api/shippingApi";
+import { addAddress , showAddress ,updateAddress} from "@/api/shippingApi";
+import { toast } from "react-toastify";
 
 
 export const addShippingAddressThunk = createAsyncThunk(
@@ -14,6 +15,34 @@ export const addShippingAddressThunk = createAsyncThunk(
         )
        }
     }
+)
+
+export const showShippingAddressThunk = createAsyncThunk(
+  "shipping/showAddress",
+  async(_,{rejectWithValue})=>{
+    try {
+      const res = await showAddress()
+      return res 
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "address not fetched"
+      )
+    }
+  }
+)
+
+export const updateShippingAddressThunk = createAsyncThunk(
+  "shipping/updateAddress",
+  async(updatedAddress,{rejectWithValue})=>{
+    try {
+      const res = await updateAddress(updatedAddress)
+      return res 
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "address not fetched"
+      )
+    }
+  }
 )
 
 
@@ -44,6 +73,42 @@ const shippingSlice = createSlice({
        .addCase(addShippingAddressThunk.rejected , (state , action)=>{
         state.loading = false
         state.isSaved = false
+        state.error = action.payload
+       })
+
+       .addCase(showShippingAddressThunk.pending , (state)=>{
+        state.loading = true
+        state.error = null
+       })
+
+       .addCase(showShippingAddressThunk.fulfilled ,(state , action)=>{
+        state.loading = false 
+        state.address = action.payload
+       })
+
+       .addCase(showShippingAddressThunk.rejected ,(state , payload)=>{
+        state.loading = false
+        state.error = action.payload
+       })
+
+       .addCase(updateShippingAddressThunk.pending , (state)=>{
+        state.loading = true
+        state.error = null
+       })
+
+       .addCase(updateShippingAddressThunk.fulfilled , (state , action)=>{
+        state.loading = false
+         if (state.address?.data?.length) {
+    state.address.data[0] = action.payload;
+  } else {
+    state.address = { data: [action.payload] };
+  }
+        toast.success("address Updated")
+        state.error = null
+       })
+
+       .addCase(updateShippingAddressThunk.rejected , (state , action)=>{
+        state.loading = false
         state.error = action.payload
        })
 
