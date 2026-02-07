@@ -16,7 +16,6 @@ export default function ProfileView({ user, setUser }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile view
   useEffect(() => {
     const checkScreen = () => setIsMobile(window.innerWidth < 768);
     checkScreen();
@@ -110,8 +109,6 @@ export default function ProfileView({ user, setUser }) {
             />
           )}
 
-          {/* {active === "/account/orders" && <Orders />} */}
-          {/* {active === "/account/address" && <Address />} */}
           {active === "/account/orders" && (
             <Orders onBack={handleBack} />
            )}

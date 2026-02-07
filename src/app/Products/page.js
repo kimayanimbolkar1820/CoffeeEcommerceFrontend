@@ -157,7 +157,7 @@ const Page = () => {
                     {/* PRICE + CTA */}
                     <div className="mt-auto flex items-center justify-between pt-3">
                       <span className="font-semibold text-black text-sm sm:text-base">
-                        ₹{item.price}
+                        ₹{item.weights?.[0]?.price}
                       </span>
                       <button
                         onClick={(e)=>{
