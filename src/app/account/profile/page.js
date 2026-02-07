@@ -14,18 +14,23 @@ export default function ProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false);
 
+
+  const handleEditButton = ()=>{
+    setIsEditing((prev)=>!prev)
+  }
+
   return (
     <>
       <Profile
         user={user}
-        onEditClick={() => setIsEditing(true)}
+        
       />
 
       {isEditing && (
         <EditProfile
           user={user}
-          setUser={setUser}   // ✅ VERY IMPORTANT
-          onClose={() => setIsEditing(false)}
+         // setUser={setUser}   // ✅ VERY IMPORTANT
+          onClose={handleEditButton}
         />
       )}
     </>
