@@ -5,13 +5,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ChangePassword({ onBack }) {
-=======
-
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import { motion } from "framer-motion";
-
-export default function ChangePassword() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -122,30 +115,6 @@ export default function ChangePassword() {
           border-radius: 0.5rem;
         }
       `}</style>
-        {/* Animated Button */}
- <div className="flex justify-center ">
-  <motion.button
-    whileTap={{ scale: 0.94 }}
-    whileHover={{ scale: 1.03 }}
-    transition={{ type: "spring", stiffness: 260 }}
-    onClick={() => {
-      console.log("Update Password clicked");
-      // call API here
-    }}
-    className="
-      btn-primary btn-glow 
-      w-60 py-3 mt-6
-      rounded-lg
-      text-base sm:text-lg
-      flex items-center justify-center
-    "
-  >
-    Update Password
-  </motion.button>
-</div>
-
-      </motion.div>
     </div>
   );
-}
 }
