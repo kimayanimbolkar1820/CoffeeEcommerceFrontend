@@ -2,12 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { showShippingAddressThunk } from "@/redux/features/shippingSlice";
+import {
+  addShippingAddressThunk,
+  deleteShippingAddressThunk,
+  updateShippingAddressThunk,
+} from "@/redux/features/shippingSlice";
+import { MdDelete } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 export default function AddressPage({ onBack }) {
   const [showForm, setShowForm] = useState(false);
-  const [addresses, setAddresses] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [editId, setEditId] = useState(null);
+  const dispatch = useDispatch();
+  const addresses = useSelector((state) => state.shipping.address?.data || []);
 
   // Detect mobile
   useEffect(() => {
@@ -18,59 +28,20 @@ export default function AddressPage({ onBack }) {
   }, []);
 
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    full_name: "",
     phone: "",
-    address: "",
-    permenantaddress: "",
-    state: "",
+    address_type: "HOME",
+    address_line1: "",
+    address_line2: "",
     city: "",
-    zip: "",
+    state: "",
+    postal_code: "",
+    country: "India",
+    is_default: true,
   });
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-
-  const isFormValid =
-    form.firstName &&
-    form.lastName &&
-    form.email &&
-    form.phone &&
-    form.address &&
-    form.permenantaddress &&
-    form.state &&
-    form.city &&
-    form.zip;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
-
-    if (editId) {
-      setAddresses(
-        addresses.map((a) =>
-          a.id === editId ? { ...form, id: editId } : a
-        )
-      );
-      setEditId(null);
-    } else {
-      setAddresses([...addresses, { ...form, id: Date.now() }]);
-    }
-
-    setShowForm(false);
-    setForm({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      address: "",
-      permenantaddress: "",
-      state: "",
-      city: "",
-      zip: "",
-    });
-  };
 
   const handleBackClick = () => {
     if (isMobile && onBack) {
@@ -81,11 +52,46 @@ export default function AddressPage({ onBack }) {
     setEditId(null);
   };
 
+  useEffect(() => {
+    dispatch(showShippingAddressThunk());
+  }, [dispatch]);
+
+  console.log(form);
+
+  const handleSubmitButton = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      id: editId,
+      ...form,
+      address_type: form.address_type.toLowerCase(),
+      is_default: form.is_default ? 1 : 0,
+    };
+
+    if (editId) {
+      dispatch(updateShippingAddressThunk(payload)).then(() => {
+        dispatch(showShippingAddressThunk());
+      });
+    } else {
+      await dispatch(addShippingAddressThunk(payload)).then(() => {
+        dispatch(showShippingAddressThunk());
+      });
+    }
+
+    setEditId(null);
+    setShowForm(false);
+  };
+
+  const handleDeleteButton = (id) => {
+    dispatch(deleteShippingAddressThunk(id)).then(() => {
+      dispatch(showShippingAddressThunk());
+    });
+  };
+
   return (
     <div className="min-h-screen flex justify-center items-start bg-[#d7bf9a] p-4">
       <div className="max-w-8xl w-full relative">
         <div className="bg-[#2a1c12] p-4 rounded-lg shadow-lg sticky top-4 relative min-h-[400px]">
-
           {/* BACK BUTTON */}
           {(showForm || isMobile) && (
             <motion.div
@@ -122,14 +128,57 @@ export default function AddressPage({ onBack }) {
                   </p>
                 ) : (
                   <div className="space-y-4">
-                    {addresses.map((a) => (
-                      <div key={a.id} className="border p-4 rounded">
-                        <p className="font-medium capitalize">
-                          {a.firstName} {a.lastName}
-                        </p>
-                        <p className="text-sm capitalize">
-                          {a.address}, {a.city}, {a.state} - {a.zip}
-                        </p>
+                    {addresses.map((add) => (
+                      <div
+                        key={add.id}
+                        className=" flex justify-between border p-4 rounded shadow shadow-sm"
+                      >
+                        <div>
+                          <p className="font-medium capitalize font-cinzel font-normal pb-2">
+                            {add.full_name}
+                          </p>
+                          <p className="font-medium capitalize">{add.phone}</p>
+                          <p className="text-sm capitalize font-inter">
+                            {add.address_line1}, {add.address_line2},{add.city}{" "}
+                            - {add.postal_code}
+                          </p>
+                          <p className="text-sm capitalize">
+                            {add.state}, {add.country}
+                          </p>
+                          <h2 className="font-playfair font-medium pt-3">
+                            {" "}
+                            Type : {add.address_type}{" "}
+                          </h2>
+                        </div>
+                        <div className="flex gap-2  ">
+                          <div>
+                            <button onClick={() => handleDeleteButton(add.id)}>
+                              <MdDelete className=" cursor-pointer size-5 hover:text-red-600" />
+                            </button>
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => {
+                                (setShowForm(true),
+                                  setEditId(add.id),
+                                  setForm({
+                                    full_name: add.full_name,
+                                    phone: add.phone,
+                                    address_type: add.address_type,
+                                    address_line1: add.address_line1,
+                                    address_line2: add.address_line2,
+                                    city: add.city,
+                                    state: add.state,
+                                    postal_code: add.postal_code,
+                                    country: "India",
+                                    is_default: false,
+                                  }));
+                              }}
+                            >
+                              <MdEdit className=" cursor-pointer size-5 hover:text-yellow-600" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -138,7 +187,7 @@ export default function AddressPage({ onBack }) {
                 <div className="flex justify-center mt-8">
                   <button
                     onClick={() => setShowForm(true)}
-                    className="border border-amber-400 px-6 py-2 rounded-full bg-amber-800 btn-glow"
+                    className=" cursor-pointer border border-amber-400 px-6 py-2 rounded-full bg-amber-800 btn-glow"
                   >
                     Add new address
                   </button>
@@ -150,26 +199,89 @@ export default function AddressPage({ onBack }) {
             {showForm && (
               <motion.form
                 key="form"
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmitButton}
                 initial={{ x: 40, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 40, opacity: 0 }}
                 className="space-y-4 mt-10"
               >
-                <input className="input capitalize-text" name="firstName" placeholder="First Name" onChange={handleChange} value={form.firstName} />
-                <input className="input capitalize-text" name="lastName" placeholder="Last Name" onChange={handleChange} value={form.lastName} />
-                <input className="input" name="email" placeholder="Email" onChange={handleChange} value={form.email} />
-                <input className="input" name="phone" placeholder="Phone" onChange={handleChange} value={form.phone} />
-                <input className="input capitalize-text" name="address" placeholder="Address" onChange={handleChange} value={form.address} />
-                <input className="input capitalize-text" name="permenantaddress" placeholder="Permanent Address" onChange={handleChange} value={form.permenantaddress} />
-                <input className="input capitalize-text" name="state" placeholder="State" onChange={handleChange} value={form.state} />
-                <input className="input capitalize-text" name="city" placeholder="City" onChange={handleChange} value={form.city} />
-                <input className="input" name="zip" placeholder="Zip Code" onChange={handleChange} value={form.zip} />
+                <input
+                  className="input capitalize-text"
+                  name="full_name"
+                  placeholder="full_name"
+                  onChange={handleChange}
+                  value={form.full_name}
+                />
+                <input
+                  className="input"
+                  name="phone"
+                  placeholder="Phone"
+                  onChange={handleChange}
+                  value={form.phone}
+                />
+                <input
+                  className="input capitalize-text"
+                  name="address_line1"
+                  placeholder="address_line1"
+                  onChange={handleChange}
+                  value={form.address_line1}
+                />
+                <input
+                  className="input capitalize-text"
+                  name="address_line2"
+                  placeholder="address_line2"
+                  onChange={handleChange}
+                  value={form.address_line2}
+                />
+                <input
+                  className="input capitalize-text"
+                  name="state"
+                  placeholder="State"
+                  onChange={handleChange}
+                  value={form.state}
+                />
+                <input
+                  className="input capitalize-text"
+                  name="city"
+                  placeholder="City"
+                  onChange={handleChange}
+                  value={form.city}
+                />
+                <input
+                  className="input"
+                  name="postal_code"
+                  placeholder="postal_code"
+                  onChange={handleChange}
+                  value={form.postal_code}
+                />
+                <input
+                  disabled
+                  value="India"
+                  className="w-full px-4 py-3 rounded-xl bg-transparent border border-white/30 text-white/60"
+                />
+
+                <div>
+                  <div className="flex gap-3 mt-2">
+                    {["HOME", "OFFICE", "OTHER"].map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setForm({ ...form, address_type: type })}
+                        className={` cursor-pointer py-3 px-6 rounded-xl border text-sm transition ${
+                          form.address_type === type
+                            ? "bg-white text-black"
+                            : "border-white/30 text-white/70 hover:border-white/60"
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="flex justify-center">
                   <button
                     type="submit"
-                    disabled={!isFormValid}
                     className="px-6 py-3 rounded-3xl bg-[#b2160e] text-white btn-glow"
                   >
                     {editId ? "Update Address" : "Save Address"}

@@ -3,14 +3,7 @@
 import { useEffect, useState } from "react";
 
 import ProfileView from "@/components/account/ProfileView";
-import EditProfile from "@/components/account/EditProfile";
 
-const DEFAULT_USER = {
-  name: "Payal Nikale",
-  phone: "+91 4569852355",
-  email: "your@email.com",
-  image: "/images/profile.webp",
-};
 
 export default function AccountPage() {
   const [edit, setEdit] = useState(() => {
@@ -18,7 +11,7 @@ export default function AccountPage() {
       const saved = localStorage.getItem("user-profile");
       return saved ? JSON.parse(saved) : DEFAULT_USER;
     }
-    return DEFAULT_USER;
+    return 
   });
   const [user, setUser] = useState(edit);
 
@@ -31,13 +24,7 @@ export default function AccountPage() {
     <>
       <ProfileView user={user} onEdit={() => setEdit(true)} />
 
-      {edit && (
-        <EditProfile
-          user={user}
-          setUser={setUser}
-          onClose={() => setEdit(false)}
-        />
-      )}
+      
     </>
   );
 }

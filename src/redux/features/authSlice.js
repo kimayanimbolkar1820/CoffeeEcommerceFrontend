@@ -1,5 +1,5 @@
 import  { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
-import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword ,resetPassword , userInfo ,userLogOut } from '@/api/authApi'
+import {  signup ,login ,verifyOtp , resendOtp ,forgetPassword ,resetPassword , userInfo ,userLogOut ,changePassword } from '@/api/authApi'
 import { toast } from "react-toastify";
 
 export const singupThunk = createAsyncThunk(
@@ -123,6 +123,18 @@ export const userLogoutThunk = createAsyncThunk(
      }
 )
 
+export const changePasswordThunk = createAsyncThunk(
+    "auth/changePass",
+    async(changedPass, {rejectWithValue})=>{
+        try {
+            const res = await changePassword(changedPass)
+        } catch (error) {
+            return rejectWithValue(
+                  error.response?.data?.message || "Not authenticated"
+            ) 
+        }
+    }
+)
 
 
 const auth = createSlice({
@@ -260,7 +272,7 @@ const auth = createSlice({
          })
 
          .addCase(userInfoThunk.fulfilled , (state , action)=>{
-            state.user = action.payload
+            state.user = action.payload.user
             state.isAutherised = true
             state.authChecked = true
             state.loading = false
@@ -281,6 +293,22 @@ const auth = createSlice({
 
          .addCase(userLogoutThunk.rejected , (state , action)=>{
               state.error = action.payload
+         })
+
+         .addCase(changePasswordThunk.pending,  (state)=>{
+            state.loading = true
+            state.error = null
+         })
+
+         .addCase(changePasswordThunk.fulfilled,  (state )=>{
+            state.loading = false
+            toast.success("Password Changed Sucessfully")
+         })
+
+         .addCase(changePasswordThunk.rejected,  (state , action )=>{
+            state.loading = false
+            state.error = action.payload
+            toast.error(action.payload)
          })
 
     }
