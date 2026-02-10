@@ -9,7 +9,7 @@ import Address from "@/app/account/address/page";
 import ChangePassword from "@/app/account/change-password/page";
 import Subscriptions from "@/app/account/subscriptions/page";
 import Logout from "@/app/account/logout/page";
-import EditProfile from "@/components/account/EditProfile";
+
 
 export default function ProfileView({ user, setUser }) {
   const [active, setActive] = useState("/account/profile");
@@ -52,7 +52,7 @@ export default function ProfileView({ user, setUser }) {
                 className="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-700 bg-white"
               >
                 <Image
-                  src={user?.image || "/images/profile.webp"}
+                  src={"/images/rat.webp"}
                   alt="profile"
                   width={80}
                   height={80}
@@ -135,14 +135,7 @@ export default function ProfileView({ user, setUser }) {
       </div>
 
       {/* EDIT PROFILE MODAL / PAGE */}
-      {isEditOpen && (
-        <EditProfile
-          user={user}
-          setUser={setUser}
-          onClose={() => setIsEditOpen(false)}
-          fullPage={isMobile}
-        />
-      )}
+      
     </div>
   );
 }

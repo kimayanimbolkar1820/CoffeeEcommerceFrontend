@@ -6,6 +6,7 @@ import cartReducer from "@/redux/features/cartSlice"
 import categoryReducer from "./features/categorySlice"
 import searchReducer from "./features/searchSlice";
 import shippingReducer from "./features/shippingSlice"
+import paymentRouter  from "./features/paymentSlice"
 
 
 const store = configureStore({
@@ -17,6 +18,8 @@ const store = configureStore({
           category: categoryReducer,
           search: searchReducer,
           shipping : shippingReducer,
+          payment : paymentRouter,
+          
     }
 })
 

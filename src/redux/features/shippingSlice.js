@@ -1,5 +1,5 @@
 import { createAsyncThunk ,createSlice } from "@reduxjs/toolkit";
-import { addAddress , showAddress ,updateAddress} from "@/api/shippingApi";
+import { addAddress , showAddress ,updateAddress ,deleteAddress} from "@/api/shippingApi";
 import { toast } from "react-toastify";
 
 
@@ -45,6 +45,20 @@ export const updateShippingAddressThunk = createAsyncThunk(
   }
 )
 
+export const deleteShippingAddressThunk = createAsyncThunk(
+  "shipping/deleteAddress",
+  async(deletedAddress,{rejectWithValue})=>{
+    try {
+      const res = await deleteAddress(deletedAddress)
+      return res 
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "address not deleted"
+      )
+    }
+  }
+)
+
 
 const shippingSlice = createSlice({
     name:"shipping_address",
@@ -68,6 +82,7 @@ const shippingSlice = createSlice({
         state.address = action.payload
         state.isSaved = true
         state.error = null
+        toast.success("Address Saved")
        })
 
        .addCase(addShippingAddressThunk.rejected , (state , action)=>{
@@ -110,6 +125,22 @@ const shippingSlice = createSlice({
        .addCase(updateShippingAddressThunk.rejected , (state , action)=>{
         state.loading = false
         state.error = action.payload
+       })
+
+       .addCase(deleteShippingAddressThunk.pending , (state)=>{
+        state.loading = true
+        state.error = null
+       })
+
+       .addCase(deleteShippingAddressThunk.fulfilled , (state)=>{
+        state.loading = false
+        toast.success("address deleted")
+       })
+
+       .addCase(deleteShippingAddressThunk.rejected , (state ,action)=>{
+        state.loading = false
+        state.error = action.payload
+        toast.error(action.payload)
        })
 
 

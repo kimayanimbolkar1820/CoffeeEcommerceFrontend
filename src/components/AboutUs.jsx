@@ -61,7 +61,7 @@ export default function AboutUs() {
           </p>
 
           {/* LEFT MAIN IMAGE – ANIMATION ADDED */}
-          <div className="overflow-x-hidden">
+          <div className="overflow-hidden">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -90,7 +90,7 @@ export default function AboutUs() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="space-y-6 overflow-x-hidden"
+          className="space-y-6 overflow-hidden"
         >
           <motion.p variants={fadeUp} className="text-[#d6b28e] font-inter text-sm sm:text-base">
             We are passionate about coffee and the art behind every perfect cup.
