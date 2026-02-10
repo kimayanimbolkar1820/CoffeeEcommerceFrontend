@@ -39,3 +39,8 @@ export const userLogOut = async()=>{
     const response = await api.delete("/auth/logout")
     return response
 } 
+
+export const changePassword = async(changedPass)=>{
+    const response = await api.post("/auth/change-password" ,changedPass)
+    return response
+} 

@@ -4,15 +4,17 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { userLogoutThunk } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function Logout({ onBack }) {
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const router = useRouter()
 
   const handleLogout = () => {
     dispatch(userLogoutThunk());
-    window.location.href = "/"; // redirect after logout
+  router.push("/")
   };
 
   const onCancelClick = () => {
@@ -45,7 +47,7 @@ export default function Logout({ onBack }) {
         {/* Cancel Button */}
         <button
           onClick={onCancelClick}
-          className={`w-full sm:w-40 md:w-48 lg:w-56 border border-[#fff3e6]/40 py-3 rounded-lg font-medium transition-colors
+          className={` cursor-pointer w-full sm:w-40 md:w-48 lg:w-56 border border-[#fff3e6]/40 py-3 rounded-lg font-medium transition-colors
             ${isMobile && clicked ? "bg-red-600 text-white" : "hover:bg-red-600"}`}
         >
           Cancel
@@ -54,7 +56,7 @@ export default function Logout({ onBack }) {
         {/* Confirm Logout */}
         <button
           onClick={handleLogout}
-          className={`w-full sm:w-40 md:w-48 lg:w-56 border border-[#fff3e6]/40 py-3 rounded-lg font-medium transition-colors
+          className={` cursor-pointer w-full sm:w-40 md:w-48 lg:w-56 border border-[#fff3e6]/40 py-3 rounded-lg font-medium transition-colors
             ${isMobile && clicked ? "bg-red-600 text-white" : "hover:bg-red-600"}`}
         >
           Confirm Logout

@@ -3,14 +3,35 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { useDispatch  } from "react-redux";
+import { changePasswordThunk } from "@/redux/features/authSlice";
+
+
 
 export default function ChangePassword({ onBack }) {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const dispatch = useDispatch()
+
+  const [passInfo , setPassIngo] = useState({
+    currentPassword : "" ,
+    newPassword : ""
+  })
+ 
+
+const handleOnChnage = (e)=>{
+    const {name , value} = e.target
+    setPassIngo({...passInfo , [name]: value})
+  }
+ 
+  console.log(passInfo)
+
+  const handleUpdateButton = ()=>{
+    dispatch(changePasswordThunk(passInfo))
+  }
 
   return (
-    <div className="min-h-screen flex justify-center items-start bg-[#d7bf9a] px-4 sm:px-6 py-6">
+    <div className="min-h-screen flex justify-center items-start bg-[#d7bf9a] px-4 md:px-6 py-2">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -26,7 +47,7 @@ export default function ChangePassword({ onBack }) {
       >
         {/* BACK BUTTON - mobile only */}
         <motion.div
-          className="absolute top-4 left-4 z-20 block sm:hidden"
+          className="absolute top-2 left-4 z-20 block sm:hidden"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
@@ -42,7 +63,7 @@ export default function ChangePassword({ onBack }) {
           </motion.button>
         </motion.div>
 
-        <h2 className="title text-center mb-6 mt-8 text-[rgb(228,185,154)] font-semibold text-2xl sm:text-3xl">
+        <h2 className="title text-center mb-6 mt-6 text-[rgb(228,185,154)] font-semibold text-2xl sm:text-3xl">
           Change Password
         </h2>
 
@@ -50,9 +71,12 @@ export default function ChangePassword({ onBack }) {
           {/* Current Password */}
           <div className="relative">
             <input
+              name="currentPassword"
+              value={passInfo.currentPassword}
               className="input w-full pr-10"
               type={showCurrent ? "text" : "password"}
               placeholder="Current Password"
+              onChange={handleOnChnage}
             />
             <span
               className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 transition hover:scale-110"
@@ -66,7 +90,10 @@ export default function ChangePassword({ onBack }) {
           <div className="relative">
             <input
               className="input w-full pr-10"
+              name="newPassword"
+              value={passInfo.newPassword}
               type={showNew ? "text" : "password"}
+              onChange={handleOnChnage}
               placeholder="New Password"
             />
             <span
@@ -77,20 +104,6 @@ export default function ChangePassword({ onBack }) {
             </span>
           </div>
 
-          {/* Confirm Password */}
-          <div className="relative">
-            <input
-              className="input w-full pr-10"
-              type={showConfirm ? "text" : "password"}
-              placeholder="Confirm Password"
-            />
-            <span
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 transition hover:scale-110"
-              onClick={() => setShowConfirm(!showConfirm)}
-            >
-              {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-            </span>
-          </div>
         </div>
 
         {/* Update Button */}
@@ -99,8 +112,8 @@ export default function ChangePassword({ onBack }) {
             whileTap={{ scale: 0.94 }}
             whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 260 }}
-            onClick={() => console.log("Update Password clicked")}
-            className="btn-primary btn-glow w-60 py-3 mt-6 rounded-4xl text-base sm:text-lg flex items-center justify-center bg-amber-900"
+            onClick={handleUpdateButton}
+            className=" cursor-pointer btn-primary btn-glow w-60 py-3 mt-6 rounded-4xl text-base sm:text-lg flex items-center justify-center bg-amber-900"
           >
             Update Password
           </motion.button>
