@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchProductBySlug } from "@/redux/features/productSlice";
 import Image from "next/image";
 import { normalizeImages, getValidImage } from "@/utils/getValidImage";
-import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Weight, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { AddToCartThunk } from "@/redux/features/cartSlice";
 import AddressPopup from "@/components/checkout/AddressPopup";
@@ -79,6 +79,7 @@ const allProducts = useSelector(
       AddToCartThunk({
         product_id:product.id,
         quantity: qty,
+        weight_kg :product.weights[0].weight_kg,
       })
     );
   };
@@ -86,7 +87,8 @@ const allProducts = useSelector(
   const handleBuyNow = async () => {
     try {
       const res = await showAddress()
-    const address = res?.data || []
+      const address = res?.data || []
+    
     if(address.length > 0){
       router.push(`/checkout?slug=${product.slug}&qty=${qty}`)
     }
@@ -119,7 +121,7 @@ const allProducts = useSelector(
           <div className="pointer-events-none absolute inset-0 z-[0] hidden lg:block">
             <img
               src="/images/beans14.png"
-              alt=""
+              alt="something"
               className="absolute md:-bottom-10 lg:right-0 md:w-[35%] -bottom-50 w-[105%] right-0 max-w-none opacity-80 sepia
               hue-rotate-[18deg]
               saturate-[0.6]

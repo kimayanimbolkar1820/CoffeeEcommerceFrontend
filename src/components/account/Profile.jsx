@@ -29,10 +29,12 @@ export default function Profile({ onEdit, onBack }) {
   return (
     <div className="w-full relative px-4 sm:px-0">
 
-      {/* CLOSE BUTTON */}
+      {/* CLOSE BUTTON only show in mobile view */}
       <button
         onClick={handleClose}
-        className="absolute right-0 top-0 p-1 text-amber-950 hover:bg-amber-900/10 transition rounded-full"
+        // className="absolute right-0 top-0 p-1 text-amber-950 hover:bg-amber-900/10 transition rounded-full"
+        className="absolute right-0 top-0 p-1 text-amber-950 hover:bg-amber-900/10 transition rounded-full md:hidden"
+
       >
         <X className="h-5 w-5" />
       </button>
