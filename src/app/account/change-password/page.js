@@ -63,7 +63,8 @@ const handleOnChnage = (e)=>{
           </motion.button>
         </motion.div>
 
-        <h2 className="title text-center mb-6 mt-6 text-[rgb(228,185,154)] font-semibold text-2xl sm:text-3xl">
+
+        <h2 className="title text-center mb-6 mt-8 text-[rgb(228,185,154)] font-semibold text-2xl sm:text-3xl">
           Change Password
         </h2>
 
