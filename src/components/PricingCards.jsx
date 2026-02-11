@@ -4,9 +4,13 @@ import React from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
+
 
 export default function PricingCards() {
   const [isPods, setIsPods] = React.useState(false);
+  const router = useRouter();
+
 
   /* ---------------- DATA ---------------- */
   const coffeePlans = [
@@ -203,11 +207,13 @@ export default function PricingCards() {
                   <li>✓ 10% off always</li>
                 </ul>
 
-                <button
-                  className=" w-full py-3 rounded-full bg-white text-[#2a1f1b] font-bold text-sm hover:scale-105 transition"
-                >
-                  SUBSCRIBE NOW
-                </button>
+               <button
+  onClick={() => router.push("/subscribe")}
+  className="w-full py-3 rounded-full bg-white text-[#2a1f1b] font-bold text-sm hover:scale-105 transition"
+>
+  SUBSCRIBE NOW
+</button>
+
               </motion.div>
             ))}
             </div>

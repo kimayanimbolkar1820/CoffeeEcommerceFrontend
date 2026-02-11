@@ -54,6 +54,7 @@ useEffect(() => {
         AddToCartThunk({
           product_id: item.id,
           quantity: item.qty,
+          
         })
       );
     };
