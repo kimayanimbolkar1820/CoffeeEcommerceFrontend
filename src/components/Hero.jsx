@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import Link from "next/link";
 
 const media = [
   { type: "image", src: "/images/bg4.webp", width: 1920, height: 1080 },
@@ -25,7 +26,7 @@ export default function Hero() {
       {/* MOBILE BACKGROUND VIDEO */}
       <div className="absolute inset-0 z-0 md:hidden">
         <video
-          src="/images/coffeevideo.mp4"
+          src="/images/coffeevideo.mp4.mp4"
           autoPlay
           muted
           loop
@@ -63,9 +64,11 @@ export default function Hero() {
 
           {/* BUTTONS */}
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start w-full sm:w-auto">
-            <button className="w-full cursor-pointer sm:w-auto max-w-[220px] sm:max-w-none px-5 py-2.5 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition mx-auto sm:mx-0">
-              Order Now
-            </button>
+            <Link href="/Products">
+  <button className="w-full cursor-pointer sm:w-auto max-w-[220px] sm:max-w-none px-5 py-2.5 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition mx-auto sm:mx-0">
+    Order Now
+  </button>
+</Link>
             <button className="w-full cursor-pointer sm:w-auto max-w-[220px] sm:max-w-none px-5 py-2.5 border border-white/30 rounded-full hover:bg-white/10 transition mx-auto sm:mx-0">
               Read More
             </button>

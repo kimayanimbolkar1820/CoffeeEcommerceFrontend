@@ -97,7 +97,7 @@ const onSubmit = (e) => {
         <ul className="hidden md:flex gap-10 text-sm font-medium font-cinzel cursor-pointer text-white">
           {navbarData.links.map((link, index) => (
             <li key={index} className="relative group">
-              <NavLink href="/Products">{link.label}</NavLink>
+              <NavLink href={link.href}>{link.label}</NavLink>
 
               {Array.isArray(link.dropdown) && (
                 <DropdownContainer scrollState={scrollState}>
@@ -355,8 +355,11 @@ function DropdownContainer({ children, scrollState }) {
 function DropdownColumn({ title, children }) {
   return (
     <div>
+     
+
       <h4 className="text-2xl mb-5 text-white">{title}</h4>
       <ul className="space-y-3 text-white/80">{children}</ul>
+    
     </div>
   );
 }

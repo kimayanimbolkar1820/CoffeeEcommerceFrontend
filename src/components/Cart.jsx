@@ -7,9 +7,17 @@ import { FiX, FiPlus, FiMinus, FiShoppingCart } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { showCartProductsThunk , updateCartThunk ,deleteCartThunk  } from "@/redux/features/cartSlice";
+import { useRouter } from "next/navigation";
+import AddressPopup from "@/components/checkout/AddressPopup";
+import { showAddress } from "@/api/shippingApi";
+
 
 
 export default function Cart({ onClose }) {
+
+  const router = useRouter();
+const [showAddressPopup, setShowAddressPopup] = useState(false);
+
   const dispatch = useDispatch();
   const { products = [], loading, error } = useSelector(
     (state) => state.cart
@@ -41,6 +49,23 @@ export default function Cart({ onClose }) {
     }))
   }
 
+  const handleCheckout = async () => {
+  try {
+    const res = await showAddress();
+    const address = res?.data || [];
+
+    if (address.length > 0) {
+      router.push("/checkout"); // cart-based checkout
+      onClose();
+    } else {
+      setShowAddressPopup(true);
+    }
+  } catch (error) {
+    router.push("/Auth/login");
+  }
+};
+
+
   return (
     <>
       {/* OVERLAY */}
@@ -48,6 +73,7 @@ export default function Cart({ onClose }) {
 
       {/* CART DRAWER */}
       <div className="fixed right-0 top-0 h-screen w-full sm:w-[420px] bg-black z-[999] shadow-2xl flex flex-col">
+        
         {/* HEADER */}
         <div className="flex items-center justify-between px-5 py-4 border-b">
           <h2 className="text-[25px] font-medium tracking-wide text-white font-cinzel ">CART</h2>
@@ -58,8 +84,9 @@ export default function Cart({ onClose }) {
         </div>
 
         {/* BODY */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4 ">
           <AnimatePresence>
+            
             {cartItems.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -98,6 +125,8 @@ export default function Cart({ onClose }) {
                     className="rounded-lg object-cover"
                   />
 
+
+
                   {/* DETAILS */}
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm">{item.name}</h3>
@@ -125,11 +154,47 @@ export default function Cart({ onClose }) {
                      </button>
                   </div>
                 </motion.div>
+                
+                
               ))
+              
             )}
           </AnimatePresence>
+          {cartItems.length > 0 && (
+  <div className="p-4 border-t">
+    <motion.button
+      whileTap={{ scale: 0.96 }}
+      onClick={handleCheckout}
+     className="
+  w-full
+  bg-white/25
+  backdrop-blur-3xl
+  text-white
+  py-4
+  rounded-full
+  font-bold
+  flex
+  items-center
+  justify-center
+  gap-3
+  border border-white/20
+  hover:bg-white/50
+  transition
+  cursor-pointer
+"
+
+    >
+      <FiShoppingCart size={20} />
+      Proceed to Checkout
+    </motion.button>
+  </div>
+)}
+
         </div>
       </div>
     </>
   );
 }
+
+
+

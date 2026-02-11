@@ -56,6 +56,7 @@ useEffect(() => {
           product_id: item.id,
           quantity: item.qty,
           weight_kg:item.weights[0].weight_kg
+
         })
       );
     };
