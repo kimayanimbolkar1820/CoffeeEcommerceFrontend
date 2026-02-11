@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addToCart, showCart , updateCart ,deleteCart } from "@/api/cartApi";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 // ================= ADD TO CART =================
 export const AddToCartThunk = createAsyncThunk(
@@ -35,10 +36,11 @@ export const showCartProductsThunk = createAsyncThunk(
 
 export const updateCartThunk = createAsyncThunk(
   "cart/update",
-  async (payload, { rejectWithValue }) => {
+  async ({cart_item_id , quantity}, { rejectWithValue ,dispatch }) => {
     try {
-      await updateCart(payload); // backend call
-      return payload; // return what we updated
+      await updateCart({ cart_item_id, quantity }); // backend call
+      dispatch(showCartProductsThunk())
+      return { cart_item_id, quantity }; // return what we updated
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -116,17 +118,10 @@ const cartSlice = createSlice({
         state.error = null
       })
 
-      .addCase(updateCartThunk.fulfilled, (state, action) => {
-        const { cart_item_id, quantity } = action.payload;
+      .addCase(updateCartThunk.fulfilled, (state) => {
+  state.loading = false;
+})
 
-        const item = state.products.cart.find(
-          (i) => i.cart_item_id === cart_item_id
-        );
-
-        if (item) {
-          item.quantity = quantity;
-        }
-      })
 
       .addCase(updateCartThunk.rejected , (state , action)=>{
         state.loading = false

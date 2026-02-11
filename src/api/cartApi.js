@@ -10,8 +10,8 @@ export const showCart = async (cartProducts)=>{
     return response.data
 }
 
-export const updateCart = async (updateQty)=>{
-    const response = await api.put("/cart/updatecartitem/:itemId",updateQty)
+export const updateCart = async ({cart_item_id , quantity})=>{
+    const response = await api.put(`/cart/updatecartitem/${cart_item_id}`, {quantity} )
     return response.data
 }
 

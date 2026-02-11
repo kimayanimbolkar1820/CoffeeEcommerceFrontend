@@ -6,10 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiPlus, FiMinus, FiShoppingCart } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { MdDelete } from "react-icons/md";
-import { showCartProductsThunk , updateCartThunk ,deleteCartThunk } from "@/redux/features/cartSlice";
+import { showCartProductsThunk , updateCartThunk ,deleteCartThunk  } from "@/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
 import AddressPopup from "@/components/checkout/AddressPopup";
 import { showAddress } from "@/api/shippingApi";
+
 
 
 export default function Cart({ onClose }) {
@@ -25,7 +26,7 @@ const [showAddressPopup, setShowAddressPopup] = useState(false);
   const cartItems = products?.cart || [ ]
 
   useEffect(() => {
-    dispatch(showCartProductsThunk());
+    dispatch(showCartProductsThunk()) 
   }, [dispatch]);
 
   const handlePlusButton =(item)=>{
@@ -118,9 +119,9 @@ const [showAddressPopup, setShowAddressPopup] = useState(false);
                   {/* IMAGE */}
                   <Image
                     src={(item.images)?.[0] || "/placeholder.png"}
+                    alt={item.name}
                     width={80}
                     height={80}
-                    alt={item.name}
                     className="rounded-lg object-cover"
                   />
 
@@ -145,7 +146,7 @@ const [showAddressPopup, setShowAddressPopup] = useState(false);
                   </div>
                   {/* PRICE */}
                   <div className="font-semibold text-sm">
-                    ₹{item.price * item.quantity}
+                    ₹{item.subtotal}
                   </div>
                   <div className="pt-25  "> 
                      <button onClick={()=>handleRemoveButton(item)} className="cursor-pointer">

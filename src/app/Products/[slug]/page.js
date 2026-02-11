@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchProductBySlug } from "@/redux/features/productSlice";
 import Image from "next/image";
 import { normalizeImages, getValidImage } from "@/utils/getValidImage";
-import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Weight, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { AddToCartThunk } from "@/redux/features/cartSlice";
 import AddressPopup from "@/components/checkout/AddressPopup";
@@ -54,6 +54,7 @@ export default function ProductPage() {
       AddToCartThunk({
         product_id:product.id,
         quantity: qty,
+        weight_kg :product.weights[0].weight_kg,
       })
     );
   };
@@ -61,7 +62,7 @@ export default function ProductPage() {
   const handleBuyNow = async () => {
     try {
       const res = await showAddress()
-    const address = res?.data || []
+      const address = res?.data || []
     
     if(address.length > 0){
       router.push(`/checkout?slug=${product.slug}&qty=${qty}`)
@@ -83,18 +84,14 @@ export default function ProductPage() {
 
        {/* Decorative beans – top left */}
         <div className="pointer-events-none absolute top-0 -left-0 md:-top-16 md:-left-50  w-[60%] md:w-[35%] z-[20]">
-            <img
-              src="/images/bean13.png"
-              alt=""
-              className="w-full max-w-none rotate-180"
-            />
+            <img src="/images/bean13.png" alt="productInfo" className="w-full max-w-none rotate-180"/>
           </div>
 
           {/* Decorative beans – bottom right */}
           <div className="pointer-events-none absolute inset-0 z-[0]">
             <img
               src="/images/beans14.png"
-              alt=""
+              alt="something"
               className="absolute md:-bottom-10 lg:right-0 md:w-[35%] -bottom-50 w-[105%] right-0 max-w-none opacity-80 sepia
               hue-rotate-[18deg]
               saturate-[0.6]
