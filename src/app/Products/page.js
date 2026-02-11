@@ -42,6 +42,7 @@ const [currentPage, setCurrentPage] = useState(1);
   }, [dispatch]);
 
   useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   setCurrentPage(1);
 }, [filteredProducts, activeCategory]);
 
@@ -54,6 +55,7 @@ useEffect(() => {
         AddToCartThunk({
           product_id: item.id,
           quantity: item.qty,
+          weight_kg:item.weights[0].weight_kg
         })
       );
     };
@@ -183,7 +185,7 @@ const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
         {/* PRICE + CTA */}
         <div className="mt-auto flex items-center justify-between pt-3">
           <span className="font-semibold text-black text-sm sm:text-base">
-            ₹{item.price}
+            ₹{item.weights[0].price}
           </span>
           <button
             onClick={(e) => {

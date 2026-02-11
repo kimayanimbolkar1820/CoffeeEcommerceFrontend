@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiPlus, FiMinus, FiShoppingCart } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { MdDelete } from "react-icons/md";
-import { showCartProductsThunk , updateCartThunk ,deleteCartThunk } from "@/redux/features/cartSlice";
+import { showCartProductsThunk , updateCartThunk ,deleteCartThunk  } from "@/redux/features/cartSlice";
+
 
 export default function Cart({ onClose }) {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ export default function Cart({ onClose }) {
   const cartItems = products?.cart || [ ]
 
   useEffect(() => {
-    dispatch(showCartProductsThunk());
+    dispatch(showCartProductsThunk()) 
   }, [dispatch]);
 
   const handlePlusButton =(item)=>{
@@ -91,9 +92,9 @@ export default function Cart({ onClose }) {
                   {/* IMAGE */}
                   <Image
                     src={(item.images)?.[0] || "/placeholder.png"}
+                    alt={item.name}
                     width={80}
                     height={80}
-                    alt={item.name}
                     className="rounded-lg object-cover"
                   />
 
@@ -116,7 +117,7 @@ export default function Cart({ onClose }) {
                   </div>
                   {/* PRICE */}
                   <div className="font-semibold text-sm">
-                    ₹{item.price * item.quantity}
+                    ₹{item.subtotal}
                   </div>
                   <div className="pt-25  "> 
                      <button onClick={()=>handleRemoveButton(item)} className="cursor-pointer">
