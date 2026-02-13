@@ -4,22 +4,18 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { showShippingAddressThunk, updateShippingAddressThunk } from "@/redux/features/shippingSlice";
+import { showCheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { useSearchParams } from "next/navigation";
-import { fetchProductBySlug } from "@/redux/features/productSlice";
 import { getValidImage ,normalizeImages } from "@/utils/getValidImage";
+import { createPaymentThunk } from "@/redux/features/paymentSlice";
 
 
 export default function CheckoutPage() {
   const [edit, setEdit] = useState(false);
-  const searchParams = useSearchParams()
-  const slug = searchParams.get("slug")
-  const qty = Number(searchParams.get("qty") || 1)
-
-  const product = useSelector((state) => state.product.currentProduct)
-  
-
-  console.log("this is the product id : ",product?.name)
-
+  const searchParam = useSearchParams()
+  const [method , setMethod] = useState({
+     paymentMethod : "PHONEPE"
+  })
   const [fdata, setFdata] = useState({
     full_name: "",
     phone: "",
@@ -33,19 +29,19 @@ export default function CheckoutPage() {
     is_default: false,
   });
 
-  console.log(`this is the product slug  ${slug} and quantity ${qty} `)
 
+  
   const dispatch = useDispatch();
   const { address, loading } = useSelector((state) => state.shipping);
-
-
-
+  
+  
+  
   useEffect(() => {
     dispatch(showShippingAddressThunk());
   }, [dispatch]);
-
+  
   const defaultAddress = address?.data?.[0];
-
+  
   // Sync fdata with defaultAddress
   useEffect(() => {
     if (defaultAddress) {
@@ -64,38 +60,62 @@ export default function CheckoutPage() {
       });
     }
   }, [defaultAddress]);
-
+  
   const handleEditbuttton = () => setEdit((prev) => !prev);
-
+  
   const handleSubmitButton =  (e) => {
     e.preventDefault();
     if (!defaultAddress?.id) return;
-
+    
     const data = {
       id: defaultAddress.id,
       ...fdata,
       address_type: fdata.address_type.toLowerCase(),
       is_default: fdata.is_default ? 1 : 0,
     };
-
+    
     dispatch(updateShippingAddressThunk(data)).then(()=>{
       setEdit(false)
       dispatch(showShippingAddressThunk())
     })
     
   };
+  
+  const cheakoutProducts = useSelector((state)=>state.cheakout.cheakoutProducts)
+  console.log( "this is the data : " , cheakoutProducts)
+  const id = searchParam.get("id")
 
-  useEffect(()=>{
-     if (slug) {
-    dispatch(fetchProductBySlug(slug))
+
+  useEffect(() => {
+  if (id) {
+    console.log("DISPATCHING WITH ID:", id);
+    dispatch(showCheakoutThunk(id));
   }
-  },[slug , dispatch])
+}, [id , dispatch] );
 
-  const images = normalizeImages(product?.images)
-  const mainImage = images[0]
 
-  return (
-    <div className="min-h-screen bg-[#2a1816] px-4 py-30">
+const handleCheakoutButton = async ()=>{
+  const payload ={
+    checkout_session_id : cheakoutProducts.checkout_session_id,
+    paymentMethod: method.paymentMethod,
+  }
+  try {
+    const response = await dispatch(createPaymentThunk(payload)).unwrap();
+    if(response.checkoutUrl){
+      window.location.href = response.checkoutUrl
+    }
+    else{
+      console.log("Checkout URL missing from response");
+    }
+  } catch (error) {
+    console.error("Payment failed", error);
+  }
+  dispatch(createPaymentThunk(payload))
+}
+
+
+return (
+  <div className="min-h-screen bg-[#2a1816] px-4 py-30">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
         {/* LEFT COLUMN */}
         <div className="md:col-span-2 space-y-6 w-3xl ">
@@ -261,11 +281,26 @@ export default function CheckoutPage() {
 
           {/* DELIVERY DETAILS */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
-            <h2 className="mb-3 text-lg font-semibold text-black">Delivery Details</h2>
+            <h2 className="mb-3 text-lg font-semibold text-black">Payment Mathods</h2>
             <p className="text-sm text-black">
-              Estimated delivery in <span className="font-medium">3–5 business days</span>
+              Select <span className="font-medium">Payment Method</span>
             </p>
-            <p className="mt-1 text-sm text-gray-600">Orders placed before 6 PM ship the same day.</p>
+              <div className="flex gap-2">
+                        {["COD", "PHONEPE"].map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setMethod({...method  , paymentMethod : type })}
+                            className={`rounded-md px-3 py-2 text-xs border ${
+                              fdata.address_type === type
+                                ? "border-black bg-black text-white"
+                                : "border-gray-400 text-black"
+                            }`}
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
           </div>
 
           {/* COUPON */}
@@ -287,24 +322,39 @@ export default function CheckoutPage() {
         {/* RIGHT COLUMN */}
         <div className="sticky top-6 rounded-xl bg-[#f5efe6] p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold text-[#3b2a26]">Order Summary</h2>
-          <div className="mb-4 flex gap-4 border-b border-[#e3d6c6] pb-4">
-            <Image src={getValidImage(mainImage)} alt={product?.name} width={80} height={80} className="rounded-md" />
-            <div className="flex-1 text-black">
-              <p className="font-medium text-black">{product?.name} </p>
-              <p className="text-sm text-gray-500">Qty: </p>
-              <p className="font-semibold">₹ </p>
-            </div>
+          {cheakoutProducts?.items?.map((product)=>{
+              const images = normalizeImages(product.product_image)
+              const mainImage = images[0]
+             return (
+              <>
+               <div className="mb-4 flex gap-4 border-b border-[#e3d6c6] pb-4">
+                <div>
+                   <Image src={getValidImage(mainImage)} alt={product.product_name} width={100} height={50} className="object-cover"/> 
+                </div>
+                <div className="text-start">
+                  <p className="text-black font-playfair text-[17px] pb-1">{product.product_name}</p>
+                  <div className="flex gap-4 justify-start">
+                  <p className="text-black font-inter text-[13px]">weight: {product.weight_kg}kg</p>
+                  <p className="text-red-600 font-inter text-[13px]">Quantity: {product.quantity} </p>
+                  </div>
+                  <p className="text-black font-inter text-[15px]">Price:  {product.price}</p>
+                </div>
           </div>
-
-          {/* BILLING */}
+              </>
+             )
+          })}
+           {/* BILLING */}
           <div className="space-y-2 text-sm text-black">
-            <div className="flex justify-between"><span>Subtotal</span><span>₹</span></div>
-            <div className="flex justify-between"><span>GST (18%)</span><span>₹</span></div>
-            <div className="flex justify-between"><span>Shipping</span><span>₹</span></div>
-            <div className="flex justify-between border-t border-[#e3d6c6] pt-2 font-semibold"><span>Total</span><span>₹</span></div>
+            <div className="flex justify-between"><span>Subtotal</span><span className="text-black">₹ {cheakoutProducts?.subtotal}</span></div>
+            <div className="flex justify-between"><span>GST</span><span>₹ {cheakoutProducts?.total_gst}</span></div>
+            <div className="flex justify-between"><span>Discount</span><span>₹ {cheakoutProducts?.discount}</span></div>
+            <div className="flex justify-between border-t border-[#e3d6c6] pt-2 font-semibold"><span>Total</span><span>₹ {cheakoutProducts?.final_amount}</span></div>
           </div>
+        
 
-          <button className="cursor-pointer mt-6 w-full rounded-lg bg-green-700 py-3 font-semibold text-white hover:bg-green-800">
+          
+
+          <button onClick={handleCheakoutButton} className="cursor-pointer mt-6 w-full rounded-lg bg-green-700 py-3 font-semibold text-white hover:bg-green-800">
             Checkout
           </button>
         </div>

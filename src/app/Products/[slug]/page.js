@@ -13,28 +13,56 @@ import AddressPopup from "@/components/checkout/AddressPopup";
 import { showAddress } from "@/api/shippingApi";
 import { useRouter } from "next/navigation";
 import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
+import { fetchProducts } from "@/redux/features/productSlice";
+import ProductCard from "@/components/product/ProductCards";
+
+
+
 
 export default function ProductPage() {
   const { slug } = useParams();
   const dispatch = useDispatch();
   const router = useRouter()
+  const [activeImage, setActiveImage] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [showAddressPopup, setShowAddressPopup] = useState(false);
   
+
 
 
   const { currentProduct, loading, error } = useSelector(
     (state) => state.product
   );
 
+  const product = currentProduct;
 
-  const [activeImage, setActiveImage] = useState(0);
-  const [qty, setQty] = useState(1);
-  const [showAddressPopup, setShowAddressPopup] = useState(false);
+  const images = product
+    ? normalizeImages(product.images || [])
+    : [];
 
-  
+  const imageSrc =
+    product
+      ? getValidImage(images?.[0]) ||
+        "/images/product-placeholder.png"
+      : "/images/product-placeholder.png";
+const allProducts = useSelector(
+  (state) => state.product.data.products || []
+);
 
+  const relatedProducts = product
+    ? allProducts
+        .filter(
+          (p) =>
+            p.categoryLevel2?.toLowerCase() ===
+              product.categoryLevel2?.toLowerCase() &&
+            p.slug !== product.slug
+        )
+        .slice(0, 4)
+    : [];
 
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));
+    dispatch(fetchProducts());
   }, [slug, dispatch]);
 
   if (loading)
@@ -45,9 +73,7 @@ export default function ProductPage() {
 
   if (!currentProduct) return null;
 
-  const product = currentProduct;
-  console.log(product)
-  const images = normalizeImages(product.images || []);
+  
 
   const handleAddToCart = () => {
     dispatch(
@@ -71,9 +97,14 @@ export default function ProductPage() {
       const result = await dispatch(
         cheakoutThunk({
            shipping_address_id: defaultAddress.id,
-           coupon_code: null,
-           product_id:product.id,
-           quantity: qty,
+  coupon_code: null,
+  items: [
+    {
+      product_id: product.id,
+      weight_kg: product.weights[0].weight_kg,
+      quantity: qty
+    }
+  ]
         })
       ).unwrap()
       router.push(`/checkout?id=${result.checkout_session_id}`)
@@ -94,12 +125,17 @@ export default function ProductPage() {
 
 
        {/* Decorative beans – top left */}
-        <div className="pointer-events-none absolute top-0 -left-0 md:-top-16 md:-left-50  w-[60%] md:w-[35%] z-[20]">
-            <img src="/images/bean13.png" alt="productInfo" className="w-full max-w-none rotate-180"/>
+        <div className="pointer-events-none absolute top-0 -left-0 md:-top-8 md:-left-55 w-[60%] md:w-[35%] z-[20] hidden lg:block">
+
+            <img
+              src="/images/bean13.png"
+              alt="fufuyguyg"
+              className="w-full max-w-none rotate-180"
+            />
           </div>
 
           {/* Decorative beans – bottom right */}
-          <div className="pointer-events-none absolute inset-0 z-[0]">
+          <div className="pointer-events-none absolute inset-0 z-[0] hidden lg:block">
             <img
               src="/images/beans14.png"
               alt="something"
@@ -110,11 +146,11 @@ export default function ProductPage() {
             />
           </div>
         {/* ================= LEFT : IMAGE CARD ================= */}
-        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center py-10">
+        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center md:py-17 py-12 md:pr-8 ">
 
           {/* Desktop Image */}
-          <div className="hidden lg:flex flex-col items-center justify-center gap-6
-            bg-[#b2a28e] w-full max-w-[650px] h-[680px] rounded-br-[58px]
+          <div className="hidden lg:flex flex-col items-center justify-center gap-8
+            bg-[#b2a28e] w-full max-w-[650px] h-[650px] rounded-br-[58px]
             shadow-[0_40px_80px_rgba(0,0,0,0.45)] relative z-10"
           >
             {images[activeImage] && (
@@ -174,7 +210,7 @@ export default function ProductPage() {
         </div>
 
         {/* ================= RIGHT : PRODUCT DETAILS ================= */}
-        <div className="lg:w-[50%] w w-full px-6 lg:px-16 pt-6 pb-6 flex flex-col justify-between relative z-[10] h-auto lg:h-[520px] pt-8 pb-6">
+        <div className="lg:w-[50%]  w-full px-6 lg:px-16  flex flex-col justify-between relative z-[10] h-auto lg:h-[520px] md:pt-10 pt-0 pb-6">
 
           <div>
             {product.categoryLevel3 && (
@@ -251,6 +287,20 @@ export default function ProductPage() {
               Add to Cart
             </motion.button>
 
+
+
+{product?.is_subscribable && (
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    className="cursor-pointer w-full border bg-[#c7a17a] border-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+  >
+     Subscribe & Save
+  </motion.button>
+  
+
+  
+)}
+
            <motion.button
   whileTap={{ scale: 0.95 }}
   onClick={handleBuyNow}
@@ -260,10 +310,72 @@ export default function ProductPage() {
   Buy Now
 </motion.button>
 
+
           </div>
 
         </div>
+
+
+
       </div>
+
+
+      
+
+     {/* ================= RELATED PRODUCTS SECTION ================= */}
+{relatedProducts.length > 0 && (
+  <section className="bg-[#1a120c] py-20">
+    <div className="max-w-7xl mx-auto px-6 lg:px-16">
+      
+      {/* Heading */}
+      <h2 className="text-3xl lg:text-4xl font-cinzel text-[#c7a17a] mb-12 text-center">
+        You May Also Like
+      </h2>
+
+      {/* 📱 Mobile Scroll */}
+      <div className="flex md:hidden overflow-x-auto gap-6 px-2">
+        {relatedProducts.map((product) => {
+          const images = normalizeImages(product.images);
+          const imageSrc =
+            getValidImage(images?.[0]) ||
+            "/images/product-placeholder.png";
+
+          return (
+            <div key={product._id} className="min-w-[85%] shrink-0">
+              <ProductCard
+                product={{
+                  ...product,
+                  imageSrc,
+                }}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 💻 Desktop Grid */}
+      <div className="hidden md:grid md:grid-cols-4 gap-8">
+        {relatedProducts.map((product) => {
+          const images = normalizeImages(product.images);
+          const imageSrc =
+            getValidImage(images?.[0]) ||
+            "/images/product-placeholder.png";
+
+          return (
+            <ProductCard
+              key={product._id}
+              product={{
+                ...product,
+                imageSrc,
+              }}
+            />
+          );
+        })}
+      </div>
+
+    </div>
+  </section>
+)}
 
       <AddressPopup
   open={showAddressPopup}
@@ -274,6 +386,10 @@ export default function ProductPage() {
   onClose={() => setShowAddressPopup(false)}
   onSubmit={(addressData) => {
     console.log("Address from PDP:", addressData);
+
+
+
+
     setShowAddressPopup(false);
   }}
 />

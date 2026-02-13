@@ -13,6 +13,7 @@ import { useRef } from "react";
 import SubscriptionHero from "@/components/subscribePage/SubscriptionHero";
 
 export default function SubscribePage() {
+  
 
   const [selectedProduct, setSelectedProduct] = useState(null);
  

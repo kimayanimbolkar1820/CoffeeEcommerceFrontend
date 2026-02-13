@@ -72,22 +72,24 @@ export default function AddressPopup({
     if (from === "pdp") {
       checkoutPayload.items = [
         {
-          product_id: productId,
-          quantity: qty,
-          weight_kg: weight,
+           shipping_address_id: addressId,
+           coupon_code: null,
+           product_id: productId,
+           weight_kg: weight ,
+           quantity: qty
         },
       ];
     }
 
     const checkoutResponse = await dispatch(
       cheakoutThunk(checkoutPayload)
-    ).unwrap();
+    ).unwrap()
 
-    console.log("Checkout success:", checkoutResponse);
-
-    router.push(
+    router.replace(
       `/checkout?id=${checkoutResponse.checkout_session_id}`
     );
+    onClose()
+
 
   } catch (err) {
     console.log("Error:", err);
