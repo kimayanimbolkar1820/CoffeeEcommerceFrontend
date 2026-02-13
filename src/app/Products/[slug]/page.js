@@ -12,6 +12,7 @@ import { AddToCartThunk } from "@/redux/features/cartSlice";
 import AddressPopup from "@/components/checkout/AddressPopup";
 import { showAddress } from "@/api/shippingApi";
 import { useRouter } from "next/navigation";
+import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { fetchProducts } from "@/redux/features/productSlice";
 import ProductCard from "@/components/product/ProductCards";
 import { useMemo } from "react";
@@ -97,7 +98,23 @@ const relatedProducts = useMemo(() => {
       const address = res?.data || []
     
     if(address.length > 0){
-      router.push(`/checkout?slug=${product.slug}&qty=${qty}`)
+      const defaultAddress =
+        address.find((a) => a.is_default) || address[0];
+
+      const result = await dispatch(
+        cheakoutThunk({
+           shipping_address_id: defaultAddress.id,
+  coupon_code: null,
+  items: [
+    {
+      product_id: product.id,
+      weight_kg: product.weights[0].weight_kg,
+      quantity: qty
+    }
+  ]
+        })
+      ).unwrap()
+      router.push(`/checkout?id=${result.checkout_session_id}`)
     }
     else{
       setShowAddressPopup(true)
@@ -119,7 +136,7 @@ const relatedProducts = useMemo(() => {
 
             <img
               src="/images/bean13.png"
-              alt=""
+              alt="fufuyguyg"
               className="w-full max-w-none rotate-180"
             />
           </div>
@@ -213,6 +230,17 @@ const relatedProducts = useMemo(() => {
               {product.name}
             </h1>
 
+            {/* Price */}
+            <div className="mt-2 flex items-center gap-5">
+              <p className="text-3xl font-bold text-[#c7a17a]">
+                ₹{product.weights[0].price}
+              </p>
+              {product.discountPrice && (
+                <p className="line-through text-gray-500 text-lg">
+                  ₹{ product.weights[0].price}
+                </p>
+              )}
+            </div>
 
 {/* Price + Subscribe */}
 <div className="mt-2 flex items-center gap-5 flex-wrap">
@@ -405,11 +433,14 @@ const relatedProducts = useMemo(() => {
 
       <AddressPopup
   open={showAddressPopup}
-  slug={product.slug}
-  quantity={product.qty}
+  productId={product.id}
+  qty={qty}
+  weight={product.weights[0].weight_kg}
+  from="pdp"
   onClose={() => setShowAddressPopup(false)}
   onSubmit={(addressData) => {
     console.log("Address from PDP:", addressData);
+
 
 
 
