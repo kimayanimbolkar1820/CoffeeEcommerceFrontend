@@ -25,7 +25,8 @@ export default function ProductPage() {
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
   const [showAddressPopup, setShowAddressPopup] = useState(false);
-  
+  const [selectedWeightIndex, setSelectedWeightIndex] = useState(0);
+
 
 
 
@@ -34,6 +35,13 @@ export default function ProductPage() {
   );
 
   const product = currentProduct;
+  const hasWeights = product?.weights && product.weights.length > 0;
+const hasMultipleWeights = product?.weights?.length > 1;
+
+const selectedWeight = hasWeights
+  ? product.weights[selectedWeightIndex]
+  : null;
+
 
   const images = product
     ? normalizeImages(product.images || [])
@@ -79,7 +87,8 @@ const allProducts = useSelector(
       AddToCartThunk({
         product_id:product.id,
         quantity: qty,
-        weight_kg :product.weights[0].weight_kg,
+         weight_kg: selectedWeight?.weight_kg,
+        // weight_kg :product.weights[0].weight_kg,
       })
     );
   };
@@ -122,7 +131,7 @@ const allProducts = useSelector(
             <img
               src="/images/beans14.png"
               alt="something"
-              className="absolute md:-bottom-10 lg:right-0 md:w-[35%] -bottom-50 w-[105%] right-0 max-w-none opacity-80 sepia
+              className="absolute md:-bottom-0 lg:right-0 md:w-[35%]  w-[105%] right-0 max-w-none opacity-80 sepia
               hue-rotate-[18deg]
               saturate-[0.6]
               brightness-[1.25]"
@@ -193,7 +202,7 @@ const allProducts = useSelector(
         </div>
 
         {/* ================= RIGHT : PRODUCT DETAILS ================= */}
-        <div className="lg:w-[50%]  w-full px-6 lg:px-16  flex flex-col justify-between relative z-[10] h-auto lg:h-[520px] md:pt-10 pt-0 pb-6">
+        <div className="lg:w-[50%]  w-auto px-6 lg:px-16  flex flex-col justify-between relative z-[10]  md:pt-8 pt-0 pb-6">
 
           <div>
             {product.categoryLevel3 && (
@@ -206,37 +215,82 @@ const allProducts = useSelector(
               {product.name}
             </h1>
 
-            {/* Price */}
-            <div className="mt-2 flex items-center gap-5">
-              <p className="text-3xl font-bold text-[#c7a17a]">
-                ₹{product.weights[0].discountPrice || product.weights[0].price}
-              </p>
-              {product.discountPrice && (
-                <p className="line-through text-gray-500 text-lg">
-                  ₹{ product.weights[0].price}
-                </p>
-              )}
-            </div>
+
+{/* Price + Subscribe */}
+<div className="mt-2 flex items-center gap-5 flex-wrap">
+  
+  <div className="flex items-center gap-4">
+    <p className="text-3xl font-bold text-[#c7a17a]">
+      ₹{selectedWeight?.discount_price || selectedWeight?.price}
+    </p>
+
+    {selectedWeight?.discount_price && (
+      <p className="line-through text-gray-500 text-lg">
+        ₹{selectedWeight?.price}
+      </p>
+    )}
+  </div>
+
+  {product?.is_subscribable && (
+    <motion.button
+      whileTap={{ scale: 0.95 }}
+      className="cursor-pointer px-6 py-1.5 text-md font-semibold rounded-full bg-[#c7a17a] text-black hover:bg-[#d6ba9e] transition"
+    >
+      Subscribe & Save !
+    </motion.button>
+  )}
+
+</div>
+{/* Weight Selector */}
+{hasMultipleWeights && (
+  <div className="mt-6">
+ 
+
+    <div className="flex gap-3 flex-wrap">
+      {product.weights.map((weight, index) => (
+        <button
+          key={weight.sku}
+          onClick={() => setSelectedWeightIndex(index)}
+          className={`px-5 py-2 rounded-full border text-sm font-medium transition
+            ${
+              selectedWeightIndex === index
+                ? "bg-[#c7a17a] text-black border-[#c7a17a]"
+                : "border-[#3a2a1a] text-gray-300 hover:border-[#c7a17a]"
+            }`}
+        >
+          {weight.weight_grams}g
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
 
             {/* Description */}
-            <p className="mt-3 text-gray-300 leading-loose text-sm max-w-md">
-              {product.description}
+           <p className="mt-4 text-gray-300 leading-relaxed text-base max-w-3xl">
+    {product.description}
             </p>
 
             {/* Specs */}
-            <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+            <div className="grid grid-cols-4 gap-4 mt-4 text-sm">
               <Spec label="Roast Level" value={product.roastLevel} />
               <Spec label="Roast Colour" value={product.roastColour} />
               <Spec
-                label="Stock"
-                value={product.weights[0].inStock ? "In Stock" : "Out of Stock"}
-                valueClass={ product.weights[0].inStock ? "text-green-400" : "text-red-500"}
-              />
-              <Spec label="Quantity" value={product.weights[0].quantity} />
+  label="Stock"
+  value={selectedWeight?.in_stock ? "In Stock" : "Out of Stock"}
+  valueClass={
+    selectedWeight?.in_stock ? "text-green-400" : "text-red-500"
+  }
+/>
+
+<Spec label="Quantity" value={selectedWeight?.quantity} />
+
+          
+              
             </div>
 
             {/* Quantity Selector */}
-            <div className="mt-4">
+            <div className="mt-3">
               <div className="inline-flex items-center border border-[#3a2a1a] rounded-full overflow-hidden">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
@@ -260,11 +314,11 @@ const allProducts = useSelector(
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col gap-4 mt-3 pb-6 lg:pb-0">
+          <div className="flex grid-cols-2 gap-4 mt-3 pb-6 lg:pb-0">
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleAddToCart}
-              className="w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+              className="cursor-pointer w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3 hover:bg-[#d6ba9e] transition"
             >
               <ShoppingCart size={20} />
               Add to Cart
@@ -272,22 +326,13 @@ const allProducts = useSelector(
 
 
 
-{product?.is_subscribable && (
-  <motion.button
-    whileTap={{ scale: 0.95 }}
-    className="cursor-pointer w-full border bg-[#c7a17a] border-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
-  >
-     Subscribe & Save
-  </motion.button>
-  
 
-  
-)}
+
 
            <motion.button
   whileTap={{ scale: 0.95 }}
   onClick={handleBuyNow}
-  className=" cursor-pointer w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
+  className=" cursor-pointer w-full border border-[#c7a17a] bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3 hover:bg-[#d6ba9e] transition"
 >
   <Zap size={20} />
   Buy Now
