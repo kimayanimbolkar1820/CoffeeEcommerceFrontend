@@ -1,48 +1,43 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import ProductCard from "@/components/product/ProductCards";
-import { getValidImage, normalizeImages } from "@/utils/getValidImage";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "@/redux/features/productSlice";
-import { fetchPlansThunk } from "@/redux/features/subscriptionSlice";
-import clsx from "clsx";
+import { clsx } from "clsx";
+
+import ProductCard from "@/components/product/ProductCards";
 import SubscriptionHero from "@/components/subscribePage/SubscriptionHero";
 
-export default function SubscribePage() {
+import { fetchProducts } from "@/redux/features/productSlice";
+import { getValidImage, normalizeImages } from "@/utils/getValidImage";
+import { useMemo } from "react";
 
+export default function SubscribePage() {
   const dispatch = useDispatch();
+  const scrollRef = useRef(null);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDesktop, setIsDesktop] = useState(true);
 
-  const { loading } = useSelector((state) => state.product);
-  const allProducts = useSelector(
-    (state) => state.product.data.products || []
-  );
-
-  const { plans, loading: plansLoading, error: plansError } = useSelector(
-    (state) => state.subscription
-  );
-
-  // ---------------- FETCH PRODUCTS ON LOAD ----------------
+  // Fetch products
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  // ---------------- FETCH PLANS WHEN PRODUCT SELECTED ----------------
-  useEffect(() => {
-    if (selectedProduct?.id) {
-      dispatch(fetchPlansThunk(selectedProduct.id));
-    }
-  }, [selectedProduct, dispatch]);
+  // Redux state
+  const { loading, error } = useSelector((state) => state.product);
+const allProducts = useSelector(
+  (state) => state.product.data.products || []
+);
 
-  // ---------------- FILTER SUBSCRIBABLE PRODUCTS ----------------
-  const subscribableProducts = allProducts.filter(
-    (product) => Number(product.is_subscribable) === 1
+
+
+const subscribableProducts = useMemo(() => {
+  return allProducts.filter(
+    (product) => product.is_subscribable === true
   );
+}, [allProducts]);
 
-  // ---------------- HORIZONTAL SCROLL ----------------
-  const scrollRef = useRef(null);
+  // Scroll settings
   const CARD_WIDTH = 260;
   const GAP = 24;
 
@@ -57,8 +52,7 @@ export default function SubscribePage() {
     });
   };
 
-  const [isDesktop, setIsDesktop] = useState(true);
-
+  // Responsive check
   useEffect(() => {
     const checkScreen = () => {
       setIsDesktop(window.innerWidth >= 1024);
@@ -79,35 +73,62 @@ export default function SubscribePage() {
       
       <SubscriptionHero />
 
-      {/* ---------------- HEADER SECTION ---------------- */}
-      <div className="max-w-8xl mx-auto mb-16 mt-10 text-center">
-
-        <h1 className="text-4xl md:text-5xl font-cinzel mb-10 text-white">
+      {/* Heading Section */}
+      <div className="max-w-8xl mx-auto mb-16 mt-10 flex flex-col items-center text-center">
+        <h1 className="text-4xl md:text-5xl font-cinzel mb-10">
           Completely Customise your Subscription, in just a few clicks
         </h1>
 
+        {/* Customisation Steps */}
+        <div className="md:w-7xl w-full overflow-hidden bg-[#eedecb] rounded-2xl py-10">
+          <div className="flex lg:grid grid-cols-5 gap-8 place-items-center overflow-x-auto lg:overflow-visible scrollbar-hide">
+            {[
+              { label: "NUMBER", icon: "images/icon4.png" },
+              { label: "PACK SIZE", icon: "images/icon1.png" },
+              { label: "COFFEES", icon: "images/icon2.png" },
+              { label: "GRIND SIZE", icon: "images/icon5.png" },
+              { label: "FREQUENCY", icon: "images/icon3.png" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center gap-3 shrink-0 min-w-[120px]"
+              >
+                <img
+                  src={item.icon}
+                  alt={item.label}
+                  className="w-20 h-20 object-contain"
+                />
+                <p className="text-xs tracking-widest font-semibold text-[#231b0f]">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* ---------------- PRODUCTS SECTION ---------------- */}
+      {/* Products Section */}
       <section className="bg-[#24160E] pt-10 pb-20">
-
-        <div className="max-w-[1600px] mx-auto px-10 py-12">
+        <div className="max-w-[1600px] px-10 -mt-26 py-12">
 
           <h2 className="text-2xl font-cinzel text-white text-center mb-10">
             Choose Products for Subscription
           </h2>
 
           {loading ? (
-            <p className="text-center text-white/60">Loading products…</p>
+            <p className="text-center text-white/60">
+              Loading products…
+            </p>
           ) : (
             <>
+              {/* Viewport */}
               <div
                 className="w-full overflow-x-hidden"
                 style={isDesktop ? { width: VIEWPORT_WIDTH } : {}}
               >
                 <div
                   ref={scrollRef}
-                  className="flex gap-6 scroll-smooth overflow-x-hidden"
+                  className="flex gap-6 scroll-smooth scrollbar-hide overflow-x-hidden"
                 >
                   {subscribableProducts.map((product) => {
                     const images = normalizeImages(product.images);
@@ -117,13 +138,11 @@ export default function SubscribePage() {
 
                     return (
                       <div
-                        key={product.id}
-                        style={{ width: CARD_WIDTH }}
+                        key={product._id}
                         className={clsx(
-                          "shrink-0 cursor-pointer transition",
-                          selectedProduct?.id === product.id &&
-                            "ring-2 ring-white rounded-xl"
+                          "shrink-0 cursor-pointer transition"
                         )}
+                        style={{ width: CARD_WIDTH }}
                         onClick={() => setSelectedProduct(product)}
                       >
                         <ProductCard
@@ -138,87 +157,26 @@ export default function SubscribePage() {
                 </div>
               </div>
 
+              {/* Scroll Controls */}
               <div className="flex justify-center gap-6 mt-10">
                 <button
                   onClick={() => scroll("left")}
-                  className="w-12 h-12 rounded-full bg-black text-white hover:bg-white hover:text-black transition"
+                  className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-white hover:text-black transition"
                 >
                   ←
                 </button>
 
                 <button
                   onClick={() => scroll("right")}
-                  className="w-12 h-12 rounded-full bg-black text-white hover:bg-white hover:text-black transition"
+                  className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-white hover:text-black transition"
                 >
                   →
                 </button>
               </div>
             </>
           )}
-
         </div>
-
       </section>
-
-      {/* ---------------- PLANS SECTION ---------------- */}
-      <section className="bg-[#1b140c] py-20 px-6 md:px-16">
-
-        <div className="max-w-7xl mx-auto text-center">
-
-          <h2 className="text-3xl md:text-4xl font-cinzel text-white mb-12">
-            Choose Your Subscription Plan
-          </h2>
-
-          {!selectedProduct ? (
-            <p className="text-white/60">
-              Select a product to see available plans.
-            </p>
-          ) : plansLoading ? (
-            <p className="text-white/60">Loading plans...</p>
-          ) : plansError ? (
-            <p className="text-red-400">{plansError}</p>
-          ) : plans.length === 0 ? (
-            <p className="text-white/60">
-              No subscription plans available for this product.
-            </p>
-          ) : (
-            <div className="grid md:grid-cols-3 gap-8">
-              {plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className="bg-[#2a1d13] text-white rounded-2xl p-8 shadow-lg hover:scale-105 transition"
-                >
-                  <h3 className="text-xl font-semibold mb-3">
-                    {plan.weight_grams}g
-                  </h3>
-
-                  <p className="text-lg mb-2">
-                    {plan.delivery_count} Deliveries
-                  </p>
-
-                  <p className="text-sm text-white/60 mb-2">
-                    Every {plan.frequency_count}{" "}
-                    {plan.frequency.toLowerCase()}
-                  </p>
-
-                  <p className="text-green-400 font-semibold mb-6">
-                    {plan.discount_percent}% OFF
-                  </p>
-
-                  <button
-                    className="w-full bg-white text-black py-2 rounded-full font-medium hover:bg-gray-200 transition"
-                  >
-                    Select Plan
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-        </div>
-
-      </section>
-
     </section>
   );
 }

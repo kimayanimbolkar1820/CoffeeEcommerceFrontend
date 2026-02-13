@@ -14,6 +14,7 @@ import { showAddress } from "@/api/shippingApi";
 import { useRouter } from "next/navigation";
 import { fetchProducts } from "@/redux/features/productSlice";
 import ProductCard from "@/components/product/ProductCards";
+import { useMemo } from "react";
 
 
 
@@ -30,9 +31,9 @@ export default function ProductPage() {
 
 
 
-  const { currentProduct, loading, error } = useSelector(
-    (state) => state.product
-  );
+const { data: products, currentProduct, loading, error } =
+  useSelector((state) => state.product);
+
 
   const product = currentProduct;
   const hasWeights = product?.weights && product.weights.length > 0;
@@ -52,21 +53,18 @@ const selectedWeight = hasWeights
       ? getValidImage(images?.[0]) ||
         "/images/product-placeholder.png"
       : "/images/product-placeholder.png";
-const allProducts = useSelector(
-  (state) => state.product.data.products || []
-);
+const relatedProducts = useMemo(() => {
+  if (!product || !products?.length) return [];
 
-  const relatedProducts = product
-    ? allProducts
-        .filter(
-          (p) =>
-            p.categoryLevel2?.toLowerCase() ===
-              product.categoryLevel2?.toLowerCase() &&
-            p.slug !== product.slug
-        )
-        .slice(0, 4)
-    : [];
-
+  return products
+    .filter(
+      (p) =>
+        p.categoryLevel2?.toLowerCase() ===
+          product.categoryLevel2?.toLowerCase() &&
+        p.slug !== product.slug
+    )
+    .slice(0, 4);
+}, [products, product]);
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));
     dispatch(fetchProducts());
