@@ -12,7 +12,7 @@ import { AddToCartThunk } from "@/redux/features/cartSlice";
 import AddressPopup from "@/components/checkout/AddressPopup";
 import { showAddress } from "@/api/shippingApi";
 import { useRouter } from "next/navigation";
-
+import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
 
 export default function ProductPage() {
   const { slug } = useParams();
@@ -65,7 +65,18 @@ export default function ProductPage() {
       const address = res?.data || []
     
     if(address.length > 0){
-      router.push(`/checkout?slug=${product.slug}&qty=${qty}`)
+      const defaultAddress =
+        address.find((a) => a.is_default) || address[0];
+
+      const result = await dispatch(
+        cheakoutThunk({
+           shipping_address_id: defaultAddress.id,
+           coupon_code: null,
+           product_id:product.id,
+           quantity: qty,
+        })
+      ).unwrap()
+      router.push(`/checkout?id=${result.checkout_session_id}`)
     }
     else{
       setShowAddressPopup(true)
@@ -179,7 +190,7 @@ export default function ProductPage() {
             {/* Price */}
             <div className="mt-2 flex items-center gap-5">
               <p className="text-3xl font-bold text-[#c7a17a]">
-                ₹{product.weights[0].discountPrice || product.weights[0].price}
+                ₹{product.weights[0].price}
               </p>
               {product.discountPrice && (
                 <p className="line-through text-gray-500 text-lg">
@@ -256,17 +267,13 @@ export default function ProductPage() {
 
       <AddressPopup
   open={showAddressPopup}
-  slug={product.slug}
-  quantity={product.qty}
+  productId={product.id}
+  qty={qty}
+  weight={product.weights[0].weight_kg}
+  from="pdp"
   onClose={() => setShowAddressPopup(false)}
   onSubmit={(addressData) => {
     console.log("Address from PDP:", addressData);
-
-    // Later:
-    // 1. Save address via shipment API
-    // 2. Create order
-    // 3. Redirect to payment
-
     setShowAddressPopup(false);
   }}
 />

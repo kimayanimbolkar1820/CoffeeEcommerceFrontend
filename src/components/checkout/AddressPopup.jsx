@@ -1,13 +1,24 @@
 "use client";
 
-import { useState , } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { addShippingAddressThunk } from "@/redux/features/shippingSlice";
+import { addShippingAddressThunk , showShippingAddressThunk } from "@/redux/features/shippingSlice";
+import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { useRouter } from "next/navigation";
 
-export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }) {
+export default function AddressPopup({
+  open,
+  onClose,
+  productId,
+  qty,
+  weight,
+  from,
+}) {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const [form, setForm] = useState({
     full_name: "",
     phone: "",
@@ -20,43 +31,79 @@ export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }
     country: "India",
     is_default: true,
   });
-  const dispatch = useDispatch()
-  const router = useRouter()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const payload = {...form , address_type : form.address_type.toLowerCase(),
-       is_default: form.is_default ? 1 : 0,
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const addressResponse = await dispatch(
+      addShippingAddressThunk({
+        ...form,
+        address_type: form.address_type.toLowerCase(),
+        is_default: form.is_default ? 1 : 0,
+      })
+    );
+
+    const getAddressId = await dispatch(showShippingAddressThunk()).unwrap();
+
+    const addressId = getAddressId?.data?.[0]?.id;
+
+    if (!addressId) {
+      console.log("Address ID missing");
+      return;
     }
 
-    await dispatch(addShippingAddressThunk(payload));
-    router.push(`/checkout?slug=${slug}&qty=${quantity}`)
-  };
+    console.log("Calling checkout...");
+
+    const checkoutPayload = {
+      shipping_address_id: addressId,
+      coupon_code: null,
+    };
+
+
+    if (from === "pdp") {
+      checkoutPayload.items = [
+        {
+          product_id: productId,
+          quantity: qty,
+          weight_kg: weight,
+        },
+      ];
+    }
+
+    const checkoutResponse = await dispatch(
+      cheakoutThunk(checkoutPayload)
+    ).unwrap();
+
+    console.log("Checkout success:", checkoutResponse);
+
+    router.push(
+      `/checkout?id=${checkoutResponse.checkout_session_id}`
+    );
+
+  } catch (err) {
+    console.log("Error:", err);
+  }
+};
 
   if (!open) return null;
 
-
-
-  console.log(form)
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
       <div
         onClick={onClose}
         className="absolute inset-0 bg-black/70 backdrop-blur-md"
       />
 
-      {/* Modal */}
       <div className="relative w-full max-w-3xl rounded-3xl bg-black/80 text-white shadow-2xl border border-white/10 my-8">
-
-        {/* Background image */}
         <div className="absolute inset-0 z-0 pointer-events-none bg-black/30">
           <Image
             src="/images/formimage.png"
@@ -68,76 +115,32 @@ export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }
         </div>
 
         <div className="relative z-10 p-8">
-
-          {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h1 className="font-cinzel text-2xl">Coffee & Joy</h1>
-            <button onClick={onClose} className="text-white/70 hover:text-white">
+            <h1 className="text-2xl font-semibold">Shipping Address</h1>
+            <button onClick={onClose}>
               <X />
             </button>
           </div>
 
-          <h2 className="text-xl font-semibold mb-6">Shipping Address</h2>
-
           <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-
-            {/* Left Column */}
+            {/* LEFT */}
             <div className="space-y-4">
-              <Field
-                label="Full Name"
-                name="full_name"
-                value={form.full_name}
-                placeholder="Enter your full name"
-                onChange={handleChange}
-              />
-              <Field
-                label="Phone Number"
-                name="phone"
-                value={form.phone}
-                placeholder="Enter your phone number"
-                onChange={handleChange}
-              />
-              <Field
-                label="Address Line 1"
-                name="address_line1"
-                value={form.address_line1}
-                placeholder="House no, street, area"
-                onChange={handleChange}
-              />
-              <Field
-                label="Address Line 2 (Optional)"
-                name="address_line2"
-                value={form.address_line2}
-                placeholder="Apartment, landmark"
-                onChange={handleChange}
-              />
+              <Input label="Full Name" name="full_name" value={form.full_name} onChange={handleChange} />
+              <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
+              <Input label="Address Line 1" name="address_line1" value={form.address_line1} onChange={handleChange} />
+              <Input label="Address Line 2" name="address_line2" value={form.address_line2} onChange={handleChange} />
             </div>
 
-            {/* Right Column */}
+            {/* RIGHT */}
             <div className="space-y-4">
-              <Field
-                label="City"
-                name="city"
-                value={form.city}
-                placeholder="City"
-                onChange={handleChange}
-              />
-              <Field
-                label="State"
-                name="state"
-                value={form.state}
-                placeholder="State"
-                onChange={handleChange}
-              />
-              <Field
-                label="Postal Code"
-                name="postal_code"
-                value={form.postal_code}
-                placeholder="PIN code"
-                onChange={handleChange}
-              />
+              <Input label="City" name="city" value={form.city} onChange={handleChange} />
+              <Input label="State" name="state" value={form.state} onChange={handleChange} />
+              <Input label="Postal Code" name="postal_code" value={form.postal_code} onChange={handleChange} />
+
               <div>
-                <Label>Country</Label>
+                <label className="text-xs uppercase text-white/70">
+                  Country
+                </label>
                 <input
                   disabled
                   value="India"
@@ -146,24 +149,27 @@ export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }
               </div>
             </div>
 
-            {/* Bottom row */}
+            {/* BOTTOM */}
             <div className="col-span-2 mt-6 space-y-4">
-
-              {/* Address Type */}
               <div>
-                <Label>Save address as</Label>
-                <div className="flex gap-3 mt-2">
+                <p className="text-xs uppercase text-white/70 mb-2">
+                  Save address as
+                </p>
+                <div className="flex gap-3">
                   {["HOME", "OFFICE", "OTHER"].map((type) => (
                     <button
                       key={type}
                       type="button"
                       onClick={() =>
-                        setForm({ ...form, address_type: type })
+                        setForm((prev) => ({
+                          ...prev,
+                          address_type: type,
+                        }))
                       }
-                      className={` cursor-pointer py-3 px-6 rounded-xl border text-sm transition ${
+                      className={`py-2 px-5 rounded-xl border ${
                         form.address_type === type
                           ? "bg-white text-black"
-                          : "border-white/30 text-white/70 hover:border-white/60"
+                          : "border-white/30 text-white/70"
                       }`}
                     >
                       {type}
@@ -172,28 +178,24 @@ export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }
                 </div>
               </div>
 
-              {/* Save Default */}
-              <label className="flex items-start gap-3 text-sm text-white/80">
+              <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   name="is_default"
                   checked={form.is_default}
                   onChange={handleChange}
-                  className=" cursor-pointer mt-1"
                 />
-                Save this address for faster checkout next time
+                Save this address for faster checkout
               </label>
 
-              {/* Submit */}
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className=" cursor-pointer bg-white text-black py-3 px-6 rounded-xl font-semibold hover:bg-white/90"
+                  className="bg-white text-black px-6 py-3 rounded-xl font-semibold"
                 >
                   Continue
                 </button>
               </div>
-
             </div>
           </form>
         </div>
@@ -202,25 +204,16 @@ export default function AddressPopup({ open, onClose, onSubmit ,slug ,quantity }
   );
 }
 
-/* ---------- Small reusable bits ---------- */
-
-function Label({ children }) {
-  return (
-    <p className="text-xs uppercase tracking-widest text-white/70 mb-1">
-      {children}
-    </p>
-  );
-}
-
-function Field({ label, ...props }) {
+function Input({ label, ...props }) {
   return (
     <div>
-      <Label>{label}</Label>
+      <label className="text-xs uppercase text-white/70 mb-1 block">
+        {label}
+      </label>
       <input
         {...props}
         required
-        className="w-full px-4 py-3 rounded-xl bg-transparent border border-white/30
-                   text-white placeholder-white/40 focus:border-white outline-none"
+        className="w-full px-4 py-3 rounded-xl bg-transparent border border-white/30 text-white outline-none"
       />
     </div>
   );
