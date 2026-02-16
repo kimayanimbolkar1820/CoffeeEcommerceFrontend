@@ -10,7 +10,10 @@ export default function NavbarWrapper() {
   // pathname.startsWith("/account")
     pathname === "/Auth/login" ||
     pathname === "/Auth/signup" ||
-    pathname === "/Auth/forgot-password";
+    pathname === "/Auth/forgot-password" ||
+    pathname === "/admin" ||
+    pathname === "/admin/auth/login" ||
+    pathname === "/admin/admin-dashboard";
 
   if (hideNavbar) return null;
 
