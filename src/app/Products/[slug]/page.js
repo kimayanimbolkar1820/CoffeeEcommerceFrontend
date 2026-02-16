@@ -103,7 +103,7 @@ const allProducts = useSelector(
 
 
   return (
-    <section className="min-h-screen bg-[#24160E] text-[#f5efe6]">
+    <section className=" bg-[#24160E] text-[#f5efe6]">
      <div className="flex flex-col lg:flex-row min-h-screen items-start relative">
 
 
@@ -197,7 +197,7 @@ const allProducts = useSelector(
 
           <div>
             {product.categoryLevel3 && (
-              <p className="text-sm uppercase tracking-widest text-[#c7a17a] mb-6">
+              <p className="text-sm lg:w-[80%] uppercase tracking-widest text-[#c7a17a] mb-6">
                 {product.categoryLevel2}
               </p>
             )}
@@ -260,7 +260,7 @@ const allProducts = useSelector(
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col gap-4 mt-3 pb-6 lg:pb-0">
+          <div className="flex flex-col gap-1 mt-3 pb-6 lg:pb-0">
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleAddToCart}
@@ -275,7 +275,9 @@ const allProducts = useSelector(
 {product?.is_subscribable && (
   <motion.button
     whileTap={{ scale: 0.95 }}
-    className="cursor-pointer w-full border bg-[#c7a17a] border-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+    // className="cursor-pointer w-full border bg-[#c7a17a] border-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+      className="w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+
   >
      Subscribe & Save
   </motion.button>
@@ -287,7 +289,9 @@ const allProducts = useSelector(
            <motion.button
   whileTap={{ scale: 0.95 }}
   onClick={handleBuyNow}
-  className=" cursor-pointer w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
+  // className=" cursor-pointer w-full border border-[#c7a17a] text-[#c7a17a] py-4 rounded-full font-bold flex items-center justify-center gap-3"
+     className="w-full bg-[#c7a17a] text-black py-4 rounded-full font-bold flex items-center justify-center gap-3"
+
 >
   <Zap size={20} />
   Buy Now
@@ -300,14 +304,11 @@ const allProducts = useSelector(
 
 
 
-      </div>
-
-
-      
+      </div>      
 
      {/* ================= RELATED PRODUCTS SECTION ================= */}
 {relatedProducts.length > 0 && (
-  <section className="bg-[#1a120c] py-20">
+  <section className="bg-[#1a120c] py-20 mt-10">
     <div className="max-w-7xl mx-auto px-6 lg:px-16">
       
       {/* Heading */}
@@ -335,6 +336,7 @@ const allProducts = useSelector(
           );
         })}
       </div>
+      
 
       {/* 💻 Desktop Grid */}
       <div className="hidden md:grid md:grid-cols-4 gap-8">
@@ -355,7 +357,6 @@ const allProducts = useSelector(
           );
         })}
       </div>
-
     </div>
   </section>
 )}
@@ -383,9 +384,10 @@ const allProducts = useSelector(
 /* ================= SPEC CARD ================= */
 function Spec({ label, value, valueClass = "text-[#c7a17a]" }) {
   return (
-    <div className="border border-[#3a2a1a] p-3 rounded-lg">
+    <div className="border border-[#dcae80] p-3 rounded-lg">
       <p className="text-gray-400 text-xs">{label}</p>
       <p className={`mt-1 font-medium ${valueClass}`}>{value}</p>
     </div>
   );
 }
+
