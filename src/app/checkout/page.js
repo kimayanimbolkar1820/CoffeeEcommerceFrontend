@@ -4,22 +4,18 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { showShippingAddressThunk, updateShippingAddressThunk } from "@/redux/features/shippingSlice";
+import { showCheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { useSearchParams } from "next/navigation";
-import { fetchProductBySlug } from "@/redux/features/productSlice";
 import { getValidImage ,normalizeImages } from "@/utils/getValidImage";
+import { createPaymentThunk } from "@/redux/features/paymentSlice";
 
 
 export default function CheckoutPage() {
   const [edit, setEdit] = useState(false);
-  const searchParams = useSearchParams()
-  const slug = searchParams.get("slug")
-  const qty = Number(searchParams.get("qty") || 1)
-
-  const product = useSelector((state) => state.product.currentProduct)
-  
-
-  console.log("this is the product id : ",product?.name)
-
+  const searchParam = useSearchParams()
+  const [method , setMethod] = useState({
+     paymentMethod : "PHONEPE"
+  })
   const [fdata, setFdata] = useState({
     full_name: "",
     phone: "",
@@ -33,19 +29,19 @@ export default function CheckoutPage() {
     is_default: false,
   });
 
-  console.log(`this is the product slug  ${slug} and quantity ${qty} `)
 
+  
   const dispatch = useDispatch();
   const { address, loading } = useSelector((state) => state.shipping);
-
-
-
+  
+  
+  
   useEffect(() => {
     dispatch(showShippingAddressThunk());
   }, [dispatch]);
-
+  
   const defaultAddress = address?.data?.[0];
-
+  
   // Sync fdata with defaultAddress
   useEffect(() => {
     if (defaultAddress) {
@@ -64,41 +60,76 @@ export default function CheckoutPage() {
       });
     }
   }, [defaultAddress]);
-
+  
   const handleEditbuttton = () => setEdit((prev) => !prev);
-
+  
   const handleSubmitButton =  (e) => {
     e.preventDefault();
     if (!defaultAddress?.id) return;
-
+    
     const data = {
       id: defaultAddress.id,
       ...fdata,
       address_type: fdata.address_type.toLowerCase(),
       is_default: fdata.is_default ? 1 : 0,
     };
-
+    
     dispatch(updateShippingAddressThunk(data)).then(()=>{
       setEdit(false)
       dispatch(showShippingAddressThunk())
     })
     
   };
+  
+  const cheakoutProducts = useSelector((state)=>state.cheakout.cheakoutProducts)
+  console.log( "this is the data : " , cheakoutProducts)
+  const id = searchParam.get("id")
 
-  useEffect(()=>{
-     if (slug) {
-    dispatch(fetchProductBySlug(slug))
+
+  useEffect(() => {
+  if (id) {
+    console.log("DISPATCHING WITH ID:", id);
+    dispatch(showCheakoutThunk(id));
   }
-  },[slug , dispatch])
+}, [id , dispatch] );
 
-  const images = normalizeImages(product?.images)
-  const mainImage = images[0]
 
-  return (
-    <div className="min-h-screen bg-[#2a1816] px-4 py-30">
+const handleCheakoutButton = async ()=>{
+  const payload ={
+    checkout_session_id : cheakoutProducts.checkout_session_id,
+    paymentMethod: method.paymentMethod,
+  }
+  try {
+    const response = await dispatch(createPaymentThunk(payload)).unwrap();
+    if(response.checkoutUrl){
+      window.location.href = response.checkoutUrl
+    }
+    else{
+      console.log("Checkout URL missing from response");
+    }
+  } catch (error) {
+    console.error("Payment failed", error);
+  }
+  dispatch(createPaymentThunk(payload))
+}
+
+
+return (
+  <div className="min-h-screen bg-[#2a1816] px-4 py-30">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
+  return (
+   <div className="min-h-screen overflow-hidden bg-[#2a1816] px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-30">
+
+      <div className="mx-auto max-w-6xl flex flex-col gap-6 lg:grid lg:grid-cols-3">
+
         {/* LEFT COLUMN */}
-        <div className="md:col-span-2 space-y-6 w-3xl ">
+      <div className="
+  order-2 
+  lg:order-1 
+  lg:col-span-2 
+  space-y-6
+">
+
           {/* SHIPPING ADDRESS */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
@@ -115,7 +146,8 @@ export default function CheckoutPage() {
               {edit ? (
                 <form onSubmit={handleSubmitButton} className="space-y-3 text-sm text-black">
                   {/* Row 1 */}
-                  <div className="flex gap-3">
+                 <div className="flex flex-col sm:flex-row gap-3">
+
                     <div className="flex-1">
                       <label className="mb-1 block text-xs font-medium">Full Name</label>
                       <input
@@ -126,7 +158,8 @@ export default function CheckoutPage() {
                         className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
                       />
                     </div>
-                    <div className="w-40">
+                 <div className="w-full sm:w-40">
+
                       <label className="mb-1 block text-xs font-medium">Phone</label>
                       <input
                         required
@@ -139,7 +172,8 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* Row 2 */}
-                  <div className="flex gap-3">
+                 <div className="flex flex-col sm:flex-row gap-3">
+
                     <div className="flex-1">
                       <label className="mb-1 block text-xs font-medium">Address Line 1</label>
                       <input
@@ -162,7 +196,8 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* Row 3 */}
-                  <div className="flex gap-3">
+                 <div className="flex flex-col sm:flex-row gap-3">
+
                     <div className="flex-1">
                       <label className="mb-1 block text-xs font-medium">City</label>
                       <input
@@ -183,7 +218,8 @@ export default function CheckoutPage() {
                         className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
                       />
                     </div>
-                    <div className="w-28">
+                   <div className="w-full sm:w-28">
+
                       <label className="mb-1 block text-xs font-medium">PIN</label>
                       <input
                         required
@@ -207,7 +243,8 @@ export default function CheckoutPage() {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-medium">Address Type</label>
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
+
                         {["HOME", "OFFICE", "OTHER"].map((type) => (
                           <button
                             key={type}
@@ -261,17 +298,33 @@ export default function CheckoutPage() {
 
           {/* DELIVERY DETAILS */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
-            <h2 className="mb-3 text-lg font-semibold text-black">Delivery Details</h2>
+            <h2 className="mb-3 text-lg font-semibold text-black">Payment Mathods</h2>
             <p className="text-sm text-black">
-              Estimated delivery in <span className="font-medium">3–5 business days</span>
+              Select <span className="font-medium">Payment Method</span>
             </p>
-            <p className="mt-1 text-sm text-gray-600">Orders placed before 6 PM ship the same day.</p>
+              <div className="flex gap-2">
+                        {["COD", "PHONEPE"].map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setMethod({...method  , paymentMethod : type })}
+                            className={`rounded-md px-3 py-2 text-xs border ${
+                              fdata.address_type === type
+                                ? "border-black bg-black text-white"
+                                : "border-gray-400 text-black"
+                            }`}
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
           </div>
 
           {/* COUPON */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
             <h2 className="mb-3 text-lg font-semibold text-[#120d0b]">Apply Coupon</h2>
-            <div className="flex gap-2 text-black">
+           <div className="flex flex-col sm:flex-row gap-2 text-black">
+
               <input
                 type="text"
                 placeholder="Enter coupon code"
@@ -285,26 +338,66 @@ export default function CheckoutPage() {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="sticky top-6 rounded-xl bg-[#f5efe6] p-6 shadow-sm">
+       <div className="
+  order-1 
+  lg:order-2 
+  lg:col-span-1 
+  rounded-xl 
+  bg-[#f5efe6] 
+  p-5 
+  sm:p-6 
+  shadow-sm 
+  lg:sticky lg:top-6
+">
+
           <h2 className="mb-4 text-lg font-semibold text-[#3b2a26]">Order Summary</h2>
+          {cheakoutProducts?.items?.map((product)=>{
+              const images = normalizeImages(product.product_image)
+              const mainImage = images[0]
+             return (
+              <>
+               <div className="mb-4 flex gap-4 border-b border-[#e3d6c6] pb-4">
+                <div>
+                   <Image src={getValidImage(mainImage)} alt={product.product_name} width={100} height={50} className="object-cover"/> 
+                </div>
+                <div className="text-start">
+                  <p className="text-black font-playfair text-[17px] pb-1">{product.product_name}</p>
+                  <div className="flex gap-4 justify-start">
+                  <p className="text-black font-inter text-[13px]">weight: {product.weight_kg}kg</p>
+                  <p className="text-red-600 font-inter text-[13px]">Quantity: {product.quantity} </p>
+                  </div>
+                  <p className="text-black font-inter text-[15px]">Price:  {product.price}</p>
+                </div>
           <div className="mb-4 flex gap-4 border-b border-[#e3d6c6] pb-4">
-            <Image src={getValidImage(mainImage)} alt={product?.name} width={80} height={80} className="rounded-md" />
+          <Image
+  src={getValidImage(mainImage)}
+  alt={product?.name}
+  width={80}
+  height={80}
+  className="rounded-md w-16 h-16 sm:w-20 sm:h-20 object-cover"
+/>
+
             <div className="flex-1 text-black">
               <p className="font-medium text-black">{product?.name} </p>
               <p className="text-sm text-gray-500">Qty: </p>
               <p className="font-semibold">₹ </p>
             </div>
           </div>
-
-          {/* BILLING */}
+              </>
+             )
+          })}
+           {/* BILLING */}
           <div className="space-y-2 text-sm text-black">
-            <div className="flex justify-between"><span>Subtotal</span><span>₹</span></div>
-            <div className="flex justify-between"><span>GST (18%)</span><span>₹</span></div>
-            <div className="flex justify-between"><span>Shipping</span><span>₹</span></div>
-            <div className="flex justify-between border-t border-[#e3d6c6] pt-2 font-semibold"><span>Total</span><span>₹</span></div>
+            <div className="flex justify-between"><span>Subtotal</span><span className="text-black">₹ {cheakoutProducts?.subtotal}</span></div>
+            <div className="flex justify-between"><span>GST</span><span>₹ {cheakoutProducts?.total_gst}</span></div>
+            <div className="flex justify-between"><span>Discount</span><span>₹ {cheakoutProducts?.discount}</span></div>
+            <div className="flex justify-between border-t border-[#e3d6c6] pt-2 font-semibold"><span>Total</span><span>₹ {cheakoutProducts?.final_amount}</span></div>
           </div>
+        
 
-          <button className="cursor-pointer mt-6 w-full rounded-lg bg-green-700 py-3 font-semibold text-white hover:bg-green-800">
+          
+
+          <button onClick={handleCheakoutButton} className="cursor-pointer mt-6 w-full rounded-lg bg-green-700 py-3 font-semibold text-white hover:bg-green-800">
             Checkout
           </button>
         </div>

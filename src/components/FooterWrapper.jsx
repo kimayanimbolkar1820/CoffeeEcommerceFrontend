@@ -9,7 +9,10 @@ export default function FooterWrapper() {
   const hideFooter =
     pathname === "/Auth/login" ||
     pathname === "/Auth/signup" ||
-    pathname === "/Auth/forgot-password";
+    pathname === "/Auth/forgot-password" ||
+    pathname === "/admin" ||
+    pathname === "/admin/auth/login" ||
+    pathname === "/admin/admin-dashboard";
 
   if (hideFooter) return null;
 
