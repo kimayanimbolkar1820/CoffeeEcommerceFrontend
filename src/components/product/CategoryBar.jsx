@@ -15,7 +15,6 @@ const CategoryBar = () => {
     { label: "Coffee", value: "coffee" },
     { label: "Machines", value: "machine" },
     { label: "Pods", value: "pods" },
-    { label: "Grinders", value: "grinders" },
     { label: "Accessories", value: "accessories" },
   ];
 

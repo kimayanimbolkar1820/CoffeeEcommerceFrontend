@@ -21,16 +21,16 @@ const FilterSidebar = () => {
   /* ---------------- LEVEL 2 OPTIONS (DEPEND ON CATEGORY) ---------------- */
   const categoryLevel2Options = {
     coffee: ["Whole Bean", "Ground Coffee", "Instant Coffee","Blends","Decaf"],
-    machine: ["Espresso", "Capsule", "Manual", "Drip"],
-    grinders: ["Manual Grinder", "Electric Grinder"],
+    machine: ["Espresso", "Grinders", "Manual", "Drip"],
+    Grinders: ["Manual Grinder", "Electric Grinder"],
     accessories: ["Mugs", "Filters", "Scoops"],
-    pods: ["Nespresso Pods", "Compatible Pods","Coffee Capsules","Coffee Pods"],
+    pods: ["Coffee Capsules","Coffee Pods"],
   };
 
   /* ---------------- LEVEL 3 OPTIONS (DEPEND ON LEVEL 2) ---------------- */
   const categoryLevel3Map = {
     Espresso: ["Commercial", "Fully Automatic", "Semi Automatic"],
-    Capsule: ["Nespresso", "Dolce Gusto", "Multi-Pod"],
+    Grinders:["Manual","Electric"],
     Manual: ["French Press", "Moka Pot", "AeroPress"],
     Drip: ["Pour Over", "Auto Drip"],
 

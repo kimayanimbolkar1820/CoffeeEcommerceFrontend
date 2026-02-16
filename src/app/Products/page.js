@@ -8,6 +8,11 @@ import Link from "next/link";
 import { fetchProducts } from "@/redux/features/productSlice";
 import { selectFilteredProducts } from "@/redux/selectors/productSelectors";
 import { getValidImage, normalizeImages } from "@/utils/getValidImage";
+import { useSearchParams } from "next/navigation";
+import { setActiveCategory } from "@/redux/features/categorySlice";
+import { resetFilters } from "@/redux/features/filterSlice";
+import { clearSearch } from "@/redux/features/searchSlice";
+
 
 import CategoryBar from "@/components/product/CategoryBar";
 import FilterSidebar from "@/components/product/Filters/FilterSidebar";
@@ -18,6 +23,8 @@ import { FaFilter } from "react-icons/fa";
 
 const Page = () => {
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+
   const activeCategory = useSelector((state) => state.category.activeCategory); 
   const { loading, error } = useSelector((state) => state.product);
   const filteredProducts = useSelector(selectFilteredProducts);
@@ -60,6 +67,17 @@ useEffect(() => {
         })
       );
     };
+
+    useEffect(() => {
+  const categoryFromUrl = searchParams.get("category");
+
+  if (categoryFromUrl) {
+    dispatch(setActiveCategory(categoryFromUrl));
+    dispatch(resetFilters());
+    dispatch(clearSearch());
+  }
+}, [searchParams, dispatch]);
+
 
     const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
