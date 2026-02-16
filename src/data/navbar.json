@@ -2,13 +2,13 @@
   "links": [
     {
       "label": "COFFEE",
-      "href": "/Products",
+      "href": "/Products?category=coffee",
       "dropdown": [
         {
           "title": "Beans & Grounds",
           "items": [
             { "label": "Whole Bean", "slug": "whole-bean" },
-            { "label": "Instant Coffee", "slug": "classic-instant" },
+            { "label": "Ground Coffee", "slug": "ground-coffee" },
             { "label": "Single Origin", "slug": "single-origin" },
             { "label": "Blends", "slug": "blends" },
             { "label": "Decaf", "slug": "decaf" }
@@ -19,15 +19,15 @@
           "items": [
             { "label": "Coffee Pods", "slug": "coffee-pods" },
             { "label": "Coffee Capsules", "slug": "coffee-capsules" },
-            { "label": "Nespresso Pods", "slug": "nespresso" },
-            { "label": "Compatible Pods", "slug": "compatible-pods" }
+            { "label": "Nespresso Pods", "slug": "nespresso" }
+            
           ]
         }
       ]
     },
     {
       "label": "MACHINES",
-      "href": "/machines",
+      "href": "/Products?category=machine",
       "dropdown": [
         {
           "title": "Espresso",
@@ -39,25 +39,18 @@
           ]
         },
         {
-          "title": "Capsule",
-          "items": [
-            { "label": "Nespresso", "slug": "nespresso" },
-            { "label": "Dolce Gusto", "slug": "dolce-gusto" },
-            { "label": "Multi Pod", "slug": "multi-pod" }
-          ]
-        },
-        {
-          "title": "Drip",
+          "title": "Drip & Grinders",
           "items": [
             { "label": "Auto Drip", "slug": "drip" },
-            { "label": "Pour Over", "slug": "pour-over" }
+            { "label": "Pour Over", "slug": "pour-over" },
+            {"label": "Grinders","slug":"grinders"}
           ]
         }
       ]
     },
     {
       "label": "ACCESSORIES",
-      "href": "/accessories",
+      "href": "/Products?category=accessories",
       "dropdown": [
         {
           "title": "Accessories",
@@ -71,7 +64,7 @@
     },
     {
       "label": "ABOUT US",
-      "href": "#about-us"
+      "href": "/#about-us"
     },
     {
       "label": "SUBSCRIPTION",
