@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { IoMail } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { forgotpassThunk } from "@/redux/features/authSlice";
 import { useDispatch , useSelector } from "react-redux";
@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div className="w-14 h-14 rounded-full bg-amber-600/20 flex items-center justify-center">
-            <Mail size={26} className="text-amber-500" />
+            <IoMail size={26} className="text-amber-500" />
           </div>
         </div>
 

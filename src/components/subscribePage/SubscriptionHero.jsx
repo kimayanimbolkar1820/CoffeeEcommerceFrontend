@@ -15,7 +15,7 @@ function SubscriptionHero() {
           {/* BEANS BACKGROUND IMAGE */}
   <div className="absolute  -bottom-55  -left-22 z-0 opacity-90 pointer-events-none">
     <Image
-      src="/images/coffeepaint1.png"   // <-- your beans image
+      src="/images/coffeepaint1.webp"   // <-- your beans image
       alt=""
       width={280}
       height={250}
@@ -34,7 +34,7 @@ function SubscriptionHero() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="text-4xl md:text-7xl font-semibold font-cinzel leading-tight mb-6"
+      className="text-4xl md:text-5xl font-semibold font-cinzel leading-tight mb-6"
     >
       Subscribe & Save More!
     </motion.h1>
@@ -92,7 +92,7 @@ function SubscriptionHero() {
           className="relative w-full h-[360px] md:h-[420px] lg:h-[480px]"
         >
           <Image
-            src="/images/Subscribe.png"
+            src="/Subscribeicons/Subscribe.webp"
             alt="Coffee products"
             fill
             priority

@@ -2,11 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { showUserOrdersThunk } from "@/redux/features/orderSlice";
+import { useDispatch , useSelector } from "react-redux";
 
 export default function Orders({ onBack }) {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const dispatch = useDispatch()
 
   // detect mobile
   useEffect(() => {
@@ -27,6 +30,12 @@ export default function Orders({ onBack }) {
     setShowForm(false);
     setEditId(null);
   };
+
+  const orders = useSelector((state)=>state.orders)
+
+  useEffect(()=>{
+     dispatch(showUserOrdersThunk())
+  })
 
   return (
     <div className="relative w-full min-h-[300px] p-4 sm:p-6 md:p-8 bg-[#37291d] rounded-2xl">

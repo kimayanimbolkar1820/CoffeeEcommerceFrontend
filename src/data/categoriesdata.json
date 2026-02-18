@@ -119,13 +119,6 @@
     "heroImage": "/images/categories/cat24.jpg",
     "level": 3
   },
-  {
-    "slug": "classic-instant",
-    "name": "Classic Instant",
-    "subtitle": "Everyday instant coffee, familiar and comforting",
-     "heroImage": "/images/categories/cat24.jpg",
-    "level": 3
-  },
 
   {
     "slug": "nespresso",
@@ -167,7 +160,21 @@
   "name": "Auto Drip Machines", 
   "subtitle": "Simple everyday brewing",
    "heroImage": "/images/categories/cat25.jpg", 
-   "level": 3 }
+   "level": 3 },
+   {
+  "slug": "grinders",
+  "name": "Coffee Grinders",
+  "subtitle": "Grind fresh for maximum flavour",
+  "heroImage": "/images/categories/cat27.jpg",
+  "level": 3
+},
+   {
+  "slug": "ground-coffee",
+  "name": "Ground Coffee",
+  "subtitle": "Freshly roasted beans for the perfect grind",
+  "heroImage": "/images/categories/cat27.jpg",
+  "level": 3
+}
 
 
 ]

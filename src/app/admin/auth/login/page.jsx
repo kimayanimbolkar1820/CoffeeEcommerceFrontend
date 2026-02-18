@@ -1,48 +1,44 @@
 "use client";
 
 import { useState , useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaRegEye ,FaRegEyeSlash  } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebookF } from "react-icons/fa";
-import { loginThunk } from "@/redux/features/authSlice";
+import { Eye, EyeOff } from "lucide-react";
+import {  sellerLoginThunk } from "@/redux/features/authSlice";
 import { useSelector , useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import AdminOtpVerification from "@/components/admin/AdminOtpVerification";
 
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [fromData , setFromData] =  useState({
+  const [formData , setFormData] =  useState({
     email : "",
     password : ""
   })
 
   const router = useRouter()
   const dispatch = useDispatch()
-  const {user , loading , error } = useSelector((state)=>state.auth)
+  const {tempUser , otpSent, otpVerified, loading, error } = useSelector((state)=>state.auth)
 
-  const handleOnChnage = (e)=>{
+  const handleOnChange = (e)=>{
     const {name , value} = e.target
-    setFromData({...fromData , [name]: value})
+    setFormData({...formData , [name]: value})
   }
 
 
- useEffect(() => {
-  console.log("User changed:", user);
-  if (user) {
-    console.log("Redirecting to home");
-    router.push("/");
+  console.log(formData)
+
+   useEffect(() => {
+    if (otpVerified) {
+      router.push("/admin/admin-dashboard");
+    }
+  }, [otpVerified, router]);
+
+  if (otpSent) {
+    return <AdminOtpVerification email={tempUser || formData.email} />;
   }
-}, [user, router]);
 
-  console.log(fromData)
-
-
-  const handleGoogleAuth = ()=>{
-    window.location.href="http://coffeewebapi.barecms.com/api/auth/google"
-  }
 
   return (
     <motion.div
@@ -70,10 +66,7 @@ export default function LoginPage() {
           initial={{ x: -60, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.9 }}
-          className="hidden md:flex w-1/2 h-full items-center justify-center
-                     bg-[#1b1512]
-                     [clip-path:ellipse(100%_85%_at_0%_50%)]"
-        >
+          className="hidden md:flex w-1/2 h-full items-center justify-center bg-[#1b1512] [clip-path:ellipse(100%_85%_at_0%_50%)]" >
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
@@ -109,7 +102,7 @@ export default function LoginPage() {
             }}
             className="text-3xl sm:text-4xl font-cinzel text-center mb-10 text-white font-bold"
           >
-            Sign In
+            Seller Sign In
           </motion.h1>
 
           <motion.input
@@ -118,9 +111,9 @@ export default function LoginPage() {
               visible: { y: 0, opacity: 1 },
             }}
             type="email"
-            value={fromData.email}
+            value={formData.email}
             name="email"
-            onChange={handleOnChnage}
+            onChange={handleOnChange}
             placeholder="Email"
             className="w-full mb-6 bg-transparent border-b border-gray-300
                        focus:border-amber-500 focus:outline-none py-2
@@ -137,9 +130,9 @@ export default function LoginPage() {
           >
             <input
               type={showPassword ? "text" : "password"}
-              value={fromData.password}
+              value={formData.password}
               name="password"
-              onChange={handleOnChnage}
+              onChange={handleOnChange}
               placeholder="Password"
               className="w-full bg-transparent border-b border-gray-300
                          focus:border-amber-500 focus:outline-none py-2
@@ -150,7 +143,7 @@ export default function LoginPage() {
               onClick={() => setShowPassword(!showPassword)}
               className="cursor-pointer absolute right-2 top-2.5 text-gray-400 hover:text-white transition"
             >
-              {showPassword ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </motion.div>
 
@@ -158,54 +151,11 @@ export default function LoginPage() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
-            onClick={()=> dispatch(loginThunk(fromData))}
-            className="w-full py-3 rounded-full bg-gradient-to-r
-                       from-amber-600 to-orange-900
-                       font-playfair font-bold shadow-lg text-white cursor-pointer"
-          >
+            onClick={()=> dispatch(sellerLoginThunk(formData))}
+            className="w-full py-3 rounded-full bg-linear-to-r  from-amber-600 to-orange-900 font-playfair font-bold shadow-lg text-white cursor-pointer">
             Sign In
           </motion.button>
 
-          {/* LINKS */}
-          <div className="text-center mt-6">
-            <Link href="/Auth/forgot-password" className="text-sm hover:underline text-white">
-              Forgot Password?
-            </Link>
-          </div>
-
-          <p className="text-center mt-6 text-sm text-gray-300">
-            Don&apos;t have an account?{" "}
-            <Link href="/Auth/signup" className="text-amber-500 hover:underline">
-              Create new account
-            </Link>
-          </p>
-
-          {/* SOCIAL LOGIN Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mt-10"
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <span className="flex-1 h-px bg-gray-500/40" />
-              <span className="text-sm text-gray-300">or continue with</span>
-              <span className="flex-1 h-px bg-gray-500/40" />
-            </div>
-
-            <div className="flex justify-center gap-6">
-              <motion.button
-                whileHover={{ scale: 1.12 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleGoogleAuth}
-                className="w-12 h-12 rounded-full bg-white flex items-center justify-center
-                           shadow-lg hover:shadow-[0_0_25px_#ffffff] cursor-pointer"
-              >
-                <FcGoogle size={22} />
-              </motion.button>
-
-            </div>
-          </motion.div>
         </motion.div>
       </div>
     </motion.div>

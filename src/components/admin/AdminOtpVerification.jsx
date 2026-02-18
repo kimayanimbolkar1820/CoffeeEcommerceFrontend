@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { otpThunk ,resendThunk } from "@/redux/features/authSlice";
+import { sellerVerifyThunk ,resendThunk } from "@/redux/features/authSlice";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { LuKeyRound } from "react-icons/lu";
+import { KeyRound } from "lucide-react";
 
 
-const Otp = ({ email }) => {
+const AdminOtpVerification = ({ email }) => {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [timer, setTimer] = useState(30);
 
@@ -62,7 +62,7 @@ const Otp = ({ email }) => {
       return;
     }
     const otpCode = otp.join("");
-    dispatch(otpThunk({ email, otp: otpCode }));
+    dispatch(sellerVerifyThunk({ email, otp: otpCode }));
   };
 
   const handleResend = () => {
@@ -95,7 +95,7 @@ const Otp = ({ email }) => {
       >
         <div className="flex justify-center mb-6">
           <div className="w-14 h-14 rounded-full bg-amber-600/20 flex items-center justify-center">
-            <LuKeyRound size={26} className="text-amber-500" />
+            <KeyRound size={26} className="text-amber-500" />
           </div>
         </div>
 
@@ -165,4 +165,4 @@ const Otp = ({ email }) => {
   );
 };
 
-export default Otp;
+export default AdminOtpVerification;

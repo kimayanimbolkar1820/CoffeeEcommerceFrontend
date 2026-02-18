@@ -44,3 +44,9 @@ export const changePassword = async(changedPass)=>{
     const response = await api.post("/auth/change-password" ,changedPass)
     return response
 } 
+
+// seller verify otp
+export const sellerVerify = async(otpCode)=>{
+    const response = await api.post("/auth/seller/login/verify-otp", otpCode)
+    return response.data
+}
