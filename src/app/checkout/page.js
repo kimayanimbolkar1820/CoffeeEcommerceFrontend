@@ -3,31 +3,20 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  showShippingAddressThunk,
-  updateShippingAddressThunk,
-} from "@/redux/features/shippingSlice";
+import { showShippingAddressThunk, updateShippingAddressThunk } from "@/redux/features/shippingSlice";
 import { showCheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { useSearchParams } from "next/navigation";
-import { getValidImage, normalizeImages } from "@/utils/getValidImage";
+import { getValidImage ,normalizeImages } from "@/utils/getValidImage";
 import { createPaymentThunk } from "@/redux/features/paymentSlice";
+import { fetchEligibleCoupons } from "@/redux/features/couponSlice";
+
 
 export default function CheckoutPage() {
-  const dispatch = useDispatch();
-  const searchParam = useSearchParams();
-  const id = searchParam.get("id");
-
-  const { address, loading } = useSelector((state) => state.shipping);
-  const cheakoutProducts = useSelector(
-    (state) => state.cheakout.cheakoutProducts
-  );
-
   const [edit, setEdit] = useState(false);
-
-  const [method, setMethod] = useState({
-    paymentMethod: "PHONEPE",
-  });
-
+  const searchParam = useSearchParams()
+  const [method , setMethod] = useState({
+     paymentMethod : "PHONEPE"
+  })
   const [fdata, setFdata] = useState({
     full_name: "",
     phone: "",
@@ -41,27 +30,34 @@ export default function CheckoutPage() {
     is_default: false,
   });
 
-  const defaultAddress = address?.data?.[0];
 
-  /* ================= FETCH ADDRESS ================= */
+  
+  const dispatch = useDispatch();
+  const { address, loading } = useSelector((state) => state.shipping);
+
+  const { coupons, finalAmount, discountAmount, cartAmount } =
+  useSelector((state) => state.coupon);
+
+useEffect(() => {
+  dispatch(fetchEligibleCoupons());
+}, [dispatch]);
+  
+  
+  
   useEffect(() => {
     dispatch(showShippingAddressThunk());
   }, [dispatch]);
-
-  /* ================= FETCH CHECKOUT ================= */
-  useEffect(() => {
-    if (id) {
-      dispatch(showCheakoutThunk(id));
-    }
-  }, [id, dispatch]);
-
-  /* ================= SYNC ADDRESS ================= */
+  
+  const defaultAddress = address?.data?.[0];
+  
+  // Sync fdata with defaultAddress
   useEffect(() => {
     if (defaultAddress) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFdata({
         full_name: defaultAddress.full_name || "",
         phone: defaultAddress.phone || "",
-        address_type: defaultAddress.address_type?.toUpperCase() || "HOME",
+        address_type: defaultAddress.address_type || "HOME",
         address_line1: defaultAddress.address_line1 || "",
         address_line2: defaultAddress.address_line2 || "",
         city: defaultAddress.city || "",
@@ -72,261 +68,309 @@ export default function CheckoutPage() {
       });
     }
   }, [defaultAddress]);
-
+  
   const handleEditbuttton = () => setEdit((prev) => !prev);
-
-  const handleSubmitButton = async (e) => {
+  
+  const handleSubmitButton =  (e) => {
     e.preventDefault();
     if (!defaultAddress?.id) return;
-
+    
     const data = {
       id: defaultAddress.id,
       ...fdata,
       address_type: fdata.address_type.toLowerCase(),
       is_default: fdata.is_default ? 1 : 0,
     };
-
-    await dispatch(updateShippingAddressThunk(data));
-    setEdit(false);
-    dispatch(showShippingAddressThunk());
+    
+    dispatch(updateShippingAddressThunk(data)).then(()=>{
+      setEdit(false)
+      dispatch(showShippingAddressThunk())
+    })
+    
   };
+  
+  const cheakoutProducts = useSelector((state)=>state.cheakout.cheakoutProducts)
+  console.log( "this is the data : " , cheakoutProducts)
+  const id = searchParam.get("id")
 
-  const handleCheakoutButton = async () => {
-    if (!cheakoutProducts?.checkout_session_id) return;
 
-    const payload = {
-      checkout_session_id: cheakoutProducts.checkout_session_id,
-      paymentMethod: method.paymentMethod,
-    };
+  useEffect(() => {
+  if (id) {
+    console.log("DISPATCHING WITH ID:", id);
+    dispatch(showCheakoutThunk(id));
+  }
+}, [id , dispatch] );
 
-    try {
-      const response = await dispatch(
-        createPaymentThunk(payload)
-      ).unwrap();
 
-      if (response?.checkoutUrl) {
-        window.location.href = response.checkoutUrl;
-      } else {
-        console.log("Checkout URL missing");
-      }
-    } catch (error) {
-      console.error("Payment failed", error);
+const handleCheakoutButton = async ()=>{
+  const payload ={
+    checkout_session_id : cheakoutProducts.checkout_session_id,
+    paymentMethod: method.paymentMethod,
+  }
+  try {
+    const response = await dispatch(createPaymentThunk(payload)).unwrap();
+    if(response.checkoutUrl){
+      window.location.href = response.checkoutUrl
     }
-  };
+    else{
+      console.log("Checkout URL missing from response");
+    }
+  } catch (error) {
+    console.error("Payment failed", error);
+  }
+  dispatch(createPaymentThunk(payload))
+}
 
-  return (
-    <div className="min-h-screen overflow-hidden bg-[#2a1816] px-4 sm:px-6 lg:px-8 py-20">
-      <div className="mx-auto max-w-6xl flex flex-col gap-6 lg:grid lg:grid-cols-3">
-        {/* ================= LEFT SIDE ================= */}
-        <div className="lg:col-span-2 space-y-6">
 
+return (
+  <div className="min-h-screen bg-[#2a1816] px-4 py-30">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
+        {/* LEFT COLUMN */}
+        <div className="md:col-span-2 space-y-6 w-3xl ">
           {/* SHIPPING ADDRESS */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-black">
-                Shipping Address
-              </h2>
+              <h2 className="text-lg font-semibold text-[#3b2a26]">Shipping Address</h2>
               <button
                 onClick={handleEditbuttton}
-                className="text-sm text-[#7b4a3e] hover:underline"
+                className="cursor-pointer text-sm text-[#7b4a3e] hover:underline"
               >
                 Change
               </button>
             </div>
 
-            <div className="rounded-lg border bg-white p-4 text-sm">
+            <div className="rounded-lg border border-[#e3d6c6] bg-white p-4 text-sm">
               {edit ? (
-                <form onSubmit={handleSubmitButton} className="space-y-3 text-black">
-                  <input
-                    required
-                    type="text"
-                    placeholder="Full Name"
-                    value={fdata.full_name}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, full_name: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
+                <form onSubmit={handleSubmitButton} className="space-y-3 text-sm text-black">
+                  {/* Row 1 */}
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="mb-1 block text-xs font-medium">Full Name</label>
+                      <input
+                        required
+                        type="text"
+                        value={fdata.full_name}
+                        onChange={(e) => setFdata({ ...fdata, full_name: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                    <div className="w-40">
+                      <label className="mb-1 block text-xs font-medium">Phone</label>
+                      <input
+                        required
+                        type="tel"
+                        value={fdata.phone}
+                        onChange={(e) => setFdata({ ...fdata, phone: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                  </div>
 
-                  <input
-                    required
-                    type="tel"
-                    placeholder="Phone"
-                    value={fdata.phone}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, phone: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
+                  {/* Row 2 */}
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="mb-1 block text-xs font-medium">Address Line 1</label>
+                      <input
+                        required
+                        type="text"
+                        value={fdata.address_line1}
+                        onChange={(e) => setFdata({ ...fdata, address_line1: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="mb-1 block text-xs font-medium">Address Line 2</label>
+                      <input
+                        type="text"
+                        value={fdata.address_line2}
+                        onChange={(e) => setFdata({ ...fdata, address_line2: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                  </div>
 
-                  <input
-                    required
-                    type="text"
-                    placeholder="Address Line 1"
-                    value={fdata.address_line1}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, address_line1: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
+                  {/* Row 3 */}
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <label className="mb-1 block text-xs font-medium">City</label>
+                      <input
+                        required
+                        type="text"
+                        value={fdata.city}
+                        onChange={(e) => setFdata({ ...fdata, city: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="mb-1 block text-xs font-medium">State</label>
+                      <input
+                        required
+                        type="text"
+                        value={fdata.state}
+                        onChange={(e) => setFdata({ ...fdata, state: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                    <div className="w-28">
+                      <label className="mb-1 block text-xs font-medium">PIN</label>
+                      <input
+                        required
+                        type="text"
+                        value={fdata.postal_code}
+                        onChange={(e) => setFdata({ ...fdata, postal_code: e.target.value })}
+                        className="w-full rounded-md border border-gray-400 px-3 py-2 text-black placeholder-gray-500 focus:border-black focus:outline-none"
+                      />
+                    </div>
+                  </div>
 
-                  <input
-                    type="text"
-                    placeholder="Address Line 2"
-                    value={fdata.address_line2}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, address_line2: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
+                  {/* Row 4 */}
+                  <div className="flex gap-3 items-end">
+                    <div className="flex-1">
+                      <label className="mb-1 block text-xs font-medium">Country</label>
+                      <input
+                        disabled
+                        value="India"
+                        className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-black"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium">Address Type</label>
+                      <div className="flex gap-2">
+                        {["HOME", "OFFICE", "OTHER"].map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setFdata({ ...fdata, address_type: type })}
+                            className={`rounded-md px-3 py-2 text-xs border ${
+                              fdata.address_type === type
+                                ? "border-black bg-black text-white"
+                                : "border-gray-400"
+                            }`}
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
 
-                  <input
-                    required
-                    type="text"
-                    placeholder="City"
-                    value={fdata.city}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, city: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
-
-                  <input
-                    required
-                    type="text"
-                    placeholder="State"
-                    value={fdata.state}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, state: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
-
-                  <input
-                    required
-                    type="text"
-                    placeholder="PIN"
-                    value={fdata.postal_code}
-                    onChange={(e) =>
-                      setFdata({ ...fdata, postal_code: e.target.value })
-                    }
-                    className="w-full border px-3 py-2 rounded"
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-black text-white px-4 py-2 rounded"
-                  >
-                    {loading ? "Updating..." : "Update"}
-                  </button>
+                  {/* Actions */}
+                  <div className="flex justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleEditbuttton}
+                      className="text-sm text-gray-600 hover:underline"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="rounded-md bg-black px-5 py-2 text-sm text-white hover:opacity-90"
+                    >
+                      {loading ? "Updating..." : "Update"}
+                    </button>
+                  </div>
                 </form>
               ) : (
                 <>
-                  <p className="font-medium">{defaultAddress?.full_name}</p>
-                  <p>
-                    {defaultAddress?.address_line1},{" "}
-                    {defaultAddress?.address_line2}
+                  <p className="font-medium text-black">{defaultAddress?.full_name}</p>
+                  <p className="text-black">
+                    {defaultAddress?.address_line1}, {defaultAddress?.address_line2}, {defaultAddress?.city} – {defaultAddress?.postal_code}
                   </p>
-                  <p>
-                    {defaultAddress?.city} -{" "}
-                    {defaultAddress?.postal_code}
+                  <p className="text-black">
+                    {defaultAddress?.state} , {defaultAddress?.country}
                   </p>
-                  <p>{defaultAddress?.state}</p>
-                  <p>Phone: {defaultAddress?.phone}</p>
+                  <p className="text-gray-800">Phone: {defaultAddress?.phone}</p>
                 </>
               )}
             </div>
           </div>
 
-          {/* PAYMENT METHOD */}
+          {/* DELIVERY DETAILS */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-black mb-3">
-              Payment Methods
-            </h2>
+            <h2 className="mb-3 text-lg font-semibold text-black">Payment Mathods</h2>
+            <p className="text-sm text-black">
+              Select <span className="font-medium">Payment Method</span>
+            </p>
+              <div className="flex gap-2">
+                        {["COD", "PHONEPE"].map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setMethod({...method  , paymentMethod : type })}
+                            className={`rounded-md px-3 py-2 text-xs border ${
+                              fdata.address_type === type
+                                ? "border-black bg-black text-white"
+                                : "border-gray-400 text-black"
+                            }`}
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
+          </div>
 
-            <div className="flex gap-3">
-              {["COD", "PHONEPE"].map((type) => (
-                <button
-                  key={type}
-                  onClick={() =>
-                    setMethod({ ...method, paymentMethod: type })
-                  }
-                  className={`px-4 py-2 border rounded text-sm ${
-                    method.paymentMethod === type
-                      ? "bg-black text-white"
-                      : "text-black"
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
+          {/* COUPON */}
+          <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
+            <h2 className="mb-3 text-lg font-semibold text-[#120d0b]">Apply Coupon</h2>
+            
+  <div>
+    <h3 className="text-black">Available Coupons</h3>
+
+    {coupons.map((coupon) => (
+      <div key={coupon.id} className="coupon-card">
+        <p><strong>{coupon.coupon_code}</strong></p>
+        <p>{coupon.custom_text}</p>
+
+        <button
+          onClick={() => dispatch(applyCoupon(coupon.coupon_code))}
+        >
+          Apply
+        </button>
+      </div>
+    ))}
+  </div>
+
           </div>
         </div>
 
-        {/* ================= RIGHT SIDE ================= */}
-        <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm lg:sticky lg:top-6">
-          <h2 className="text-lg font-semibold text-black mb-4">
-            Order Summary
-          </h2>
-
-          {cheakoutProducts?.items?.map((product, index) => {
-            const images = normalizeImages(product.product_image);
-            const mainImage = images[0];
-
-            return (
-              <div
-                key={index}
-                className="mb-4 flex gap-4 border-b pb-4"
-              >
-                <Image
-                  src={getValidImage(mainImage)}
-                  alt={product.product_name}
-                  width={80}
-                  height={80}
-                  className="rounded-md object-cover"
-                />
-
-                <div className="flex-1 text-black">
-                  <p className="font-medium">
-                    {product.product_name}
-                  </p>
-                  <p className="text-sm">
-                    Qty: {product.quantity}
-                  </p>
-                  <p className="font-semibold">
-                    ₹ {product.price}
-                  </p>
+        {/* RIGHT COLUMN */}
+        <div className="sticky top-6 rounded-xl bg-[#f5efe6] p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-[#3b2a26]">Order Summary</h2>
+          {cheakoutProducts?.items?.map((product)=>{
+              const images = normalizeImages(product.product_image)
+              const mainImage = images[0]
+             return (
+              <>
+               <div className="mb-4 flex gap-4 border-b border-[#e3d6c6] pb-4">
+                <div>
+                   <Image src={getValidImage(mainImage)} alt={product.product_name} width={100} height={50} className="object-cover"/> 
                 </div>
-              </div>
-            );
-          })}
-
-          {/* BILLING */}
-          <div className="space-y-2 text-sm text-black">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>₹ {cheakoutProducts?.subtotal}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>GST</span>
-              <span>₹ {cheakoutProducts?.total_gst}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Discount</span>
-              <span>₹ {cheakoutProducts?.discount}</span>
-            </div>
-            <div className="flex justify-between font-semibold border-t pt-2">
-              <span>Total</span>
-              <span>₹ {cheakoutProducts?.final_amount}</span>
-            </div>
+                <div className="text-start">
+                  <p className="text-black font-playfair text-[17px] pb-1">{product.product_name}</p>
+                  <div className="flex gap-4 justify-start">
+                  <p className="text-black font-inter text-[13px]">weight: {product.weight_kg}kg</p>
+                  <p className="text-red-600 font-inter text-[13px]">Quantity: {product.quantity} </p>
+                  </div>
+                  <p className="text-black font-inter text-[15px]">Price:  {product.price}</p>
+                </div>
           </div>
+              </>
+             )
+          })}
+           {/* BILLING */}
+          <div className="space-y-2 text-sm text-black">
+            <div className="flex justify-between"><span>Subtotal</span><span className="text-black">₹ {cheakoutProducts?.subtotal}</span></div>
+            <div className="flex justify-between"><span>GST</span><span>₹ {cheakoutProducts?.total_gst}</span></div>
+            <div className="flex justify-between"><span>Discount</span><span>₹ {cheakoutProducts?.discount}</span></div>
+            <div className="flex justify-between border-t border-[#e3d6c6] pt-2 font-semibold"><span>Total</span><span>₹ {cheakoutProducts?.final_amount}</span></div>
+          </div>
+        
 
-          <button
-            onClick={handleCheakoutButton}
-            className="mt-6 w-full bg-green-700 text-white py-3 rounded-lg hover:bg-green-800"
-          >
+          
+
+          <button onClick={handleCheakoutButton} className="cursor-pointer mt-6 w-full rounded-lg bg-green-700 py-3 font-semibold text-white hover:bg-green-800">
             Checkout
           </button>
         </div>
