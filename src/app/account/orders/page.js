@@ -3,13 +3,15 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { showUserOrdersThunk } from "@/redux/features/orderSlice";
-import { useDispatch , useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
+import { getValidImage ,normalizeImages } from "@/utils/getValidImage";
 
 export default function Orders({ onBack }) {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // detect mobile
   useEffect(() => {
@@ -31,18 +33,18 @@ export default function Orders({ onBack }) {
     setEditId(null);
   };
 
-  const orders = useSelector((state)=>state.orders)
+  const orders = useSelector((state) => state.orders.orders.orders);
 
-  useEffect(()=>{
-     dispatch(showUserOrdersThunk())
-  })
+  useEffect(() => {
+    dispatch(showUserOrdersThunk());
+  }, [dispatch]);
+
+  console.log(orders);
 
   return (
     <div className="relative w-full min-h-[300px] p-4 sm:p-6 md:p-8 bg-[#37291d] rounded-2xl">
-
-      {!showForm ? (
+      {!orders || orders.length === 0 ? (
         <div className="relative flex flex-col items-center justify-center h-full text-center">
-
           {/* BACK BUTTON - Mobile only */}
           <motion.button
             type="button"
@@ -73,7 +75,6 @@ export default function Orders({ onBack }) {
         </div>
       ) : (
         <div className="relative p-4 sm:p-6">
-
           {/* BACK BUTTON - mobile + desktop */}
           <motion.button
             type="button"
@@ -84,6 +85,21 @@ export default function Orders({ onBack }) {
           >
             ⟵
           </motion.button>
+
+          <div>
+            {orders.map((order) => {
+               const images = normalizeImages(order.product_image)
+               const mainImage = images[0]
+               return (
+                 <>   
+              <div>
+                <Image src={getValidImage(mainImage)} alt={order.product_name} width={100} height={50} className="object-cover"/> 
+                <p className="text-white">{order.product_name}</p>
+              </div>
+                 </>
+               )
+})}
+          </div>
 
           <p className="text-[#f1b287] font-bold font-cinzel text-center underline mt-40">
             Form goes here...
