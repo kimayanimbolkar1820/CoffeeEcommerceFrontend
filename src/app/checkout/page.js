@@ -8,7 +8,6 @@ import { showCheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { useSearchParams } from "next/navigation";
 import { getValidImage ,normalizeImages } from "@/utils/getValidImage";
 import { createPaymentThunk } from "@/redux/features/paymentSlice";
-import { fetchEligibleCoupons } from "@/redux/features/couponSlice";
 
 
 export default function CheckoutPage() {
@@ -34,13 +33,6 @@ export default function CheckoutPage() {
   
   const dispatch = useDispatch();
   const { address, loading } = useSelector((state) => state.shipping);
-
-  const { coupons, finalAmount, discountAmount, cartAmount } =
-  useSelector((state) => state.coupon);
-
-useEffect(() => {
-  dispatch(fetchEligibleCoupons());
-}, [dispatch]);
   
   
   
@@ -314,24 +306,16 @@ return (
           {/* COUPON */}
           <div className="rounded-xl bg-[#f5efe6] p-6 shadow-sm">
             <h2 className="mb-3 text-lg font-semibold text-[#120d0b]">Apply Coupon</h2>
-            
-  <div>
-    <h3 className="text-black">Available Coupons</h3>
-
-    {coupons.map((coupon) => (
-      <div key={coupon.id} className="coupon-card">
-        <p><strong>{coupon.coupon_code}</strong></p>
-        <p>{coupon.custom_text}</p>
-
-        <button
-          onClick={() => dispatch(applyCoupon(coupon.coupon_code))}
-        >
-          Apply
-        </button>
-      </div>
-    ))}
-  </div>
-
+            <div className="flex gap-2 text-black">
+              <input
+                type="text"
+                placeholder="Enter coupon code"
+                className="flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2e1914]"
+              />
+              <button className="cursor-pointer rounded-md bg-[#3b2a26] px-4 py-2 text-sm text-white hover:bg-[#2a1d1a]">
+                Apply
+              </button>
+            </div>
           </div>
         </div>
 

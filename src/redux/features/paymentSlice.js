@@ -38,7 +38,6 @@ const paymentSlice = createSlice({
      .addCase(createPaymentThunk.fulfilled , (state ,action)=>{
         state.loading = false
         state.payments = action.payload
-        toast.success("Payment Done")
     })
 
      .addCase(createPaymentThunk.rejected , (state ,action)=>{

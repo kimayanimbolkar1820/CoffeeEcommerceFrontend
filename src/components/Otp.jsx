@@ -6,7 +6,7 @@ import { otpThunk ,resendThunk } from "@/redux/features/authSlice";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { KeyRound } from "lucide-react";
+import { LuKeyRound } from "react-icons/lu";
 
 
 const Otp = ({ email }) => {
@@ -95,7 +95,7 @@ const Otp = ({ email }) => {
       >
         <div className="flex justify-center mb-6">
           <div className="w-14 h-14 rounded-full bg-amber-600/20 flex items-center justify-center">
-            <KeyRound size={26} className="text-amber-500" />
+            <LuKeyRound size={26} className="text-amber-500" />
           </div>
         </div>
 

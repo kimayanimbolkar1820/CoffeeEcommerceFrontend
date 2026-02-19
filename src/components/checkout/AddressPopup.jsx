@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { addShippingAddressThunk , showShippingAddressThunk } from "@/redux/features/shippingSlice";
 import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
@@ -120,7 +120,7 @@ export default function AddressPopup({
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-semibold">Shipping Address</h1>
             <button onClick={onClose}>
-              <X />
+              <IoCloseSharp />
             </button>
           </div>
 

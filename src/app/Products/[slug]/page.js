@@ -230,7 +230,14 @@ const relatedProducts = useMemo(() => {
               {product.name}
             </h1>
 
-          
+            {/* Price */}
+            <div className="mt-2 flex items-center gap-5">
+              {product.discountPrice && (
+                <p className="line-through text-gray-500 text-lg">
+                  ₹{ product.weights[0].price}
+                </p>
+              )}
+            </div>
 
 {/* Price + Subscribe */}
 <div className="mt-2 flex items-center gap-5 flex-wrap">
