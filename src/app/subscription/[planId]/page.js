@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { AddToCartThunk } from "@/redux/features/cartSlice";
+import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
+import { showAddress } from "@/api/shippingApi";
 import { useRouter } from "next/navigation";
 
 
@@ -110,48 +112,42 @@ useEffect(() => {
   dispatch(AddToCartThunk(cartItem));
 };
 
+
+
+
+// buy now button 
+
 const handleBuyNow = async () => {
-  if (!selectedProduct || !selectedWeight || !selectedPlan) return;
+    try {
+      const res = await showAddress()
+      const address = res?.data || []
+    
+    if(address.length > 0){
+      const defaultAddress =
+        address.find((a) => a.is_default) || address[0];
 
-  if (!userLoggedIn) {
-    router.push("/Auth/login"); // redirect to login
-    return;
-  }
-
-  try {
-    const res = await showAddress();
-    const address = res?.data || [];
-
-    if (address.length === 0) {
-      setShowAddressPopup(true);
-      return;
+      const result = await dispatch(
+        cheakoutThunk({
+           shipping_address_id: defaultAddress.id,
+  coupon_code: null,
+  items: [
+          {
+            product_id: selectedProduct.id,
+            weight_kg: selectedProduct.weights[0].weight_kg,
+            quantity: qty
+          }
+        ],
+        })
+      ).unwrap()
+      router.push(`/checkout?id=${result.checkout_session_id}`)
     }
-
-    const defaultAddress = address.find((a) => a.is_default) || address[0];
-
-    const checkoutItem = {
-      product_id: selectedProduct.id,
-      weight_kg: selectedWeight.weight_kg,
-      quantity: selectedPlan.deliveries_count,
-      subscription_plan_id: selectedPlan.id,
-      price_per_delivery: priceBreakdown.finalPerDelivery,
-      total_price: priceBreakdown.totalPrice,
-    };
-
-    const result = await dispatch(
-      cheakoutThunk({
-        shipping_address_id: defaultAddress.id,
-        coupon_code: null,
-        items: [checkoutItem],
-      })
-    ).unwrap();
-
-    router.push(`/checkout?id=${result.checkout_session_id}`);
-  } catch (error) {
-    router.push("/Auth/login");
-  }
+    else{
+      setShowAddressPopup(true)
+    }
+    } catch (error) {
+      router.push("/Auth/login")
+    }
 };
-
 
 
 
@@ -337,12 +333,7 @@ const handleBuyNow = async () => {
     </div>
   )
 
-)}
-
-
-         
-
-         
+)}    
 
              {/* ADD TO CART & BUY NOW BUTTONS */}
           <div className="flex gap-4 mt-6">
