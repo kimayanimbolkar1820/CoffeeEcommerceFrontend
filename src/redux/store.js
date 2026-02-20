@@ -9,6 +9,7 @@ import shippingReducer from "./features/shippingSlice"
 import paymentRouter  from "./features/paymentSlice"
 import cheakoutRouter from "./features/cheakoutSlice"
 import subscriptionReducer from "./features/subscriptionSlice";
+import ordersReducer from "./features/orderSlice"
 import couponReducer from "./features/couponSlice";
 
 
@@ -24,6 +25,7 @@ const store = configureStore({
           payment : paymentRouter,
           cheakout : cheakoutRouter,
           subscription: subscriptionReducer,
+          orders : ordersReducer,
           coupon: couponReducer,
           
     }

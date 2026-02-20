@@ -8,7 +8,6 @@ import { showCheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { useSearchParams } from "next/navigation";
 import { getValidImage ,normalizeImages } from "@/utils/getValidImage";
 import { createPaymentThunk } from "@/redux/features/paymentSlice";
-import { fetchEligibleCoupons } from "@/redux/features/couponSlice";
 
 
 export default function CheckoutPage() {
@@ -34,13 +33,6 @@ export default function CheckoutPage() {
   
   const dispatch = useDispatch();
   const { address, loading } = useSelector((state) => state.shipping);
-
-  const { coupons, finalAmount, discountAmount, cartAmount } =
-  useSelector((state) => state.coupon);
-
-useEffect(() => {
-  dispatch(fetchEligibleCoupons());
-}, [dispatch]);
   
   
   

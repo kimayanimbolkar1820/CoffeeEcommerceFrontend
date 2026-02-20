@@ -38,9 +38,12 @@ export default function ProfileView({ user, setUser }) {
 
         {/* SIDEBAR */}
         <aside
-          className={`bg-[#d7bf9a] rounded-xl p-2 space-y-1
-          ${showContent ? "hidden md:block" : "block"}`}
-        >
+  className={`bg-[#d7bf9a] rounded-xl p-2 space-y-1
+  sticky top-20 self-start h-[calc(100vh-6rem)]
+  overflow-y-auto scrollbar-hide
+  ${showContent ? "hidden md:block" : "block"}`}
+>
+
           {/* 📱 Mobile profile image */}
           {isMobile && (
             <div className="flex justify-center my-6">
@@ -101,9 +104,11 @@ export default function ProfileView({ user, setUser }) {
 
         {/* CONTENT */}
         <main
-          className={`bg-[#d7bf9a] rounded-xl p-4 sm:p-8
-          ${showContent ? "block" : "hidden md:block"}`}
-        >
+  className={`bg-[#d7bf9a] rounded-xl p-4 sm:p-8
+  h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide
+  ${showContent ? "block" : "hidden md:block"}`}
+>
+
           {active === "/account/profile" && (
             <Profile
               user={user}

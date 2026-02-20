@@ -4,7 +4,7 @@ import { useState , useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Eye, EyeOff } from "lucide-react";
+import { FaRegEye ,FaRegEyeSlash  } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import { loginThunk } from "@/redux/features/authSlice";
@@ -150,7 +150,7 @@ export default function LoginPage() {
               onClick={() => setShowPassword(!showPassword)}
               className="cursor-pointer absolute right-2 top-2.5 text-gray-400 hover:text-white transition"
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
             </button>
           </motion.div>
 
@@ -204,15 +204,6 @@ export default function LoginPage() {
                 <FcGoogle size={22} />
               </motion.button>
 
-              <motion.button
-                whileHover={{ scale: 1.12 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-12 h-12 rounded-full bg-[#1877F2]
-                           flex items-center justify-center
-                           shadow-lg hover:shadow-[0_0_25px_#1877F2] cursor-pointer"
-              >
-                <FaFacebookF size={20} className="text-white" />
-              </motion.button>
             </div>
           </motion.div>
         </motion.div>
