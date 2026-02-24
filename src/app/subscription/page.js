@@ -156,9 +156,13 @@ export default function SubscribePage() {
       className="bg-[#2e1f14] text-white w-[280px] p-6 rounded-2xl cursor-pointer hover:scale-105 transition-all duration-300 border border-[#3a281c]"
     >
       <h3 className="text-xl font-cinzel mb-4 text-center">{plan.name}</h3>
-      <p className="text-sm text-white/70 text-center mb-6">
-        {plan.description || "Customize your subscription"}
+      <p className="text-sm text-white/70 text-center mb-6 ">
+        {plan.description || "Customize your subscription "}
+       
       </p>
+       <p className="text-sm text-white/70 text-center mb-1 ">
+       {plan.description || "Plan Starting at "}
+       </p>
       <div className="text-center">
         <p className="text-3xl font-bold">₹{plan.display_price}</p>
         <p className="text-xs text-white/50 mt-1">{plan.deliveries_count} Deliveries</p>

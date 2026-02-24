@@ -32,8 +32,13 @@ export default function ProductPage() {
 
 
 
-const { data: products, currentProduct, loading, error } =
+const { data, currentProduct, loading, error } =
   useSelector((state) => state.product);
+
+// Make it work whether API returns array OR object
+const products = Array.isArray(data)
+  ? data
+  : data?.products || [];
 
 
   const product = currentProduct;
@@ -54,18 +59,22 @@ const selectedWeight = hasWeights
       ? getValidImage(images?.[0]) ||
         "/images/product-placeholder.png"
       : "/images/product-placeholder.png";
+
 const relatedProducts = useMemo(() => {
-  if (!product || !products?.length) return [];
+  if (!currentProduct || !products.length) return [];
 
   return products
-    .filter(
-      (p) =>
-        p.categoryLevel2?.toLowerCase() ===
-          product.categoryLevel2?.toLowerCase() &&
-        p.slug !== product.slug
+    .filter((p) =>
+      p.category_level_1 &&
+      currentProduct.category_level_1 &&
+      p.category_level_1.toLowerCase() ===
+        currentProduct.category_level_1.toLowerCase() &&
+      p.id !== currentProduct.id
     )
     .slice(0, 4);
-}, [products, product]);
+}, [products, currentProduct]);
+
+
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));
     dispatch(fetchProducts());
@@ -153,7 +162,7 @@ const relatedProducts = useMemo(() => {
             />
           </div>
         {/* ================= LEFT : IMAGE CARD ================= */}
-        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center md:py-17 py-12 md:pr-8 ">
+        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center md:py-17 py-12 md:pr-8 md:pt-20 ">
 
           {/* Desktop Image */}
           <div className="hidden lg:flex flex-col items-center justify-center gap-8
@@ -217,7 +226,7 @@ const relatedProducts = useMemo(() => {
         </div>
 
         {/* ================= RIGHT : PRODUCT DETAILS ================= */}
-        <div className="lg:w-[50%]  w-auto px-6 lg:px-16  flex flex-col justify-between relative z-[10]  md:pt-8 pt-0 pb-6">
+        <div className="lg:w-[50%]  w-auto px-6 lg:px-16  flex flex-col justify-between relative z-[10]  md:pt-12 pt-0 pb-6">
 
           <div>
             {product.categoryLevel3 && (
@@ -375,7 +384,7 @@ const relatedProducts = useMemo(() => {
 
      {/* ================= RELATED PRODUCTS SECTION ================= */}
 {relatedProducts.length > 0 && (
-  <section className="bg-[#1a120c] py-20">
+  <section className="bg-[#1a120c] py-20 ">
     <div className="max-w-7xl mx-auto px-6 lg:px-16">
       
       {/* Heading */}
@@ -392,8 +401,7 @@ const relatedProducts = useMemo(() => {
             "/images/product-placeholder.png";
 
           return (
-            <div key={product._id} className="min-w-[85%] shrink-0">
-              <ProductCard
+<div key={product.id} className="min-w-[85%] shrink-0">              <ProductCard
                 product={{
                   ...product,
                   imageSrc,
