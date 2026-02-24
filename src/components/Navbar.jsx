@@ -280,17 +280,25 @@ const onSubmit = (e) => {
 
             return (
               <div key={index} className="border-b border-white/10 pb-4">
-                <button
-                  className="flex items-center justify-between w-full text-left text-lg font-cinzel"
-                  onClick={() =>
-                    setOpenMobileDropdown(isOpen ? null : index)
-                  }
-                >
-                  {link.label}
-                  {link.dropdown && (
-                    <span className="text-xl">{isOpen ? "−" : "+"}</span>
-                  )}
-                </button>
+          {link.dropdown ? (
+  <button
+    className="flex items-center justify-between w-full text-left text-lg font-cinzel"
+    onClick={() =>
+      setOpenMobileDropdown(isOpen ? null : index)
+    }
+  >
+    {link.label}
+    <span className="text-xl">{isOpen ? "−" : "+"}</span>
+  </button>
+) : (
+  <Link
+    href={link.href}
+    onClick={() => setMenuOpen(false)}
+    className="block text-lg font-cinzel"
+  >
+    {link.label}
+  </Link>
+)}
 
                 <AnimatePresence>
                   {link.dropdown && isOpen && (
@@ -309,8 +317,8 @@ const onSubmit = (e) => {
                           <ul className="space-y-2">
                             {col.items.map((item, j) => (
                               <li key={j}>
- <Link
-  href={`/Navbarproduct/${item.slug}`}
+<Link
+  href={`/navbarproducts/${item.slug}`}
   onClick={() => setMenuOpen(false)}
   className="block text-white/80 hover:text-white transition"
 >

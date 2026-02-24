@@ -55,7 +55,7 @@ export const previewSubscriptionThunk = createAsyncThunk(
 );
 
 const subscriptionSlice = createSlice({
-  name: "subscription",
+  name: "subscription", 
   initialState: {
     plans: [],
     selectedPlan: null,
