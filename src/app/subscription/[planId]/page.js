@@ -95,27 +95,8 @@ useEffect(() => {
   if (loading) return <p className="text-white p-10">Loading...</p>;
   if (!selectedPlan) return <p className="text-white p-10">Plan not found</p>;
 
-   /* ================= CART / BUY LOGIC ================= */
 
-   const handleAddToCart = () => {
-  if (!selectedProduct || !selectedWeight || !selectedPlan) return;
 
-  if (!userLoggedIn) {
-    router.push("/Auth/login"); // redirect to login
-    return;
-  }
-
-  const cartItem = {
-    product_id: selectedProduct.id,
-    quantity: selectedPlan.deliveries_count,
-    weight_kg: selectedWeight.weight_kg,
-    subscription_plan_id: selectedPlan.id,
-    price_per_delivery: priceBreakdown.finalPerDelivery,
-    total_price: priceBreakdown.totalPrice,
-  };
-
-  dispatch(AddToCartThunk(cartItem));
-};
 
 
 
@@ -123,6 +104,28 @@ useEffect(() => {
 // buy now button 
 
 const handleBuyNow = async () => {
+
+
+    // ✅ VALIDATION FIRST
+  if (!selectedProduct) {
+    alert("Please select a product.");
+    return;
+  }
+
+  if (!selectedWeight) {
+    alert("Please select a weight.");
+    return;
+  }
+
+  if (!selectedFrequency) {
+    alert("Please select delivery frequency.");
+    return;
+  }
+
+  if (!selectedPaymentType) {
+    alert("Please select payment type.");
+    return;
+  }
     try {
       const res = await showAddress()
       const address = res?.data || []
@@ -411,18 +414,12 @@ price: priceBreakdown.finalPerDelivery
 
              {/* ADD TO CART & BUY NOW BUTTONS */}
           <div className="flex gap-4 mt-6">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={handleAddToCart}
-              className="cursor-pointer w-full bg-[#c7a17a]/80 text-black py-4 rounded-full font-bold flex items-center justify-center gap-3 hover:bg-[#d6ba9e] transition"
-            >
-              Add to Cart
-            </motion.button>
+        
 
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleBuyNow}
-              className="cursor-pointer w-full border border-[#c7a17a] bg-[#c7a17a]/80 text-black py-4 rounded-full font-bold flex items-center justify-center gap-3 hover:bg-[#d6ba9e] transition"
+              className="cursor-pointer w-100 border border-[#c7a17a] bg-[#c7a17a]/80 text-black py-4 rounded-full font-bold flex items-center justify-center gap-3 hover:bg-[#d6ba9e] transition ml-50"
             >
               Buy Now
             </motion.button>
