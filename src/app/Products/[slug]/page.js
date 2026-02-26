@@ -16,6 +16,8 @@ import { cheakoutThunk } from "@/redux/features/cheakoutSlice";
 import { fetchProducts } from "@/redux/features/productSlice";
 import ProductCard from "@/components/product/ProductCards";
 import { useMemo } from "react";
+import ProductReviewsSection from "@/components/product/ProductReviewsSection"
+
 
 
 
@@ -80,6 +82,7 @@ const relatedProducts = useMemo(() => {
     dispatch(fetchProducts());
   }, [slug, dispatch]);
 
+
   if (loading)
     return <div className="mt-40 text-center text-[#c7a17a]">Loading...</div>;
 
@@ -87,6 +90,8 @@ const relatedProducts = useMemo(() => {
     return <div className="mt-40 text-center text-red-500">{error}</div>;
 
   if (!currentProduct) return null;
+
+
 
   
 
@@ -162,7 +167,7 @@ const relatedProducts = useMemo(() => {
             />
           </div>
         {/* ================= LEFT : IMAGE CARD ================= */}
-        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center md:py-17 py-12 md:pr-8 md:pt-20 ">
+        <div className="lg:w-[45%] relative overflow-hidden flex justify-center items-center md:py-17 py-12 md:pr-8 md:pt-22 ">
 
           {/* Desktop Image */}
           <div className="hidden lg:flex flex-col items-center justify-center gap-8
@@ -226,7 +231,7 @@ const relatedProducts = useMemo(() => {
         </div>
 
         {/* ================= RIGHT : PRODUCT DETAILS ================= */}
-        <div className="lg:w-[50%]  w-auto px-6 lg:px-16  flex flex-col justify-between relative z-[10]  md:pt-12 pt-0 pb-6">
+        <div className="lg:w-[50%]  w-auto px-6 lg:px-16  flex flex-col justify-between relative z-[10]  md:pt-20 pt-0 pb-6">
 
           <div>
             {product.categoryLevel3 && (
@@ -264,14 +269,14 @@ const relatedProducts = useMemo(() => {
   </div>
 
   {product?.is_subscribable && (
-    <motion.button
-      whileTap={{ scale: 0.95 }}
-      className="cursor-pointer px-6 py-1.5 text-md font-semibold rounded-full bg-[#c7a17a] text-black hover:bg-[#d6ba9e] transition"
-    >
-      Subscribe & Save !
-    </motion.button>
-  )}
-
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    onClick={() => router.push("/subscription")}
+    className="cursor-pointer px-6 py-1.5 text-md font-semibold rounded-full bg-[#c7a17a] text-black hover:bg-[#d6ba9e] transition"
+  >
+    Subscribe & Save !
+  </motion.button>
+)}
 </div>
 {/* Weight Selector */}
 {hasMultipleWeights && (
@@ -380,6 +385,10 @@ const relatedProducts = useMemo(() => {
       </div>
 
 
+{product?.id && (
+  <ProductReviewsSection productId={product.id} />
+)}
+
       
 
      {/* ================= RELATED PRODUCTS SECTION ================= */}
@@ -401,7 +410,8 @@ const relatedProducts = useMemo(() => {
             "/images/product-placeholder.png";
 
           return (
-<div key={product.id} className="min-w-[85%] shrink-0">              <ProductCard
+<div key={product.id} className="min-w-[85%] shrink-0">      
+          <ProductCard
                 product={{
                   ...product,
                   imageSrc,
@@ -422,7 +432,7 @@ const relatedProducts = useMemo(() => {
 
           return (
             <ProductCard
-              key={product._id}
+              key={product.id}
               product={{
                 ...product,
                 imageSrc,
